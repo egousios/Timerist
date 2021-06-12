@@ -14,6 +14,8 @@
 | alarm.wav     | A wav file that is played alongside the "alarm.gif" file to show the user that the time is up, and that they need to complete their task as soon as possible to stay on time.
 | app.py        | A module that combines all other source files, and runs the application.
 | blueprint     | A blueprint for the requirements that our application needs to meet at the minimum.
-| data.txt      | A textfile that acts as a "database" for all the todos that the user has made in the application's "todo" section. 
+| data.txt      | A textfile that acts as a "database" for all the todos that the user has made in the application's "todo" section.
+| interface.ui  | A .ui file composed of qml tags that were at first, the user interface our application which had been expanded and improved by python code.
+
 
 
