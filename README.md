@@ -51,15 +51,15 @@ Timerist
 │   │   main.png
 │   │   notes-dark.png
 │   │   notes.png
-    README.md
-    alarm.gif
-    alarm.wav
-    app.py
-    blueprint
-    data.txt
-    interface.ui
-    light-theme.qss
-    requirements.txt
+|   README.md
+|   alarm.gif
+|   alarm.wav
+|   app.py
+|   blueprint
+|   data.txt
+|   interface.ui
+|   light-theme.qss
+|   requirements.txt
 ```
 
 ### Running from source (Windows):
