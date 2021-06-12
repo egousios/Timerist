@@ -49,7 +49,7 @@ Open up your terminal, and type or paste in the following:
 3. `pip3 install requirements.txt`
 4. `python3 -u app.py`
 
-### Note: Binaries and Executables will be realeased in the near future, as a part of the distribution of this application 😀.
+Note: Binaries and Executables will be realeased in the near future, as a part of the distribution of this application 😀.
 
 
 
