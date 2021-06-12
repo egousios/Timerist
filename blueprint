@@ -1,0 +1,23 @@
+TITLE: EliteOrganizer
+0. App Compatibility:
+ - Desktop Application -> (Windows, Linux, MacOS)
+
+1. User Interface 
+- GUI
+    -> Modules:
+        - Pyqt5
+
+
+2. Purpose:
+- Help students at elementary school
+    -> How:
+        - Timer
+        - To Do [create tasks, delete completed tasks]
+          -> TABLE: [Status, Date, Task]
+        - Text editor
+
+3. Add-Ons
+- Settings menu
+
+4. Files:
+- app.py
