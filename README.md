@@ -16,7 +16,7 @@
 
 
 
-### My Codebase:
+### Codebase Description:
 | Folder/File     | Purpose       
 | -------------   |:-------------:
 | Resource        | <p align="left">The Resource package is a utility composed of modules, classes, & functions that can help us easily break down implementations for GUI.</p> 
@@ -32,7 +32,7 @@
 | light-theme.qss | <p align="left">A .qss file that is a stylesheet for our application.</p>
 | requirements.txt | <p align="left">A text file containing the required dependencies that are needed in order to run this application from source.</p>
 
-### My Codebase Directory Structure:
+### Codebase Directory Structure:
 ```
 Timerist
 │      
