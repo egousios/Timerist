@@ -35,7 +35,7 @@
 ### Running from source (Windows):
 Make sure that you have 'pip' installed on your system, and that you have added it to your Python path.
 If you have completed the step above, you may move on to completing the steps below.
-Open up your terminal, and type in the following:
+Open up your terminal, and type or paste in the following:
 1. `git clone "https://github.com/DaEliteCoder/Timerist.git"`
 2. `cd Timerist`
 3. `pip install requirements.txt`
