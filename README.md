@@ -34,22 +34,32 @@
 
 ### My Codebase Directory Structure:
 ```
-project
-│   README.md
-│   file001.txt    
-│
-└───folder1
-│   │   file011.txt
-│   │   file012.txt
-│   │
-│   └───subfolder1
-│       │   file111.txt
-│       │   file112.txt
-│       │   ...
-│   
-└───folder2
-    │   file021.txt
-    │   file022.txt
+Timerist
+│      
+└───Resource
+│   │   description.template
+│   │   query.py
+│   │   time.py
+└───database
+│   │   Example Note     
+│   │   Math Homework
+└───images
+│   │   button.png
+│   │   icon.png
+│   │   icon2.png
+│   │   main-dark.png
+│   │   main.png
+│   │   notes-dark.png
+│   │   notes.png
+    README.md
+    alarm.gif
+    alarm.wav
+    app.py
+    blueprint
+    data.txt
+    interface.ui
+    light-theme.qss
+    requirements.txt
 ```
 
 ### Running from source (Windows):
