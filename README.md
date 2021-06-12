@@ -16,7 +16,7 @@
 
 
 
-### My Codebase Structure:
+### My Codebase:
 | Folder/File     | Purpose       
 | -------------   |:-------------:
 | Resource        | <p align="left">The Resource package is a utility composed of modules, classes, & functions that can help us easily break down implementations for GUI.</p> 
@@ -31,6 +31,26 @@
 | interface.ui    | <p align="left">A .ui file composed of qml tags that were at first, the user interface our application which had been expanded and improved by python code.</p>
 | light-theme.qss | <p align="left">A .qss file that is a stylesheet for our application.</p>
 | requirements.txt | <p align="left">A text file containing the required dependencies that are needed in order to run this application from source.</p>
+
+### My Codebase Directory Structure:
+.
++-- _config.yml
++-- _drafts
+|   +-- begin-with-the-crazy-ideas.textile
+|   +-- on-simplicity-in-technology.markdown
++-- _includes
+|   +-- footer.html
+|   +-- header.html
++-- _layouts
+|   +-- default.html
+|   +-- post.html
++-- _posts
+|   +-- 2007-10-29-why-every-programmer-should-play-nethack.textile
+|   +-- 2009-04-26-barcamp-boston-4-roundup.textile
++-- _data
+|   +-- members.yml
++-- _site
++-- index.html
 
 ### Running from source (Windows):
 Make sure that you have 'pip' installed on your system, and that you have added it to your Python path.
