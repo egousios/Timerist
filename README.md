@@ -1,6 +1,6 @@
 <div style="margin-left: 50px">
 <h1>Timerist</h1>
-|GithubCommits|
+<img alt="Stars" src="https://img.shields.io/badge/build-passing-brightgreen>
 <h4>An application that will help students organize their day at school :)</h4>
 </div>
 <br>
