@@ -1,8 +1,10 @@
 <div style="margin-left: 50px">
 <h1>Timerist (In Construction 👷 🚧)</h1>
 <img alt="Stars" src="https://img.shields.io/badge/build-passing-brightgreen">
-<img alt="Echo" src="https://img.shields.io/github/issues-raw/DaEliteCoder/Timerist">
+<img alt="Issues" src="https://img.shields.io/github/issues-raw/DaEliteCoder/Timerist">
 <img alt="Language" src="https://img.shields.io/badge/language-python-red.svg">
+<img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
+  
 <h4>An application that will help students organize their day at school :)</h4>
 </div>
 <br>
