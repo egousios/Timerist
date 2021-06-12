@@ -29,13 +29,27 @@
 | blueprint       | A blueprint for the requirements that our application needs to meet at the minimum.
 | data.txt        | A textfile that acts as a "database" for all the todos that the user has made in the application's "todo" section.
 | interface.ui    | A .ui file composed of qml tags that were at first, the user interface our application which had been expanded and improved by python code.
-| light-theme.qss | A .qss file that is a stylesheet for our application. 
+| light-theme.qss | A .qss file that is a stylesheet for our application.
+| requirements.txt | A text file containing the required dependencies that are needed in order to run this application from source.
 
-### Running from source:
+### Running from source (Windows):
+Make sure that you have 'pip' installed on your system, and that you have added it to your Python path.
+If you have completed the step above, you may move on to completing the steps below.
 Open up your terminal, and type in the following:
-1. `git clone ""`
-2. `pip install requirements.txt`
-3. Go to the root directory of 
+1. `git clone "https://github.com/DaEliteCoder/Timerist.git"`
+2. `cd Timerist`
+3. `pip install requirements.txt`
+4. `python -u app.py`
+### Running from source (MacOS / Linux):
+1. `git clone "https://github.com/DaEliteCoder/Timerist.git"`
+2. `cd Timerist`
+3. `pip3 install requirements.txt`
+4. `python3 -u app.py`
+
+### Note: Binaries and Executables will be realeased in the near future, as a part of the distribution of this application 😀.
+
+
+
 
 
 
