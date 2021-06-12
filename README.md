@@ -9,6 +9,8 @@
 #### light and dark theme mode:
 <img src="images/main.png">
 <img src="images/notes.png">
+<img src="images/main-dark.png">
+<img src="images/notes-dark.png">
 
 
 
