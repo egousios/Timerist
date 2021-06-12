@@ -6,11 +6,9 @@
 
 ### Images/Samples of our application:
 ---
-#### light theme mode:
+#### light and dark theme mode:
 <img src="images/main.png">
 <img src="images/notes.png">
----
-#### dark theme mode:
 
 
 
