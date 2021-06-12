@@ -42,7 +42,7 @@ Open up your terminal, and type or paste in the following:
 4. `python -u app.py`
 ---
 Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
-5. `pip freeze`
+`pip freeze`
 ### Running from source (MacOS / Linux):
 Make sure that you have 'pip' installed on your system, and that you have added it to your Python path.
 If you have completed the step above, you may move on to completing the steps below. Remember, Python version 2 is pre-installed on your operating system, so you will have to say pip3 and python3 to specify that you're not using version 2.
@@ -53,7 +53,7 @@ Open up your terminal, and type or paste in the following:
 4. `python3 -u app.py`
 ---
 Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
-5. `pip3 freeze`
+`pip3 freeze`
 
 Note: Binaries and Executables will be realeased in the near future, as a part of the distribution of this application 😀.
 
