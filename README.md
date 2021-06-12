@@ -6,7 +6,7 @@
 </div>
 <br>
 
-### Images/Samples of our application:
+### Screenshots of my application:
 ---
 #### light and dark theme mode:
 <img src="images/main.png">
