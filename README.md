@@ -6,6 +6,6 @@
 #### My Codebase Structure:
 | Folder        | Purpose       
 | ------------- |:-------------:
-| dddddddd      | right-aligned 
-| col 2 is      | centered      
-| zebra stripes | are neat      
+| Resource      | s 
+| database      | centered      
+| images        | are neat      
