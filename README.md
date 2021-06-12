@@ -7,7 +7,8 @@
 ### Images/Samples of our application:
 ---
 #### light theme mode:
-
+<img src="images/main.png">
+<img src="images/notes.png">
 
 
 ### My Codebase Structure:
