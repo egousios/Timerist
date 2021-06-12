@@ -20,17 +20,17 @@
 | Folder/File     | Purpose       
 | -------------   |:-------------:
 | Resource        | <p align="left">The Resource package is a utility composed of modules, classes, & functions that can help us easily break down implementations for GUI.</p> 
-| database        | A folder database that handles the notes created by the user in the application.      
-| images          | A folder that contains image resources for the application and the "README.md" file.
-| README.md       | A markdown file describing our application, and the underlying source code that works behind the scenes to help the user organize their day at school.
-| alarm.gif       | A gif file that is shown when one of the tasks that the user has created in the "to do" section, has not been completed by the assigned date and time.
-| alarm.wav       | A wav file that is played alongside the "alarm.gif" file to show the user that the time is up, and that they need to complete their task as soon as possible to stay on time.
-| app.py          | A module that combines all other source files, and runs the application.
-| blueprint       | A blueprint for the requirements that our application needs to meet at the minimum.
-| data.txt        | A textfile that acts as a "database" for all the todos that the user has made in the application's "todo" section.
-| interface.ui    | A .ui file composed of qml tags that were at first, the user interface our application which had been expanded and improved by python code.
-| light-theme.qss | A .qss file that is a stylesheet for our application.
-| requirements.txt | A text file containing the required dependencies that are needed in order to run this application from source.
+| database        | <p align="left">A folder database that handles the notes created by the user in the application.</p>      
+| images          | <p align="left">A folder that contains image resources for the application and the "README.md" file.</p>
+| README.md       | <p align="left">A markdown file describing our application, and the underlying source code that works behind the scenes to help the user organize their day at school.</p>
+| alarm.gif       | <p align="left">A gif file that is shown when one of the tasks that the user has created in the "to do" section, has not been completed by the assigned date and time.</p>
+| alarm.wav       | <p align="left">A wav file that is played alongside the "alarm.gif" file to show the user that the time is up, and that they need to complete their task as soon as possible to stay on time.</p>
+| app.py          | <p align="left">A module that combines all other source files, and runs the application.</p>
+| blueprint       | <p align="left">A blueprint for the requirements that our application needs to meet at the minimum.</p>
+| data.txt        | <p align="left">A textfile that acts as a "database" for all the todos that the user has made in the application's "todo" section.</p>
+| interface.ui    | <p align="left">A .ui file composed of qml tags that were at first, the user interface our application which had been expanded and improved by python code.</p>
+| light-theme.qss | <p align="left">A .qss file that is a stylesheet for our application.</p>
+| requirements.txt | <p align="left">A text file containing the required dependencies that are needed in order to run this application from source.</p>
 
 ### Running from source (Windows):
 Make sure that you have 'pip' installed on your system, and that you have added it to your Python path.
