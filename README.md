@@ -31,5 +31,11 @@
 | interface.ui    | A .ui file composed of qml tags that were at first, the user interface our application which had been expanded and improved by python code.
 | light-theme.qss | A .qss file that is a stylesheet for our application. 
 
+### Running from source:
+Open up your terminal, and type in the following:
+1. `git clone ""`
+2. `pip install requirements.txt`
+3. Go to the root directory of 
+
 
 
