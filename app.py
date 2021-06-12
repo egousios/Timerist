@@ -24,7 +24,7 @@ def load_from_stylesheet(file):
     '''
     A function that reads a qss stylesheet line-by-line
     and returns the data as a string for PyQt5 to read
-    and parse the stylsheet.
+    and parse the stylesheet.
     '''
     with open(file, "r") as f:
         data = f.read()
