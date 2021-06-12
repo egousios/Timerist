@@ -1,6 +1,7 @@
 <div style="margin-left: 50px">
 <h1>Timerist</h1>
 <img alt="Stars" src="https://img.shields.io/badge/build-passing-brightgreen">
+<img alt="Echo" src="https://img.shields.io/github/issues-raw/DaEliteCoder/Timerist">
 <h4>An application that will help students organize their day at school :)</h4>
 </div>
 <br>
