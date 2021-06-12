@@ -13,4 +13,6 @@
 | alarm.gif     | A gif file that is shown when one of the tasks that the user has created in the "to do" section, has not been completed by the assigned date and time.
 | alarm.wav     | A wav file that is played alongside the "alarm.gif" file to show the user that the time is up, and that they need to complete their task as soon as possible to stay on time.
 | app.py        | A module that combines all other source files, and runs the application.
+| blueprint     | A blueprint for the requirements that our application needs to meet at the minimum.
+
 
