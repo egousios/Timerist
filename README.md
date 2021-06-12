@@ -19,7 +19,7 @@
 ### My Codebase Structure:
 | Folder/File     | Purpose       
 | -------------   |:-------------:
-| Resource        | The Resource package is a utility composed of modules, classes, & functions that can help us easily break down implementations for GUI. 
+| Resource        | <p align="left">The Resource package is a utility composed of modules, classes, & functions that can help us easily break down implementations for GUI.</p> 
 | database        | A folder database that handles the notes created by the user in the application.      
 | images          | A folder that contains image resources for the application and the "README.md" file.
 | README.md       | A markdown file describing our application, and the underlying source code that works behind the scenes to help the user organize their day at school.
