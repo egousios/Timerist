@@ -1,6 +1,6 @@
 <div style="margin-left: 50px">
 <h1>Timerist</h1>
-{{ LANGUAGE_PERCENT }}
+|GithubCommits|
 <h4>An application that will help students organize their day at school :)</h4>
 </div>
 <br>
