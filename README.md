@@ -40,6 +40,7 @@ Open up your terminal, and type or paste in the following:
 2. `cd Timerist`
 3. `pip install requirements.txt`
 4. `python -u app.py`
+---
 Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
 5. `pip freeze`
 ### Running from source (MacOS / Linux):
@@ -50,6 +51,7 @@ Open up your terminal, and type or paste in the following:
 2. `cd Timerist`
 3. `pip3 install requirements.txt`
 4. `python3 -u app.py`
+---
 Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
 5. `pip3 freeze`
 
