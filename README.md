@@ -3,7 +3,7 @@
 <h4>An application that will help students organize their day at school :)</h4>
 </div>
 
-# My Codebase Structure:
+#### My Codebase Structure:
 | Tables        | Are           | Cool  |
 | ------------- |:-------------:| -----:|
 | col 3 is      | right-aligned | $1600 |
