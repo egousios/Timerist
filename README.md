@@ -9,7 +9,7 @@
 #### light theme mode:
 <img src="images/main.png">
 <img src="images/notes.png">
-#### dark theme mode:
+dark theme mode:
 
 
 
