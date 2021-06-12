@@ -3,7 +3,15 @@
 <h4>An application that will help students organize their day at school :)</h4>
 </div>
 
-#### My Codebase Structure:
+### Images/Samples of our application:
+---
+#### light theme mode:
+dddd
+
+
+
+
+### My Codebase Structure:
 | Folder/File     | Purpose       
 | -------------   |:-------------:
 | Resource        | The Resource package is a utility composed of modules, classes, & functions that can help us easily break down implementations for GUI. 
