@@ -68,7 +68,7 @@ If you have completed the step above, you may move on to completing the steps be
 Open up your terminal, and type or paste in the following:
 1. `git clone "https://github.com/DaEliteCoder/Timerist.git"`
 2. `cd Timerist`
-3. `pip install requirements.txt`
+3. `pip install -r requirements.txt`
 4. `python -u app.py`
 ---
 Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
@@ -79,7 +79,7 @@ If you have completed the step above, you may move on to completing the steps be
 Open up your terminal, and type or paste in the following:
 1. `git clone "https://github.com/DaEliteCoder/Timerist.git"`
 2. `cd Timerist`
-3. `pip3 install requirements.txt`
+3. `pip3 install -r requirements.txt`
 4. `python3 -u app.py`
 ---
 Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
