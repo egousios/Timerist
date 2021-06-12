@@ -7,8 +7,6 @@
 ### Images/Samples of our application:
 ---
 #### light theme mode:
-dddd
-
 
 
 
