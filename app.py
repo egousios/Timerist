@@ -68,6 +68,7 @@ class EditTodoWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         if self.sound != None:
             self.sound.stop()
+            self.Sound.stop()
             self.destroy()
         else:
             self.destroy()
@@ -83,6 +84,11 @@ class EditTodoTabs(QtWidgets.QWidget):
         self.soundAlarm = soundAlarm
         self.music = music
         self.newText = newText
+        sound_file = 'alarm.wav'
+        self.Sound = QtMultimedia.QSoundEffect()
+        self.Sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
+        self.Sound.setLoopCount(QtMultimedia.QSoundEffect.Infinite)
+        self.Sound.setVolume(50)
         # Initialize tab screen
         self.tabs = QtWidgets.QTabWidget()
         self.tab1 = QtWidgets.QWidget()
@@ -210,6 +216,7 @@ class EditTodoTabs(QtWidgets.QWidget):
             self.music.stop()
             self.alarm_gif.setPaused(True)
             self.labelTime3.setText('Alarm: off')
+           
 
     def showTime(self):
         self.labelTime2.setText(f"{self.timeText}")
@@ -217,7 +224,9 @@ class EditTodoTabs(QtWidgets.QWidget):
             self.timeText = start_timer(self.newText)
         if self.timeText == 'yes':
             self.timeText = 'Time is Up!'
-            self.parent.destroy()
+            self.Sound.play()
+            
+            
             
 
 

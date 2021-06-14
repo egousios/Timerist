@@ -15,14 +15,19 @@ Table of contents
 =================
 <!--ts-->
    * [Table of contents](#Table-of-contents)
-   * [Screenshots of my application](#Screenshots-of-my-application)
+   * [Philosophy](#Philosophy)
+   * [Screenshots](#Screenshots)
    * [Codebase Description](#Codebase-Description)
    * [Codebase Directory Structure](#Codebase-Directory-Structure)
    * [Running the Application from Source](#Running-the-Application-from-Source)
 <!--te-->
 
+Philosophy
+===
+Students of which I am, have alot of diffrent things that we ought to complete by the end of each day. Although completing all of our tasks may seem easy, completing them with quality and staying without stress takes quite some more effort. Remembering everything that we have to do in our brains is not efficient and most of the time leads to poor quality work and stress on students and individuals. Staying organized, stressless, and completing all that we have to do on time can be done through Timerist. Timerist organizes your day but allowing you to set tasks and assign them due dates that have an alarm and countdown. Notes and documents can be used for completing homework, breaking down a problem, and writing down a thought into text. Timerist's rich assistance to the brain's ability to remeber and prioritize things will greatly benefit one's responsibility and success.
 
-Screenshots of my application
+
+Screenshots
 ===
 #### light and dark theme mode:
 <img src="images/main.png">
