@@ -36,7 +36,7 @@ Codebase Description
 ===
 | Folder/File     | Purpose       
 | -------------   |:-------------:
-| .radical-dev    | <p align="left">The ".radical-dev" folder contains the source files for Timerist's command line interface that was build for speeding up the development of Timerist.</p>
+| .radical-dev    | <p align="left">The ".radical-dev" folder contains the source files for Timerist's command line interface that was built for speeding up the development of Timerist using Golang.</p>
 | Resource        | <p align="left">The Resource package is a utility composed of modules, classes, & functions that can help us easily break down implementations for GUI.</p> 
 | database        | <p align="left">A folder database that handles the notes created by the user in the application.</p>      
 | images          | <p align="left">A folder that contains image resources for the application and the "README.md" file.</p>
