@@ -2,15 +2,28 @@
 <h1>Timerist (In Construction 👷 🚧)</h1>
 <img alt="Stars" src="https://img.shields.io/badge/build-passing-brightgreen">
 <img alt="Issues" src="https://img.shields.io/github/issues-raw/DaEliteCoder/Timerist">
-<img alt="Language" src="https://img.shields.io/badge/language-python-red.svg">
+<img alt="Language" src="https://img.shields.io/badge/language-python-blue.svg">
+<img alt="Language" src="https://img.shields.io/badge/language-golang-red.svg">
 <img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
   
 <h4>An application that will help students organize their day at school :)</h4>
 </div>
 <br>
 
-### Screenshots of my application:
----
+
+Table of contents
+=================
+<!--ts-->
+   * [Table of contents](#Table-of-contents)
+   * [Screenshots of my application](#Screenshots-of-my-application)
+   * [Codebase Description](#Codebase-Description)
+   * [Codebase Directory Structure](#Codebase-Directory-Structure)
+   * [Running the Application from Source](#Running-the-Application-from-Source)
+<!--te-->
+
+
+Screenshots of my application
+===
 #### light and dark theme mode:
 <img src="images/main.png">
 <img src="images/notes.png">
@@ -19,9 +32,11 @@
 
 
 
-### Codebase Description:
+Codebase Description
+===
 | Folder/File     | Purpose       
 | -------------   |:-------------:
+| .radical-dev    | <p align="left">The ".radical-dev" folder contains the source files for Timerist's command line interface that was build for speeding up the development of Timerist.</p>
 | Resource        | <p align="left">The Resource package is a utility composed of modules, classes, & functions that can help us easily break down implementations for GUI.</p> 
 | database        | <p align="left">A folder database that handles the notes created by the user in the application.</p>      
 | images          | <p align="left">A folder that contains image resources for the application and the "README.md" file.</p>
@@ -35,10 +50,14 @@
 | light-theme.qss | <p align="left">A .qss file that is a stylesheet for our application.</p>
 | requirements.txt | <p align="left">A text file containing the required dependencies that are needed in order to run this application from source.</p>
 
-### Codebase Directory Structure:
+Codebase Directory Structure
+===
 ```
 Timerist
-│      
+│
+└───.radical-dev
+│   │   main.exe
+|   |   main.go   
 └───Resource
 │   │   description.template
 │   │   query.py
@@ -54,17 +73,19 @@ Timerist
 │   │   main.png
 │   │   notes-dark.png
 │   │   notes.png
-|   README.md
-|   alarm.gif
-|   alarm.wav
-|   app.py
-|   blueprint
-|   data.txt
-|   interface.ui
-|   light-theme.qss
-|   requirements.txt
+|   README.md   
+│   alarm.gif
+│   alarm.wav
+│   app.py
+│   blueprint
+│   data.txt
+│   interface.ui
+│   light-theme.qss
+│   requirements.txt
 ```
 
+Running the Application from Source
+===
 ### Running from source (Windows):
 Make sure that you have 'pip' installed on your system, and that you have added it to your Python path.
 If you have completed the step above, you may move on to completing the steps below.
@@ -74,7 +95,7 @@ Open up your terminal, and type or paste in the following:
 3. `pip install -r requirements.txt`
 4. `python -u app.py`
 ---
-Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
+#### Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
 `pip freeze`
 ### Running from source (MacOS / Linux):
 Make sure that you have 'pip' installed on your system, and that you have added it to your Python path.
@@ -85,10 +106,10 @@ Open up your terminal, and type or paste in the following:
 3. `pip3 install -r requirements.txt`
 4. `python3 -u app.py`
 ---
-Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
+#### Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
 `pip3 freeze`
 
-Note: Binaries and Executables will be realeased in the near future, as a part of the distribution of this application 😀.
+<p align="center">Note: Binaries and Executables will be realeased in the near future, as a part of the distribution of this application 😀.</p>
 
 
 
