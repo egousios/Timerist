@@ -105,6 +105,27 @@ def edit_item_from_query(item_to_edit, new_data, path):
                 file.write(f"{elem}\n")
         file.close()
 
+def edit_item(item_to_edit, date, todo, status, path):
+    file = open(f"{path}", "r", encoding='utf-8')
+    data = file.readlines()
+    file.close()
+    data = [line.replace('\n', '') for line in data]
+    desired_lines = data[0::1]
+    fov = slice_per(desired_lines, 3)
+    if item_to_edit in fov:
+        idx = fov.index(item_to_edit)
+        fov[idx][0] = date
+        fov[idx][1] = todo
+        fov[idx][2] = status
+        file = open(path, 'w', encoding='utf-8').close()
+        file = open(path, 'a', encoding='utf-8')
+        for item in fov:
+            for elem in item:
+                file.write(f"{elem}\n")
+        file.close()
+
+
+
 def fetch_sorted_todos(path, fetchType):
 
     CompletedTodosStdFetchId = "completed"
@@ -134,21 +155,3 @@ def fetch_sorted_todos(path, fetchType):
                 print(todo_item_collection)
     else:
         print("Invalid fetch type.")    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

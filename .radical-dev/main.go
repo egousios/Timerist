@@ -1,13 +1,31 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
+	"github.com/fatih/color"
 	"github.com/urfave/cli"
 )
+
+func readLines(path string) ([]string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	return lines, scanner.Err()
+}
 
 func main() {
 	app := cli.NewApp()
@@ -53,9 +71,35 @@ func main() {
 				}
 
 				for _, f := range files {
-					fmt.Println(f.Name(), "\t")
+					color.Yellow(f.Name(), "\t")
 				}
 
+				return nil
+			},
+		},
+		{
+			Name:    "readfile",
+			Aliases: []string{"rf"},
+			Usage:   "Reads a file.",
+			Action: func(c *cli.Context) error {
+				lines, err := readLines(c.Args().First())
+				if err != nil {
+					log.Fatalf("readLines: %s", err)
+				}
+				fmt.Printf("Contents of %s :", c.Args().First())
+				fmt.Println("\n")
+				for _, ln := range lines {
+					color.Cyan(ln)
+				}
+				return nil
+			},
+		},
+		{
+			Name:    "path",
+			Aliases: []string{"p"},
+			Usage:   "Shows the path to timerist_cli.",
+			Action: func(c *cli.Context) error {
+				color.Magenta(filepath.Abs("."))
 				return nil
 			},
 		},

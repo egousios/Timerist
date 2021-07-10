@@ -67,6 +67,7 @@ Timerist
 │   │   description.template
 │   │   query.py
 │   │   time.py
+|   |   Nexa-Bold.ttf
 └───database
 │   │   Example Note     
 │   │   Math Homework
