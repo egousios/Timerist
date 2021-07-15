@@ -4,11 +4,11 @@ app.py
 A module that combines all other source files, and runs the application.
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets, QtMultimedia
+from PyQt5 import QtCore, QtGui, QtWidgets, QtMultimedia, QtPrintSupport, QtWebEngineWidgets, Qsci
 from PyQt5.QtCore import *
 from PyQt5.QtMultimedia import *
-from PyQt5.QtGui import QCloseEvent, QDesktopServices, QFont, QIcon, QMovie, QFontDatabase, QTextImageFormat, QTextListFormat, QTextTableFormat, QTextCursor
-from PyQt5.QtWidgets import QApplication, QFontDialog, QColorDialog, QFormLayout, QSpacerItem, QTimeEdit, QTreeWidgetItem, QVBoxLayout, QHBoxLayout
+from PyQt5.QtGui import QCloseEvent, QDesktopServices, QFont, QIcon, QMovie, QFontDatabase, QPainter, QTextImageFormat, QTextListFormat, QTextTableFormat, QTextCursor
+from PyQt5.QtWidgets import QApplication, QFontDialog, QColorDialog, QFormLayout, QListWidgetItem, QSpacerItem, QTimeEdit, QTreeWidgetItem, QVBoxLayout, QHBoxLayout
 from Resource.query import Tree
 from Resource.query import slice_per
 from Resource.query import read_contents_from_query
@@ -20,7 +20,7 @@ from Resource.query import return_contents_from_query
 from Resource.time import days_in_between, StopWatch, get_current_time
 from datetime import datetime
 import os
-import qdarkstyle
+import qdarkgraystyle
 import qtwidgets
 from qtwidgets import AnimatedToggle
 
@@ -333,34 +333,14 @@ class AddTodoForm(QtWidgets.QMainWindow):
             branch.save(branch.branches, id="all", path="data.txt")
             self.wid.addTopLevelItem(QTreeWidgetItem(data))
 
-class ColorThemeWindow(QtWidgets.QMainWindow):
-    def __init__(self, Parent, title):
-        super().__init__(parent=Parent)
-        self.setFixedSize(460, 100)
-        self.setWindowTitle(title)
-        self.centralwidget = QtWidgets.QWidget(self)
-        self.pushButton = QtWidgets.QPushButton("Dark", self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(100, 20, 110, 50))
-        self.pushButton.clicked.connect(self.dark)
-        self.pushButton2 = QtWidgets.QPushButton("Light", self.centralwidget)
-        self.pushButton2.setGeometry(QtCore.QRect(250, 20, 110, 50))
-        self.pushButton2.clicked.connect(self.light)
-        self.setCentralWidget(self.centralwidget)
-
-    def dark(self):
-        dark_stylesheet = qdarkstyle.load_stylesheet_pyqt5()
-        app.setStyleSheet(dark_stylesheet)
-
-    def light(self):
-        app.setStyleSheet(load_from_stylesheet('light-theme.qss'))
-
 
 class EditWindow(QtWidgets.QMainWindow):
-    def __init__(self, Parent, title, text):
+    def __init__(self, Parent, title, text, database=None):
         super().__init__(parent=Parent)
         self.resize(400, 400)
         self.setWindowTitle(f"{title}")
         self.title = title
+        self.database = database
         self.Opened = False
         self.layout = QHBoxLayout()
         self.layout2 = QVBoxLayout()
@@ -501,48 +481,26 @@ class EditWindow(QtWidgets.QMainWindow):
         
         self.setCentralWidget(self.widget)
         self.layout.addWidget(self.pushButtonCreate, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButtonOpen, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton3, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton4, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton5, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton6, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton12, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton2, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton11, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton7, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton8, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton9, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton10, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton13, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton14, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton15, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton16, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton18Label, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton18, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
         self.layout.addWidget(self.pushButton20, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
-        self.layout.addStretch(22)
         self.layout2.addLayout(self.layout)
         self.layout2.addWidget(self.textEdit)
         self.widget.setLayout(self.layout2)
@@ -970,8 +928,13 @@ class EditWindow(QtWidgets.QMainWindow):
             pass
 
     def createNote(self):
-        create = CreateWindow(self, self.textEdit.toHtml())
-        create.show()
+        if self.database != None:
+            create = CreateWindow(self, self.textEdit.toHtml(), database=self.database)
+            create.show()
+        else:
+            create = CreateWindow(self, self.textEdit.toHtml())
+            create.show()
+        
 
     def openNote(self):
         self.openWin = OpenWindow(self, self.textEdit, winTitle=self)
@@ -1004,11 +967,12 @@ class EditWindow(QtWidgets.QMainWindow):
 
 
 class CreateWindow(QtWidgets.QMainWindow):
-    def __init__(self, Parent, text):
+    def __init__(self, Parent, text=None, database=None):
         super().__init__(parent=Parent)
         self.setFixedSize(320, 150)
         self.setWindowTitle("New Note")
         self.text = text
+        self.database = database
         self.centralwidget = QtWidgets.QWidget(self)
         self.lineEdit = QtWidgets.QLineEdit("Note Title", self.centralwidget)
         self.lineEdit.setGeometry(20, 20, 280, 60)
@@ -1021,27 +985,127 @@ class CreateWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.centralwidget)
 
     def save(self):
-        with open(f"database/{self.lineEdit.text()}.html", "a", encoding='utf-8') as f:
-            f.write("")
+        selected = f"database/{self.lineEdit.text()}.html"
+        if os.path.isfile(selected):
+            QtWidgets.QMessageBox.critical(self, "Error!", "A note already exists with this title.")
+        else:
+            with open(selected, "a", encoding='utf-8') as f:
+                f.write(" ")
+                f.close()
+            if self.database != None:
+                self.database.addItem(QListWidgetItem(f'{self.lineEdit.text()}.html'))
+
+class HTMLEditor(Qsci.QsciScintilla):
+    def __init__(self, parent=None, text=''):
+        super().__init__(parent)
+        self.lexer = Qsci.QsciLexerHTML(self)
+        self.setLexer(self.lexer)
+        self.lexer.setFont(QFont("Consolas", 15))
+        self.setText(text)
+
+
+class EmbedHtmlWindow(QtWidgets.QMainWindow):
+    def __init__(self, Parent, title, html, filename):
+        super().__init__(parent=Parent)
+        self.setWindowTitle(title)
+        self.widget = QtWidgets.QWidget()
+        self.labelLayout = QHBoxLayout()
+        self.layout = QVBoxLayout()
+        self.tool_btn_size = QtCore.QSize(35, 35)
+
+        ## reading the html data
+        with open(filename, 'r') as f:
+            textdata = f.read()
             f.close()
+
+        self.htmlPreviewLabel = QtWidgets.QLabel("Html Code:")
+        self.webbrowserLabel = QtWidgets.QLabel("Preview:")
+        self.htmlCopy = QtWidgets.QToolButton(self.widget)
+        self.htmlCopy.setIcon(QtGui.QIcon("images/copy.png"))
+        self.htmlCopy.setToolTip("Copy")
+        self.htmlCopy.setIconSize(self.tool_btn_size)
+        self.htmlCopy.setGeometry(QtCore.QRect(150, 360, 110, 30))
+        self.htmlCopy.clicked.connect(self.CopyToClipboard)
+
+        self.htmlPreview = HTMLEditor(self.widget, text=textdata)
+        self.htmlPreview.setReadOnly(True)
+
+        self.webbrowser = QtWebEngineWidgets.QWebEngineView(self.widget)
+        self.webbrowser.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath(filename)))
+
+        self.setCentralWidget(self.widget)
+        self.labelLayout.addWidget(self.htmlPreview,alignment=Qt.AlignTop)
+        self.labelLayout.addWidget(self.htmlCopy, alignment=Qt.AlignLeft)
+        self.labelLayout.addStretch(2)
+        self.labelLayout.addWidget(self.webbrowserLabel)
+        self.labelLayout.addStretch()
+
+        #self.layout.addLayout(self.labelLayout)
+
+        #self.layout.addWidget(self.htmlPreview, alignment=Qt.AlignLeft)
+        #self.layout.addWidget(self.webbrowser, alignment=Qt.AlignRight)
+
+        self.widget.setLayout(self.labelLayout)
+        scrollWidget = QtWidgets.QScrollArea()
+        scrollWidget.setWidget(self.widget)
+        scrollWidget.setWidgetResizable(True)
+        self.setCentralWidget(scrollWidget)
+
+    def CopyToClipboard(self):
+        pass
+
 
 
 class ReadWindow(QtWidgets.QMainWindow):
     def __init__(self, Parent, title, text):
         super().__init__(parent=Parent)
         self.resize(400, 400)
+        self.title = title
         self.setWindowTitle(f"{title}")
-        self.centralwidget = QtWidgets.QWidget(self)
-        self.layout = QVBoxLayout()
+        self.centralwidget = QtWidgets.QWidget()
+        self.layout = QHBoxLayout()
+        self.layout2 = QVBoxLayout()
         self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
+        self.textEdit.setReadOnly(True)
         self.textEdit.setGeometry(QtCore.QRect(0, 0, 400, 400))
         self.textEdit.setObjectName("textEdit")
         self.font = QFont("Times", 12)
+        self.tool_btn_size = QtCore.QSize(50, 50)
         self.textEdit.setFont(self.font)
         self.textEdit.setText(text)
+
+        self.pushButtonPrint = QtWidgets.QToolButton(self.centralwidget)
+        self.pushButtonPrint.setIcon(QtGui.QIcon("images/print.png"))
+        self.pushButtonPrint.setToolTip("Print")
+        self.pushButtonPrint.setIconSize(self.tool_btn_size)
+        self.pushButtonPrint.setGeometry(QtCore.QRect(150, 360, 110, 30))
+        self.pushButtonPrint.clicked.connect(self.printDialog)
+
+        self.pushButtonEmbed = QtWidgets.QToolButton(self.centralwidget)
+        self.pushButtonEmbed.setIcon(QtGui.QIcon("images/embed.png"))
+        self.pushButtonEmbed.setToolTip("Embed Html")
+        self.pushButtonEmbed.setIconSize(self.tool_btn_size)
+        self.pushButtonEmbed.setGeometry(QtCore.QRect(150, 360, 110, 30))
+        self.pushButtonEmbed.clicked.connect(self.HtmlDialog)
+
         self.setCentralWidget(self.centralwidget)
-        self.layout.addWidget(self.textEdit)
-        self.centralwidget.setLayout(self.layout)
+        self.layout.addWidget(self.pushButtonPrint, alignment=Qt.AlignHCenter)
+        self.layout.addWidget(self.pushButtonEmbed, alignment=Qt.AlignHCenter)
+        #self.layout.addStretch()
+        self.layout2.addLayout(self.layout)
+        self.layout2.addWidget(self.textEdit)
+        self.centralwidget.setLayout(self.layout2)
+        scrollWidget = QtWidgets.QScrollArea()
+        scrollWidget.setWidget(self.centralwidget)
+        scrollWidget.setWidgetResizable(True)
+        self.setCentralWidget(scrollWidget)
+
+    def printDialog(self):
+        QtWidgets.QMessageBox.information(self, "Coming Soon...", "The functionality of printing out your notes is coming out in the future!")
+
+    def HtmlDialog(self):
+        dialog = EmbedHtmlWindow(self, "Embed Html", self.textEdit, filename=f'database/{self.title}')
+        dialog.show()
 
 class OpenWindow(QtWidgets.QMainWindow):
     def __init__(self, Parent, textTo, winTitle=None):
@@ -1095,73 +1159,12 @@ class OpenWindow(QtWidgets.QMainWindow):
     def isOpened(self):
         return self.opened
 
-class NotesWindow(QtWidgets.QMainWindow):
-    def __init__(self, Parent):
-        super().__init__(parent=Parent)
-        self.setFixedSize(500, 500)
-        self.setWindowTitle("Notes")
-        self.centralwidget = QtWidgets.QWidget(self)
-        self.centralwidget.setObjectName("centralwidget")
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(200, 20, 211, 51))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.label.setFont(font)
-        self.label.setText("Notes")
-        self.listWidget = QtWidgets.QListWidget(self)
-        self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.listWidget.setGeometry(QtCore.QRect(100, 100, 320, 200))
-        for root, dirs, files in os.walk("database"):
-            for filename in files:
-                QtWidgets.QListWidgetItem(filename, self.listWidget)
-        self.pushButton = QtWidgets.QPushButton("Remove", self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(100, 320, 100, 30))
-        self.pushButton.clicked.connect(self.remove)
-        self.pushButton2 = QtWidgets.QPushButton("Edit", self.centralwidget)
-        self.pushButton2.setGeometry(QtCore.QRect(210, 320, 100, 30))
-        self.pushButton2.clicked.connect(self.edit)
-        self.pushButton3 = QtWidgets.QPushButton("Open", self.centralwidget)
-        self.pushButton3.setGeometry(QtCore.QRect(320, 320, 100, 30))
-        self.pushButton3.clicked.connect(self.open)
-        self.setCentralWidget(self.centralwidget)
-
-    def open(self):
-        try:
-            selected = [item.text() for item in self.listWidget.selectedItems()]
-            selected_str = ", ".join(selected)
-            file = open(f"database/{selected_str}", "r", encoding='utf-8')
-            data = file.read()
-            file.close()
-            read_window = ReadWindow(self, f"{selected_str}", text=data)
-            read_window.show()
-        except:
-            QtWidgets.QMessageBox.warning(self, "Select a Note", "Please select a note so that an action can be completed.")
-
-
-    def edit(self):
-        try:
-            selected = [item.text() for item in self.listWidget.selectedItems()]
-            selected_str = ", ".join(selected)
-            file = open(f"database/{selected_str}", "r", encoding='utf-8')
-            data = file.read()
-            file.close()
-            edit_window = EditWindow(self, f"{selected_str}", f"{data}")
-            edit_window.show()
-        except Exception as E:
-            QtWidgets.QMessageBox.warning(self, "Select a Note", "Please select a note so that an action can be completed.")
-
-    def remove(self):
-        for item in self.listWidget.selectedItems():
-            self.listWidget.takeItem(self.listWidget.row(item))
-            os.remove(f"database/{item.text()}")
-
 
 class Ui_Timerist(object):
     def setupUi(self, Timerist, sound):
         Timerist.setObjectName("Timerist")
         Timerist.resize(650, 550)
         Timerist.setWindowIcon(QtGui.QIcon('images/icon.png'))
-        Timerist.destroyed.connect(self.closeEvent)
 
         self.TodoOptionsLayout = QHBoxLayout()
         self.TodoLayout = QVBoxLayout()
@@ -1199,6 +1202,9 @@ class Ui_Timerist(object):
             for filename in files:
                 QtWidgets.QListWidgetItem(filename, self.NotesDatabase)
 
+        self.create_note = QtWidgets.QPushButton("Create", self.MainWidget)
+        self.create_note.setGeometry(QtCore.QRect(320, 320, 100, 30))
+        self.create_note.clicked.connect(self.CreateNote)
         self.remove_note = QtWidgets.QPushButton("Remove", self.MainWidget)
         self.remove_note.setGeometry(QtCore.QRect(100, 320, 100, 30))
         self.remove_note.clicked.connect(self.remove)
@@ -1208,6 +1214,7 @@ class Ui_Timerist(object):
         self.open_note = QtWidgets.QPushButton("Open", self.MainWidget)
         self.open_note.setGeometry(QtCore.QRect(320, 320, 100, 30))
         self.open_note.clicked.connect(self.OpenNote)
+        
 
         file = open("data.txt", "r", encoding='utf-8')
         data = file.readlines()
@@ -1232,7 +1239,12 @@ class Ui_Timerist(object):
         self.pushButton_4.setText("View")
         self.pushButton_3.clicked.connect(self.update_todo)
         self.pushButton_4.clicked.connect(self.view_todo)
-
+        self.color_theme_btn = AnimatedToggle(checked_color="#4c5375")
+        self.color_theme_btn.setMinimumSize(80, 10)
+        self.color_theme_btn.setToolTip("Dark Mode: Off")
+        self.color_theme_btn.stateChanged.connect(
+            lambda x: self.dark_theme() if x else self.light_theme()
+        )
 
         self.TodoOptionsLayout.addWidget(self.todo_label, alignment=Qt.AlignTop)
         self.TodoOptionsLayout.addWidget(self.pushButton, alignment=Qt.AlignLeft)
@@ -1240,16 +1252,19 @@ class Ui_Timerist(object):
         self.TodoOptionsLayout.addWidget(self.pushButton_3, alignment=Qt.AlignLeft)
         self.TodoOptionsLayout.addWidget(self.pushButton_4, alignment=Qt.AlignLeft)
         self.TodoOptionsLayout.addStretch(5)
+        self.TodoOptionsLayout.addWidget(self.color_theme_btn, alignment=Qt.AlignRight)
+        self.TodoOptionsLayout.addStretch()
         self.TodoLayout.addLayout(self.TodoOptionsLayout)
         self.TodoLayout.addWidget(self.treeWidget)
-        self.TodoLayout.addStretch(1)
+        self.TodoLayout.addStretch()
         # Newest Layout for MainWidget
-        self.NotesOptionsLayout.addLayout(self.TodoLayout)
-        self.NotesOptionsLayout.addWidget(self.notes_label, alignment=Qt.AlignLeft)
+        self.NotesLayout.addLayout(self.TodoLayout)
+        self.NotesOptionsLayout.addWidget(self.notes_label, alignment=Qt.AlignTop)
+        self.NotesOptionsLayout.addWidget(self.create_note, alignment=Qt.AlignLeft)
         self.NotesOptionsLayout.addWidget(self.remove_note, alignment=Qt.AlignLeft)
         self.NotesOptionsLayout.addWidget(self.edit_note, alignment=Qt.AlignLeft)
         self.NotesOptionsLayout.addWidget(self.open_note, alignment=Qt.AlignLeft)
-        self.NotesOptionsLayout.addStretch(4)
+        self.NotesOptionsLayout.addStretch()
         self.NotesLayout.addLayout(self.NotesOptionsLayout)
         self.NotesLayout.addWidget(self.NotesDatabase)
         self.MainWidget.setLayout(self.NotesLayout)
@@ -1262,24 +1277,12 @@ class Ui_Timerist(object):
         self.menubar = QtWidgets.QMenuBar(Timerist)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
         self.menubar.setObjectName("menubar")
-        self.menuSettings = QtWidgets.QMenu(self.menubar)
-        self.menuSettings.setObjectName("menuSettings")
-        self.menuNotes = QtWidgets.QMenu(self.menubar)
-        self.menuNotes.setObjectName("menuNotes")
+        self.settings_menu = QtWidgets.QMenu("Settings", self.menubar)
+        self.menubar.addMenu(self.settings_menu)
         Timerist.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(Timerist)
         self.statusbar.setObjectName("statusbar")
         Timerist.setStatusBar(self.statusbar)
-        self.actionColor_Theme = QtWidgets.QAction(Timerist)
-        self.actionColor_Theme.setObjectName("actionColor_Theme")
-        self.actionView = QtWidgets.QAction(Timerist)
-        self.actionView.setObjectName("actionView")
-        self.menuSettings.addAction(self.actionColor_Theme)
-        self.menuNotes.addAction(self.actionView)
-        self.actionColor_Theme.triggered.connect(self.color_theme)
-        self.actionView.triggered.connect(self.view)
-        self.menubar.addAction(self.menuSettings.menuAction())
-        self.menubar.addAction(self.menuNotes.menuAction())
         self.retranslateUi(Timerist)
         QtCore.QMetaObject.connectSlotsByName(Timerist)
     
@@ -1291,15 +1294,6 @@ class Ui_Timerist(object):
         self.pushButton.clicked.connect(self.add_todo)
         self.pushButton_2.setText(_translate("Timerist", "Remove"))
         self.pushButton_2.clicked.connect(self.remove_todo)
-        self.menuSettings.setTitle(_translate("Timerist", "Settings"))
-        self.menuNotes.setTitle(_translate("Timerist", "Notes"))
-        self.actionColor_Theme.setText(_translate("Timerist", "Color Theme"))
-        self.actionView.setText(_translate("Timerist", "View"))
-
-
-    def color_theme(self):
-        cWindow = ColorThemeWindow(Timerist, "Color Theme")
-        cWindow.show()
 
     def add_todo(self):
         add = AddTodoForm(Timerist, "Add Todo", self.treeWidget)
@@ -1349,173 +1343,6 @@ class Ui_Timerist(object):
                     edit_todo_win = EditTodoWindow(Timerist, f"Viewing Task - {task_name}", text_data, taskToComplete=item_text[1], soundAlarm=True, newText=item_text[0], sound=self.sound, isTimeShowing=True, prev_date=item_text[0], prev_status=item_text[2], tree=self.treeWidget)
                     edit_todo_win.show()
 
-    def color_change(self):
-        dialog = QColorDialog().getColor()
-        if dialog.isValid():
-            cursor = self.textEdit.textCursor()
-            if cursor.hasSelection():
-                fmt = QtGui.QTextCharFormat()
-                m = []
-                for e in dialog.getRgb():
-                    m.append(e)
-                color = QtGui.QColor(m[0], m[1], m[2], m[3])
-                fmt.setForeground(color)
-                cursor.mergeCharFormat(fmt)
-            else:
-                fmt = QtGui.QTextCharFormat()
-                m = []
-                for e in dialog.getRgb():
-                    m.append(e)
-                color = QtGui.QColor(m[0], m[1], m[2], m[3])
-                fmt.setForeground(color)
-                cursor.mergeCharFormat(fmt)
-                self.textEdit.setTextCursor(cursor)
-                
-
-    def FontChange(self):
-        self.Fontdlg = QFontDialog()
-        font, ok = self.Fontdlg.getFont()
-        if ok:
-            cursor = self.textEdit.textCursor()
-            if cursor.hasSelection():
-                fmt = QtGui.QTextCharFormat()
-                fmt.setFont(font)
-                cursor.mergeCharFormat(fmt)
-            else:
-                fmt = QtGui.QTextCharFormat()
-                fmt.setFont(font)
-                cursor.mergeCharFormat(fmt)
-                self.textEdit.setTextCursor(cursor)
-            
-    def align_left(self):
-        cursor = self.textEdit.textCursor()
-        if cursor.hasSelection():
-            fmt = cursor.blockFormat()
-            fmt.setAlignment(Qt.AlignLeft)
-            cursor.mergeBlockFormat(fmt)
-        else:
-            fmt = cursor.blockFormat()
-            fmt.setAlignment(Qt.AlignLeft)
-            cursor.mergeBlockFormat(fmt)
-            self.textEdit.setTextCursor(cursor)
-
-    def align_center(self):
-        cursor = self.textEdit.textCursor()
-        if cursor.hasSelection():
-            fmt = cursor.blockFormat()
-            fmt.setAlignment(Qt.AlignCenter)
-            cursor.mergeBlockFormat(fmt)
-        else:
-            fmt = cursor.blockFormat()
-            fmt.setAlignment(Qt.AlignCenter)
-            cursor.mergeBlockFormat(fmt)
-            self.textEdit.setTextCursor(cursor)
-
-    def align_right(self):
-        cursor = self.textEdit.textCursor()
-        if cursor.hasSelection():
-            fmt = cursor.blockFormat()
-            fmt.setAlignment(Qt.AlignRight)
-            cursor.mergeBlockFormat(fmt)
-        else:
-            fmt = cursor.blockFormat()
-            fmt.setAlignment(Qt.AlignRight)
-            cursor.mergeBlockFormat(fmt)
-            self.textEdit.setTextCursor(cursor)
-
-    def highlight(self):
-        dialog = QColorDialog().getColor()
-        if dialog.isValid():
-            cursor = self.textEdit.textCursor()
-            if cursor.hasSelection():
-                fmt = QtGui.QTextCharFormat()
-                m = []
-                for e in dialog.getRgb():
-                    m.append(e)
-                color = QtGui.QColor(m[0], m[1], m[2], m[3])
-                fmt.setBackground(color)
-                cursor.mergeCharFormat(fmt)
-            else:
-                fmt = QtGui.QTextCharFormat()
-                m = []
-                for e in dialog.getRgb():
-                    m.append(e)
-                color = QtGui.QColor(m[0], m[1], m[2], m[3])
-                fmt.setBackground(color)
-                cursor.mergeCharFormat(fmt)
-                self.textEdit.setTextCursor(cursor)
-
-    def bold(self, should, widget):
-        cursor = self.textEdit.textCursor()
-        if cursor.hasSelection():
-            fmt = QtGui.QTextCharFormat()
-            if should == True:
-                fmt.setFontWeight(self.font.Bold)
-                cursor.mergeCharFormat(fmt)
-            else:
-                fmt.setFontWeight(self.font.Normal)
-                cursor.mergeCharFormat(fmt)
-                widget.setChecked(False)
-        else:
-            fmt = QtGui.QTextCharFormat()
-            if should == True:
-                fmt.setFontWeight(self.font.Bold)
-                cursor.mergeCharFormat(fmt)
-                self.textEdit.setTextCursor(cursor)
-            else:
-                fmt.setFontWeight(self.font.Normal)
-                cursor.mergeCharFormat(fmt)
-                self.textEdit.setTextCursor(cursor)
-                widget.setChecked(False)
-
-    def italic(self, should, widget):
-        cursor = self.textEdit.textCursor()
-        if cursor.hasSelection():
-            fmt = QtGui.QTextCharFormat()
-            if should == True:
-                fmt.setFontItalic(True)
-                cursor.mergeCharFormat(fmt)
-            else:
-                fmt.setFontItalic(False)
-                cursor.mergeCharFormat(fmt)
-                widget.setChecked(False)
-        else:
-            fmt = QtGui.QTextCharFormat()
-            if should == True:
-                fmt.setFontItalic(True)
-                cursor.mergeCharFormat(fmt)
-                self.textEdit.setTextCursor(cursor)
-            else:
-                fmt.setFontItalic(False)
-                cursor.mergeCharFormat(fmt)
-                self.textEdit.setTextCursor(cursor)
-                widget.setChecked(False)
-
-    
-    def underline(self, should, widget):
-        cursor = self.textEdit.textCursor()
-        if cursor.hasSelection():
-            fmt = QtGui.QTextCharFormat()
-            if should == True:
-                fmt.setFontUnderline(True)
-                cursor.mergeCharFormat(fmt)
-            else:
-                fmt.setFontUnderline(False)
-                cursor.mergeCharFormat(fmt)
-                widget.setChecked(False)
-        else:
-            fmt = QtGui.QTextCharFormat()
-            if should == True:
-                fmt.setFontUnderline(True)
-                cursor.mergeCharFormat(fmt)
-                self.textEdit.setTextCursor(cursor)
-            else:
-                fmt.setFontUnderline(False)
-                cursor.mergeCharFormat(fmt)
-                self.textEdit.setTextCursor(cursor)
-                widget.setChecked(False)
-
-
     def open(self):
         self.openWin = OpenWindow(Timerist, self.textEdit)
         self.openWin.show()
@@ -1534,13 +1361,6 @@ class Ui_Timerist(object):
         except:
             QtWidgets.QMessageBox.warning(Timerist, "Saving Error", "Please open an existing note to save your changes.")
 
-    def view(self):
-        notes_window = NotesWindow(Timerist)
-        notes_window.show()
-
-    def closeEvent(self):
-        Timerist.destroySubWindows()
-
     def remove(self):
         for item in self.NotesDatabase.selectedItems():
             self.NotesDatabase.takeItem(self.NotesDatabase.row(item))
@@ -1553,7 +1373,7 @@ class Ui_Timerist(object):
             file = open(f"database/{selected_str}", "r", encoding='utf-8')
             data = file.read()
             file.close()
-            edit_window = EditWindow(Timerist, f"{selected_str}", f"{data}")
+            edit_window = EditWindow(Timerist, f"{selected_str}", f"{data}", database=self.NotesDatabase)
             edit_window.show()
         except Exception as E:
             QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
@@ -1567,21 +1387,37 @@ class Ui_Timerist(object):
             file.close()
             read_window = ReadWindow(Timerist, f"{selected_str}", text=data)
             read_window.show()
-        except:
-            QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
+        except Exception as E:
+            QtWidgets.QMessageBox.warning(Timerist, "Select a Note", f"{E}")
+        #except:
+            #QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
+
+    def dark_theme(self):
+        app.setStyleSheet(load_from_stylesheet("dark-theme.qss"))
+        self.color_theme_btn.setToolTip("Dark Mode: On")
+
+    def light_theme(self):
+        app.setStyleSheet("")
+        self.color_theme_btn.setToolTip("Dark Mode: Off")
+
+
+    def CreateNote(self):
+        create = CreateWindow(Timerist, database=self.NotesDatabase)
+        create.show()
+            
+
 
 
 # Create the necessary instances of our classes in order to run the GUI.    
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyle('Fusion')
     app.setPalette(QtWidgets.QApplication.style().standardPalette())
     id = QFontDatabase.addApplicationFont("Resource/Poppins-Medium.ttf")
     _fontstr = QFontDatabase.applicationFontFamilies(id)[0]
     _font = QFont(_fontstr, 10)
     app.setFont(_font)
-    app.setStyleSheet(load_from_stylesheet('light-theme.qss'))
+    clipboard=app.clipboard()
     sound_file = 'alarm.wav'
     sound = QtMultimedia.QSoundEffect()
     sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
