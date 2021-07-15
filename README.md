@@ -23,12 +23,12 @@ Table of contents
 Screenshots
 ===
 #### light and dark theme mode:
-<img src="images/main_light.png">
-<img src="images/main_dark.png">
-<img src="images/editor_light.png">
-<img src="images/editor_dark.png">
-<img src="images/add_todo_light.png">
-<img src="images/view_todo_light.png">
+<img src="github.com/DaEliteCoder/Timerist/images/main_light.png">
+<img src="github.com/DaEliteCoder/Timerist/images/main_dark.png">
+<img src="github.com/DaEliteCoder/Timerist/images/editor_light.png">
+<img src="github.com/DaEliteCoder/Timerist/images/editor_dark.png">
+<img src="github.com/DaEliteCoder/Timerist/images/add_todo_light.png">
+<img src="github.com/DaEliteCoder/Timerist/images/view_todo_light.png">
 
 Running the Application from Source
 ===
