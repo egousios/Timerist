@@ -58,5 +58,7 @@ Open up your terminal, and type or paste in the following:
 Notices
 ===
 
-<p align="center">Binaries and Executables will be realeased in the near future with the deployment of this app 😀.
-Liscences will be coming soon!</p>
+<p align="center">Binaries and Executables will be realeased in the near future with the deployment of this app 😀.</p>
+
+Liscence
+===
