@@ -62,4 +62,4 @@ Notices
 
 Liscence
 ===
-<a href="https://github.com/TheEliteCoder1/Timerist/blob/main/LICENSE">MIT</a>
+<a href="https://github.com/TheEliteCoder1/Timerist/blob/main/LICENSE">BSD 2-Clause "Simplified"</a>
