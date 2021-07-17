@@ -1,9 +1,6 @@
-2021-07-12 12:00:00 am
-Sample Task
-Completed ✅
-2021-07-15 12:36:00 pm
-Hello
-Incomplete ❌
 2021-07-15 12:36:00 pm
 Clean the dishes
 Incomplete ❌
+2021-07-17 12:55:00 pm
+Do my homework
+Completed ✅

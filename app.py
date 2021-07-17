@@ -7,8 +7,8 @@ A module that combines all other source files, and runs the application.
 from PyQt5 import QtCore, QtGui, QtWidgets, QtMultimedia, QtPrintSupport, QtWebEngineWidgets, Qsci
 from PyQt5.QtCore import *
 from PyQt5.QtMultimedia import *
-from PyQt5.QtGui import QCloseEvent, QDesktopServices, QFont, QIcon, QMovie, QFontDatabase, QPainter, QTextImageFormat, QTextListFormat, QTextTableFormat, QTextCursor
-from PyQt5.QtWidgets import QApplication, QFontDialog, QColorDialog, QFormLayout, QListWidgetItem, QSpacerItem, QTimeEdit, QTreeWidgetItem, QVBoxLayout, QHBoxLayout
+from PyQt5.QtGui import QCloseEvent, QCursor, QDesktopServices, QFont, QIcon, QMovie, QFontDatabase, QPainter, QPixmap, QTextImageFormat, QTextListFormat, QTextTableFormat, QTextCursor
+from PyQt5.QtWidgets import QApplication, QCommandLinkButton, QFontDialog, QColorDialog, QFormLayout, QLabel, QListWidgetItem, QSpacerItem, QTextEdit, QTimeEdit, QTreeWidgetItem, QVBoxLayout, QHBoxLayout
 from Resource.query import Tree
 from Resource.query import slice_per
 from Resource.query import read_contents_from_query
@@ -1278,7 +1278,12 @@ class Ui_Timerist(object):
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
         self.menubar.setObjectName("menubar")
         self.settings_menu = QtWidgets.QMenu("Settings", self.menubar)
+        self.Copyright_menu = QtWidgets.QMenu("Copyright", self.menubar)
+        self.view_Copyright = QtWidgets.QAction(text="View", parent=self.Copyright_menu)
+        self.view_Copyright.triggered.connect(self.CopyrightShow)
+        self.Copyright_menu.addAction(self.view_Copyright)
         self.menubar.addMenu(self.settings_menu)
+        self.menubar.addMenu(self.Copyright_menu)
         Timerist.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(Timerist)
         self.statusbar.setObjectName("statusbar")
@@ -1404,7 +1409,26 @@ class Ui_Timerist(object):
     def CreateNote(self):
         create = CreateWindow(Timerist, database=self.NotesDatabase)
         create.show()
-            
+
+    def CopyrightShow(self):
+        CopyrightWin = QtWidgets.QMainWindow(Timerist)
+        CopyrightWin.resize(500, 350)
+        CopyrightWin.setWindowTitle("Copyright")
+        CopyrightWin.setWindowIcon(QIcon("images/keys.png"))
+        layout = QVBoxLayout()
+        widget = QtWidgets.QWidget()
+        copyright_text = QTextEdit(widget)
+        copyright_text.setReadOnly(True)
+        copyright_text.setCursor(Qt.PointingHandCursor)
+        copyright_text.setText(open("LICENSE", "r").read())
+        copyright_font_id = QFontDatabase.addApplicationFont("Resource/Segoe UI.ttf")
+        copyright_text_font_family = QFontDatabase.applicationFontFamilies(copyright_font_id)[0]
+        copyright_text_font = QFont(copyright_text_font_family, 13)
+        copyright_text.setFont(copyright_text_font)
+        layout.addWidget(copyright_text)
+        widget.setLayout(layout)
+        CopyrightWin.setCentralWidget(widget)
+        CopyrightWin.show()
 
 
 
