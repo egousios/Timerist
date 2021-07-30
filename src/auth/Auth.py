@@ -167,6 +167,7 @@ class LoginWindow(QtWidgets.QDialog):
     def loginToApp(self):
         email = self.email_field.text()
         password = self.password_field.text()
+
         try:
             auth.sign_in_with_email_and_password(email,password)
             app.setFont(_font)
@@ -176,12 +177,13 @@ class LoginWindow(QtWidgets.QDialog):
             sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
             sound.setLoopCount(QtMultimedia.QSoundEffect.Infinite)
             sound.setVolume(50)
-            ui.setupUi(Timerist, sound, user=User(email,password))
+            ui.setupUi(Timerist, sound, email=email, password=password)
             Timerist.show()
-        except Exception as E:
+            self.setParent(Timerist)
+            self.destroy(True)
+        except:
             self.invalid.setVisible(True)
             self.retry.setVisible(True)
-            print(E)
 
 
     def Retry(self):
@@ -250,6 +252,19 @@ class RegisterWindow(QtWidgets.QDialog):
         self.retry3.setIconSize(self.tool_btn_size)
         self.retry3.clicked.connect(self.Retry)
         self.retry3.setVisible(False)
+
+        self.success = QLabel("Your account has sucessfully been created.")
+        self.success.setStyleSheet("color: green;")
+        self.success.setFont(f)
+        self.success.setVisible(False)
+
+        self.close_success_msg = QtWidgets.QToolButton()
+        self.close_success_msg.setStyleSheet("border: none;")
+        self.close_success_msg.setIcon(QIcon("../images/remove.png"))
+        self.close_success_msg.setIconSize(self.tool_btn_size)
+        self.close_success_msg.setToolTip("Dismiss")
+        self.close_success_msg.clicked.connect(self.CloseSuccessMsg)
+        self.close_success_msg.setVisible(False)
 
         # Widgets & Layouts for Resize
         self.formLayout = QFormLayout()
@@ -354,6 +369,7 @@ class RegisterWindow(QtWidgets.QDialog):
 
 
         self.invalidBox = QVBoxLayout()
+        self.section4 = QtWidgets.QWidget()
         self.section3 = QtWidgets.QWidget()
         self.section2 = QtWidgets.QWidget()
         self.section1 = QtWidgets.QWidget()
@@ -369,12 +385,16 @@ class RegisterWindow(QtWidgets.QDialog):
         self.horizontal.addWidget(self.invalid, 75)
         self.horizontal.addWidget(self.retry, 25)
         self.section1.setLayout(self.horizontal)
+        self.horizontal4 = QHBoxLayout()
+        self.horizontal4.addWidget(self.success, 75)
+        self.horizontal4.addWidget(self.close_success_msg, 25)
+        self.section4.setLayout(self.horizontal4)
+        self.invalidBox.addWidget(self.section4)
         self.invalidBox.addWidget(self.section3)
         self.invalidBox.addWidget(self.section2)
         self.invalidBox.addWidget(self.section1)
         self.invalidBoxWidget = QtWidgets.QWidget()
         self.invalidBoxWidget.setLayout(self.invalidBox)
-
         self.boxLayout.addWidget(self.groupWidget)
         self.boxLayout.addWidget(self.invalidBoxWidget)
         self.boxLayout.addWidget(self.buttonBox)
@@ -392,7 +412,9 @@ class RegisterWindow(QtWidgets.QDialog):
                         auth.create_user_with_email_and_password(email,password)
                         try:
                             os.mkdir(f"../users/{email}")
-                            os.system(f"cd ../users/{email} && mkdir database && powershell Out-File -FilePath data.txt")
+                            os.system(f"""cd ../users/{email} && mkdir database && python -c "file = open('data.txt', 'a').close()" """)
+                            self.success.setVisible(True)
+                            self.close_success_msg.setVisible(True)
                         except:
                             pass
                     except:
@@ -403,7 +425,9 @@ class RegisterWindow(QtWidgets.QDialog):
                     auth.create_user_with_email_and_password(email,password)
                     try:
                         os.mkdir(f"../users/{email}")
-                        os.system(f"cd ../users/{email} && mkdir database && powershell Out-File -FilePath data.txt")
+                        os.system(f"""cd ../users/{email} && mkdir database && python -c "file = open('data.txt', 'a').close()" """)
+                        self.success.setVisible(True)
+                        self.close_success_msg.setVisible(True)
                     except:
                         pass
                 except:
@@ -414,7 +438,9 @@ class RegisterWindow(QtWidgets.QDialog):
                 auth.create_user_with_email_and_password(email,password)
                 try:
                     os.mkdir(f"../users/{email}")
-                    os.system(f"cd ../users/{email} && mkdir database && powershell Out-File -FilePath data.txt")
+                    os.system(f"""cd ../users/{email} && mkdir database && python -c "file = open('data.txt', 'a').close()" """)
+                    self.success.setVisible(True)
+                    self.close_success_msg.setVisible(True)
                 except:
                     pass
             except:
@@ -431,6 +457,10 @@ class RegisterWindow(QtWidgets.QDialog):
         self.retry.setVisible(False)
         self.retry2.setVisible(False)
         self.retry3.setVisible(False)
+
+    def CloseSuccessMsg(self):
+        self.success.setVisible(False)
+        self.close_success_msg.setVisible(False)
 
     def loginWin(self):
         login = LoginWindow()

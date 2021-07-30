@@ -25,6 +25,11 @@ import qdarkgraystyle
 import qtwidgets
 from qtwidgets import AnimatedToggle
 
+class User:
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
+
 class TabBar(QtWidgets.QTabBar):
     def tabSizeHint(self, index):
         s = QtWidgets.QTabBar.tabSizeHint(self, index)
@@ -236,8 +241,9 @@ class EditTodoTabs(QtWidgets.QWidget):
 
 
 class AddTodoForm(QtWidgets.QMainWindow):
-    def __init__(self, Parent, title, widget):
+    def __init__(self, Parent, title, widget, user):
         super().__init__(parent=Parent)
+        self.user = user
         self.wid = widget
         self.setFixedSize(485, 550)
         self.setWindowTitle(title)
@@ -320,7 +326,7 @@ class AddTodoForm(QtWidgets.QMainWindow):
         if len(self.lineEdit.text()) < 1:
             self.msg = QtWidgets.QMessageBox()
             self.msg.setWindowTitle("Error")
-            self.msg.setWindowIcon(QtGui.QIcon('images/icon.png'))
+            self.msg.setWindowIcon(QtGui.QIcon('../images/icon.png'))
             self.msg.setIcon(QtWidgets.QMessageBox.Warning)
             self.msg.setText("Your task must be at least 1 character.")
             self.msg.exec_()
@@ -331,13 +337,14 @@ class AddTodoForm(QtWidgets.QMainWindow):
                 "task":data[1],
                 "status":data[2],
             })
-            branch.save(branch.branches, id="all", path=f"../users/{USER}/data.txt")
+            branch.save(branch.branches, id="all", path=f"../users/{self.user}/data.txt")
             self.wid.addTopLevelItem(QTreeWidgetItem(data))
 
 
 class EditWindow(QtWidgets.QMainWindow):
-    def __init__(self, Parent, title, text, database=None):
+    def __init__(self, Parent, title, text, user=User("a", "b"), database=None):
         super().__init__(parent=Parent)
+        self.user = user
         self.resize(400, 400)
         self.setWindowTitle(f"{title}")
         self.title = title
@@ -355,13 +362,13 @@ class EditWindow(QtWidgets.QMainWindow):
         self.textEdit.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.tool_btn_size = QtCore.QSize(35, 35)
         self.pushButtonCreate = QtWidgets.QToolButton(self.widget)
-        self.pushButtonCreate.setIcon(QtGui.QIcon("images/add.png"))
+        self.pushButtonCreate.setIcon(QtGui.QIcon("../images/add.png"))
         self.pushButtonCreate.setToolTip("Create")
         self.pushButtonCreate.setIconSize(self.tool_btn_size)
         self.pushButtonCreate.setGeometry(QtCore.QRect(150, 360, 110, 30))
         self.pushButtonCreate.clicked.connect(self.createNote)
         self.pushButtonOpen = QtWidgets.QToolButton(self.widget)
-        self.pushButtonOpen.setIcon(QtGui.QIcon("images/open.png"))
+        self.pushButtonOpen.setIcon(QtGui.QIcon("../images/open.png"))
         self.pushButtonOpen.setToolTip("Open")
         self.pushButtonOpen.setIconSize(self.tool_btn_size)
         self.pushButtonOpen.setGeometry(QtCore.QRect(150, 360, 110, 30))
@@ -369,14 +376,14 @@ class EditWindow(QtWidgets.QMainWindow):
 
 
         self.pushButton = QtWidgets.QToolButton(self.widget)
-        self.pushButton.setIcon(QtGui.QIcon("images/save.png"))
+        self.pushButton.setIcon(QtGui.QIcon("../images/save.png"))
         self.pushButton.setToolTip("Save")
         self.pushButton.setIconSize(self.tool_btn_size)
         self.pushButton.setGeometry(QtCore.QRect(150, 360, 110, 30))
         self.pushButton.clicked.connect(self.save)
 
         self.pushButton2 = QtWidgets.QToolButton(self.widget)
-        self.pushButton2.setIcon(QtGui.QIcon("images/color.png"))
+        self.pushButton2.setIcon(QtGui.QIcon("../images/color.png"))
         self.pushButton2.setToolTip("Color")
         self.pushButton2.setIconSize(self.tool_btn_size)
         self.pushButton2.setGeometry(QtCore.QRect(250, 360, 110, 30))
@@ -396,37 +403,37 @@ class EditWindow(QtWidgets.QMainWindow):
         self.pushButton5.clicked.connect(lambda x: self.underline(True if x else False, self.pushButton5))
 
         self.pushButton6 = QtWidgets.QToolButton(self.widget)
-        self.pushButton6.setIcon(QtGui.QIcon("images/font.png"))
+        self.pushButton6.setIcon(QtGui.QIcon("../images/font.png"))
         self.pushButton6.setToolTip("Font")
         self.pushButton6.setIconSize(self.tool_btn_size)
         self.pushButton6.clicked.connect(self.FontChange)
 
         self.pushButton7 = QtWidgets.QToolButton(self.widget)
-        self.pushButton7.setIcon(QtGui.QIcon("images/left.png"))
+        self.pushButton7.setIcon(QtGui.QIcon("../images/left.png"))
         self.pushButton7.setToolTip("Align Left")
         self.pushButton7.setIconSize(self.tool_btn_size)
         self.pushButton7.clicked.connect(self.align_left)
 
         self.pushButton8 = QtWidgets.QToolButton(self.widget)
-        self.pushButton8.setIcon(QtGui.QIcon("images/center.png"))
+        self.pushButton8.setIcon(QtGui.QIcon("../images/center.png"))
         self.pushButton8.setToolTip("Align Center")
         self.pushButton8.setIconSize(self.tool_btn_size)
         self.pushButton8.clicked.connect(self.align_center)
 
         self.pushButton9 = QtWidgets.QToolButton(self.widget)
-        self.pushButton9.setIcon(QtGui.QIcon("images/right.png"))
+        self.pushButton9.setIcon(QtGui.QIcon("../images/right.png"))
         self.pushButton9.setToolTip("Align Right")
         self.pushButton9.setIconSize(self.tool_btn_size)
         self.pushButton9.clicked.connect(self.align_right)
 
         self.pushButton10 = QtWidgets.QToolButton(self.widget)
-        self.pushButton10.setIcon(QtGui.QIcon("images/justify.png"))
+        self.pushButton10.setIcon(QtGui.QIcon("../images/justify.png"))
         self.pushButton10.setToolTip("Align Justify")
         self.pushButton10.setIconSize(self.tool_btn_size)
         self.pushButton10.clicked.connect(self.align_justify)
 
         self.pushButton11 = QtWidgets.QToolButton(self.widget)
-        self.pushButton11.setIcon(QtGui.QIcon("images/highlight.png"))
+        self.pushButton11.setIcon(QtGui.QIcon("../images/highlight.png"))
         self.pushButton11.setToolTip("Highlight")
         self.pushButton11.setIconSize(self.tool_btn_size)
         self.pushButton11.clicked.connect(self.highlight)
@@ -440,25 +447,25 @@ class EditWindow(QtWidgets.QMainWindow):
 
         
         self.pushButton13 = QtWidgets.QToolButton(self.widget)
-        self.pushButton13.setIcon(QtGui.QIcon("images/number_list.png"))
+        self.pushButton13.setIcon(QtGui.QIcon("../images/number_list.png"))
         self.pushButton13.setToolTip("Numbered List")
         self.pushButton13.setIconSize(self.tool_btn_size)
         self.pushButton13.clicked.connect(self.numbered_list)
 
         self.pushButton14 = QtWidgets.QToolButton(self.widget)
-        self.pushButton14.setIcon(QtGui.QIcon("images/list.png"))
+        self.pushButton14.setIcon(QtGui.QIcon("../images/list.png"))
         self.pushButton14.setToolTip("Unordered List")
         self.pushButton14.setIconSize(self.tool_btn_size)
         self.pushButton14.clicked.connect(self.unordered_list)
 
         self.pushButton15 = QtWidgets.QToolButton(self.widget)
-        self.pushButton15.setIcon(QtGui.QIcon("images/table.png"))
+        self.pushButton15.setIcon(QtGui.QIcon("../images/table.png"))
         self.pushButton15.setToolTip("Insert Table")
         self.pushButton15.setIconSize(self.tool_btn_size)
         self.pushButton15.clicked.connect(self.table)
 
         self.pushButton16 = QtWidgets.QToolButton(self.widget)
-        self.pushButton16.setIcon(QtGui.QIcon("images/photo-icon.png"))
+        self.pushButton16.setIcon(QtGui.QIcon("../images/photo-icon.png"))
         self.pushButton16.setToolTip("Insert Image")
         self.pushButton16.setIconSize(self.tool_btn_size)
         self.pushButton16.clicked.connect(self.image)
@@ -475,7 +482,7 @@ class EditWindow(QtWidgets.QMainWindow):
         self.pushButton18.stateChanged.connect(self.change_line_wrap)
 
         self.pushButton20 = QtWidgets.QToolButton(self.widget)
-        self.pushButton20.setIcon(QtGui.QIcon("images/settings.png"))
+        self.pushButton20.setIcon(QtGui.QIcon("../images/settings.png"))
         self.pushButton20.setToolTip("Settings")
         self.pushButton20.setIconSize(self.tool_btn_size)
         self.pushButton20.clicked.connect(self.settings)
@@ -513,8 +520,8 @@ class EditWindow(QtWidgets.QMainWindow):
 
     def save(self):
         try:
-            file = open(f"../users/{USER}/database/{self.title}", 'w', encoding='utf-8').close()
-            with open(f"../users/{USER}/database/{self.title}", "w", encoding='utf-8') as f:
+            file = open(f"../users/{self.user}/database/{self.title}", 'w', encoding='utf-8').close()
+            with open(f"../users/{self.user}/database/{self.title}", "w", encoding='utf-8') as f:
                 f.write(self.textEdit.toHtml())
                 f.close()
             QtWidgets.QMessageBox.information(Timerist, "Saved!", f"Your changes were saved successfully.")
@@ -618,19 +625,17 @@ class EditWindow(QtWidgets.QMainWindow):
                 widget.setChecked(False)
 
     def align_left(self):
-        try:
-            cursor = self.textEdit.textCursor()
-            if cursor.hasSelection():
-                fmt = cursor.blockFormat()
-                fmt.setAlignment(Qt.AlignLeft)
-                cursor.mergeBlockFormat(fmt)
-            else:
-                fmt = cursor.blockFormat()
-                fmt.setAlignment(Qt.AlignLeft)
-                cursor.mergeBlockFormat(fmt)
-                self.textEdit.setTextCursor(cursor)
-        except Exception as E:
-            print(E)
+        cursor = self.textEdit.textCursor()
+        if cursor.hasSelection():
+            fmt = cursor.blockFormat()
+            fmt.setAlignment(Qt.AlignLeft)
+            cursor.mergeBlockFormat(fmt)
+        else:
+            fmt = cursor.blockFormat()
+            fmt.setAlignment(Qt.AlignLeft)
+            cursor.mergeBlockFormat(fmt)
+            self.textEdit.setTextCursor(cursor)
+
 
     def align_center(self):
         cursor = self.textEdit.textCursor()
@@ -704,7 +709,7 @@ class EditWindow(QtWidgets.QMainWindow):
     def unordered_list(self):
         self.unordered_list_win_config = QtWidgets.QDialog(self)
         self.unordered_list_win_config.resize(200, 200)
-        self.unordered_list_win_config.setWindowIcon(QtGui.QIcon("images/list.png"))
+        self.unordered_list_win_config.setWindowIcon(QtGui.QIcon("../images/list.png"))
         self.unordered_list_win_config.setWindowTitle("Insert Unordered List")
         formGroupBox = QtWidgets.QGroupBox("Bullet Type")
 
@@ -776,7 +781,7 @@ class EditWindow(QtWidgets.QMainWindow):
     def table(self):
         self.table_config_win = QtWidgets.QDialog(self)
         self.table_config_win.resize(200, 200)
-        self.table_config_win.setWindowIcon(QtGui.QIcon("images/table.png"))
+        self.table_config_win.setWindowIcon(QtGui.QIcon("../images/table.png"))
         self.table_config_win.setWindowTitle("Insert Table")
         formGroupBox = QtWidgets.QGroupBox("Configuration")
 
@@ -845,7 +850,7 @@ class EditWindow(QtWidgets.QMainWindow):
     def settings(self):
         self.settings_win = QtWidgets.QDialog(self)
         self.settings_win.resize(500, 400)
-        self.settings_win.setWindowIcon(QtGui.QIcon("images/settings.png"))
+        self.settings_win.setWindowIcon(QtGui.QIcon("../images/settings.png"))
         self.settings_win.setWindowTitle("Editor Settings")
 
         label_font = QtGui.QFont()
@@ -918,8 +923,8 @@ class EditWindow(QtWidgets.QMainWindow):
         msg_save = QtWidgets.QMessageBox.question(self, "Save Changes", "Would you like to save your changes?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
         if msg_save == QtWidgets.QMessageBox.Yes:
             try:
-                file = open(f"../users/{USER}/database/{self.title}", 'w', encoding='utf-8').close()
-                with open(f"../users/{USER}/database/{self.title}", "w", encoding='utf-8') as f:
+                file = open(f"../users/{self.user}/database/{self.title}", 'w', encoding='utf-8').close()
+                with open(f"../users/{self.user}/database/{self.title}", "w", encoding='utf-8') as f:
                     f.write(self.textEdit.toHtml())
                     f.close()
                 QtWidgets.QMessageBox.information(self, "Saved!", f"Your changes were saved successfully.")
@@ -930,15 +935,15 @@ class EditWindow(QtWidgets.QMainWindow):
 
     def createNote(self):
         if self.database != None:
-            create = CreateWindow(self, self.textEdit.toHtml(), database=self.database)
+            create = CreateWindow(self, self.textEdit.toHtml(), database=self.database, user=self.user)
             create.show()
         else:
-            create = CreateWindow(self, self.textEdit.toHtml())
+            create = CreateWindow(self, self.textEdit.toHtml(), user=self.user)
             create.show()
         
 
     def openNote(self):
-        self.openWin = OpenWindow(self, self.textEdit, winTitle=self)
+        self.openWin = OpenWindow(self, self.textEdit, winTitle=self, user=self.user)
         self.openWin.show()
 
     def isOpened(self):
@@ -968,8 +973,9 @@ class EditWindow(QtWidgets.QMainWindow):
 
 
 class CreateWindow(QtWidgets.QMainWindow):
-    def __init__(self, Parent, text=None, database=None):
+    def __init__(self, Parent, user, text=None, database=None):
         super().__init__(parent=Parent)
+        self.user = user
         self.setFixedSize(320, 150)
         self.setWindowTitle("New Note")
         self.text = text
@@ -986,7 +992,7 @@ class CreateWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.centralwidget)
 
     def save(self):
-        selected = f"../database/{self.lineEdit.text()}.html"
+        selected = f"../users/{self.user}/database/{self.lineEdit.text()}.html"
         if os.path.isfile(selected):
             QtWidgets.QMessageBox.critical(self, "Error!", "A note already exists with this title.")
         else:
@@ -1038,8 +1044,9 @@ class EmbedHtmlWindow(QtWidgets.QMainWindow):
 
 
 class ReadWindow(QtWidgets.QMainWindow):
-    def __init__(self, Parent, title, text):
+    def __init__(self, Parent, title, text, user):
         super().__init__(parent=Parent)
+        self.user = user
         self.resize(400, 400)
         self.title = title
         self.setWindowTitle(f"{title}")
@@ -1056,14 +1063,14 @@ class ReadWindow(QtWidgets.QMainWindow):
         self.textEdit.setText(text)
 
         self.pushButtonPrint = QtWidgets.QToolButton(self.centralwidget)
-        self.pushButtonPrint.setIcon(QtGui.QIcon("images/print.png"))
+        self.pushButtonPrint.setIcon(QtGui.QIcon("../images/print.png"))
         self.pushButtonPrint.setToolTip("Print")
         self.pushButtonPrint.setIconSize(self.tool_btn_size)
         self.pushButtonPrint.setGeometry(QtCore.QRect(150, 360, 110, 30))
         self.pushButtonPrint.clicked.connect(self.printDialog)
 
         self.pushButtonEmbed = QtWidgets.QToolButton(self.centralwidget)
-        self.pushButtonEmbed.setIcon(QtGui.QIcon("images/embed.png"))
+        self.pushButtonEmbed.setIcon(QtGui.QIcon("../images/embed.png"))
         self.pushButtonEmbed.setToolTip("Embed Html")
         self.pushButtonEmbed.setIconSize(self.tool_btn_size)
         self.pushButtonEmbed.setGeometry(QtCore.QRect(150, 360, 110, 30))
@@ -1085,12 +1092,13 @@ class ReadWindow(QtWidgets.QMainWindow):
         QtWidgets.QMessageBox.information(self, "Coming Soon...", "The functionality of printing out your notes is coming out in the future!")
 
     def HtmlDialog(self):
-        dialog = EmbedHtmlWindow(self, "Embed Html", self.textEdit, filename=f"../users/{USER}/database/{self.title}")
+        dialog = EmbedHtmlWindow(self, "Embed Html", self.textEdit, filename=f"../users/{self.user}/database/{self.title}")
         dialog.show()
 
 class OpenWindow(QtWidgets.QMainWindow):
-    def __init__(self, Parent, textTo, winTitle=None):
+    def __init__(self, Parent, textTo, user, winTitle=None):
         super().__init__(parent=Parent)
+        self.user = user
         self.setFixedSize(500, 500)
         self.setWindowTitle("Open A Note")
         self.to = textTo
@@ -1106,7 +1114,7 @@ class OpenWindow(QtWidgets.QMainWindow):
         self.listWidget = QtWidgets.QListWidget(self)
         self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.listWidget.setGeometry(QtCore.QRect(100, 100, 320, 200))
-        for root, dirs, files in os.walk(f"../users/{self.user.email}/database"):
+        for root, dirs, files in os.walk(f"../users/{self.user}/database"):
             for filename in files:
                 QtWidgets.QListWidgetItem(filename, self.listWidget)
         self.pushButton = QtWidgets.QPushButton("Open", self.centralwidget)
@@ -1119,8 +1127,8 @@ class OpenWindow(QtWidgets.QMainWindow):
         try:
             selected = [item.text() for item in self.listWidget.selectedItems()]
             selected_str = ", ".join(selected)
-            file = open(f"../users/{USER}/database/{selected_str}", "r", encoding="utf-8")
-            self.filename = f"../users/{USER}/database/{selected_str}"
+            file = open(f"../users/{self.user}/database/{selected_str}", "r", encoding="utf-8")
+            self.filename = f"../users/{self.user}/database/{selected_str}"
             data = file.read()
             file.close()
             self.to.setText(data)
@@ -1134,18 +1142,19 @@ class OpenWindow(QtWidgets.QMainWindow):
             self.opened = True
             self.destroy()
             return self.filename 
-        except:
-            QtWidgets.QMessageBox.warning(self, "Select a Note", "Please select a note to open.")
+        except Exception as E:
+            #QtWidgets.QMessageBox.warning(self, "Select a Note", "Please select a note to open.")
+            QtWidgets.QMessageBox.warning(self, "Select a Note", f"{E}")
 
     def isOpened(self):
         return self.opened
 
 
 class Ui_Timerist(object):
-    def setupUi(self, Timerist, sound, user):
+    def setupUi(self, Timerist, sound, email, password):
         Timerist.setObjectName("Timerist")
         Timerist.resize(650, 550)
-        Timerist.setWindowIcon(QtGui.QIcon('images/icon.png'))
+        Timerist.setWindowIcon(QtGui.QIcon('../images/icon.png'))
 
         self.TodoOptionsLayout = QHBoxLayout()
         self.TodoLayout = QVBoxLayout()
@@ -1159,8 +1168,8 @@ class Ui_Timerist(object):
         self.tool_btn_size = QtCore.QSize(400, 400)
         self.sound = sound
 
-        self.user = user
-        User = self.user
+        self.email = email
+        self.password = password
 
         font = QtGui.QFont()
         font.setPointSize(20)
@@ -1182,7 +1191,7 @@ class Ui_Timerist(object):
         self.NotesDatabase = QtWidgets.QListWidget(self.MainWidget)
         self.NotesDatabase.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.NotesDatabase.setGeometry(QtCore.QRect(100, 100, 320, 200))
-        for root, dirs, files in os.walk(f"../users/{self.user.email}/database"):
+        for root, dirs, files in os.walk(f"../users/{self.email}/database"):
             for filename in files:
                 QtWidgets.QListWidgetItem(filename, self.NotesDatabase)
 
@@ -1200,7 +1209,7 @@ class Ui_Timerist(object):
         self.open_note.clicked.connect(self.OpenNote)
         
 
-        file = open(f"../users/{self.user.email}/data.txt", "r", encoding='utf-8')
+        file = open(f"../users/{self.email}/data.txt", "r", encoding='utf-8')
         data = file.readlines()
         file.close()
         data = [line.replace('\n', '') for line in data]
@@ -1270,7 +1279,6 @@ class Ui_Timerist(object):
         self.statusbar = QtWidgets.QStatusBar(Timerist)
         self.statusbar.setObjectName("statusbar")
         Timerist.setStatusBar(self.statusbar)
-        return User
         self.retranslateUi(Timerist)
         QtCore.QMetaObject.connectSlotsByName(Timerist)
     
@@ -1284,15 +1292,22 @@ class Ui_Timerist(object):
         self.pushButton_2.clicked.connect(self.remove_todo)
 
     def add_todo(self):
-        add = AddTodoForm(Timerist, "Add Todo", self.treeWidget)
+        add = AddTodoForm(Timerist, "Add Todo", self.treeWidget, user=self.email)
         add.show()
 
     def remove_todo(self):
-        items = self.treeWidget.selectedItems()
-        for item in items:
-            item_text = [item.text(0), item.text(1), item.text(2)]
-            self.treeWidget.takeTopLevelItem(self.treeWidget.indexOfTopLevelItem(item))
-            delete_item_from_query(item_text, path='../data.txt')
+        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to delete this todo ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        if ask == QtWidgets.QMessageBox.Yes:
+            items = self.treeWidget.selectedItems()
+            if len(items) >= 0:
+                for item in items:
+                    item_text = [item.text(0), item.text(1), item.text(2)]
+                    self.treeWidget.takeTopLevelItem(self.treeWidget.indexOfTopLevelItem(item))
+                    delete_item_from_query(item_text, path=f'../users/{self.email}/data.txt')
+            else:
+                QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
+        else:
+            pass
 
     def update_todo(self):
         items = self.treeWidget.selectedItems()
@@ -1300,7 +1315,7 @@ class Ui_Timerist(object):
             item_text_prev = [item.text(0), item.text(1), item.text(2)]
             item.setText(2, "Completed ✅")
             item_text_new = [item.text(0), item.text(1), item.text(2)]
-            change_item_from_query(item_text_prev, item_text_new, '../data.txt')
+            change_item_from_query(item_text_prev, item_text_new, f'../users/{self.email}/data.txt')
 
     def view_todo(self):
         items = self.treeWidget.selectedItems()
@@ -1332,11 +1347,11 @@ class Ui_Timerist(object):
                     edit_todo_win.show()
 
     def open(self):
-        self.openWin = OpenWindow(Timerist, self.textEdit)
+        self.openWin = OpenWindow(Timerist, self.textEdit, user=self.email)
         self.openWin.show()
 
     def Save(self):
-        save = CreateWindow(Timerist, self.textEdit.toHtml())
+        save = CreateWindow(Timerist, self.textEdit.toHtml(), user=self.email)
         save.show()
 
     def save_changes(self):
@@ -1350,35 +1365,42 @@ class Ui_Timerist(object):
             QtWidgets.QMessageBox.warning(Timerist, "Saving Error", "Please open an existing note to save your changes.")
 
     def remove(self):
-        for item in self.NotesDatabase.selectedItems():
-            self.NotesDatabase.takeItem(self.NotesDatabase.row(item))
-            os.remove(f"../database/{item.text()}")
+        items = []
+        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to delete this note ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        if ask == QtWidgets.QMessageBox.Yes:
+            for item in self.NotesDatabase.selectedItems():
+                items.append(item)
+                if len(items) >= 1:
+                    self.NotesDatabase.takeItem(self.NotesDatabase.row(item))
+                    os.remove(f"../users/{self.email}/database/{item.text()}")
+                else:
+                    QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
+        else:
+            pass
 
     def edit(self):
         try:
             selected = [item.text() for item in self.NotesDatabase.selectedItems()]
             selected_str = ", ".join(selected)
-            file = open(f"../users/{USER}/database/{selected_str}", "r", encoding='utf-8')
+            file = open(f"../users/{self.email}/database/{selected_str}", "r", encoding='utf-8')
             data = file.read()
             file.close()
-            edit_window = EditWindow(Timerist, f"{selected_str}", f"{data}", database=self.NotesDatabase)
+            edit_window = EditWindow(Timerist, f"{selected_str}", f"{data}", database=self.NotesDatabase, user=self.email)
             edit_window.show()
-        except Exception as E:
+        except:
             QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
 
     def OpenNote(self):
         try:
             selected = [item.text() for item in self.NotesDatabase.selectedItems()]
             selected_str = ", ".join(selected)
-            file = open(f"../users/{USER}/database/{selected_str}", "r", encoding='utf-8')
+            file = open(f"../users/{self.email}/database/{selected_str}", "r", encoding='utf-8')
             data = file.read()
             file.close()
-            read_window = ReadWindow(Timerist, f"{selected_str}", text=data)
+            read_window = ReadWindow(Timerist, f"{selected_str}", text=data, user=self.email)
             read_window.show()
         except Exception as E:
-            QtWidgets.QMessageBox.warning(Timerist, "Select a Note", f"{E}")
-        #except:
-            #QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
+            QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
 
     def dark_theme(self):
         app.setStyleSheet(load_from_stylesheet("../dark-theme.qss"))
@@ -1390,21 +1412,21 @@ class Ui_Timerist(object):
 
 
     def CreateNote(self):
-        create = CreateWindow(Timerist, database=self.NotesDatabase)
+        create = CreateWindow(Timerist, database=self.NotesDatabase, user=self.email)
         create.show()
 
     def CopyrightShow(self):
         CopyrightWin = QtWidgets.QMainWindow(Timerist)
         CopyrightWin.resize(500, 350)
         CopyrightWin.setWindowTitle("Copyright")
-        CopyrightWin.setWindowIcon(QIcon("images/keys.png"))
+        CopyrightWin.setWindowIcon(QIcon("../images/keys.png"))
         layout = QVBoxLayout()
         widget = QtWidgets.QWidget()
         copyright_text = QTextEdit(widget)
         copyright_text.setReadOnly(True)
         copyright_text.setCursor(Qt.PointingHandCursor)
-        copyright_text.setText(open("LICENSE", "r").read())
-        copyright_font_id = QFontDatabase.addApplicationFont("backend/Segoe UI.ttf")
+        copyright_text.setText(open("../LICENSE", "r").read())
+        copyright_font_id = QFontDatabase.addApplicationFont("../backend/Segoe UI.ttf")
         copyright_text_font_family = QFontDatabase.applicationFontFamilies(copyright_font_id)[0]
         copyright_text_font = QFont(copyright_text_font_family, 13)
         copyright_text.setFont(copyright_text_font)
@@ -1417,4 +1439,3 @@ app = QtWidgets.QApplication(sys.argv)
 Timerist = QtWidgets.QMainWindow()
 Timerist.setObjectName("Timerist")
 ui = Ui_Timerist()
-#USER = ui.setupUi()
