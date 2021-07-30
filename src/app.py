@@ -21,7 +21,6 @@ from backend.time import days_in_between, StopWatch, get_current_time
 from datetime import datetime
 import os
 import sys
-import qdarkgraystyle
 import qtwidgets
 from qtwidgets import AnimatedToggle
 
