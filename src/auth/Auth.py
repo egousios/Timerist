@@ -4,6 +4,7 @@ import os
 import subprocess
 sys.path.insert(0, "../")
 from app import *
+from platforms import executePlatformCompatibleAuthCMD
 import pyrebase
 
 firebaseConfig = {
@@ -140,7 +141,14 @@ class LoginWindow(QtWidgets.QDialog):
         f = f
         f.setPointSize(12)
         self.registerLbl.setFont(f)
-        self.registerBtn = QCommandLinkButton("Sign Up")
+        self.registerBtn = QtWidgets.QToolButton()
+        self.registerBtn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.registerBtn.setIcon(QIcon("../images/right-arrow-light.png"))
+        self.registerBtn.setIconSize(self.tool_btn_size)
+        self.registerBtn.setText("Sign Up")
+        self.registerBtn.setStyleSheet("QToolButton {border-radius: 5px; background-color: #28a745; color: white;} QToolButton:hover {background-color: #218f3a;}")
+        self.registerBtn.setFont(btnfont)
+        self.registerBtn.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
         self.registerBtn.setMaximumHeight(50)
         self.registerBtn.clicked.connect(self.registerWin)
 
@@ -167,7 +175,6 @@ class LoginWindow(QtWidgets.QDialog):
     def loginToApp(self):
         email = self.email_field.text()
         password = self.password_field.text()
-
         try:
             auth.sign_in_with_email_and_password(email,password)
             app.setFont(_font)
@@ -180,11 +187,26 @@ class LoginWindow(QtWidgets.QDialog):
             ui.setupUi(Timerist, sound, email=email, password=password)
             Timerist.show()
             self.setParent(Timerist)
-            self.destroy(True)
+            self.destroy()
         except:
             self.invalid.setVisible(True)
             self.retry.setVisible(True)
 
+        # This is to check for errors in the code
+        '''
+        auth.sign_in_with_email_and_password(email,password)
+        app.setFont(_font)
+        clipboard=app.clipboard()
+        sound_file = '../alarm.wav'
+        sound = QtMultimedia.QSoundEffect()
+        sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
+        sound.setLoopCount(QtMultimedia.QSoundEffect.Infinite)
+        sound.setVolume(50)
+        ui.setupUi(Timerist, sound, email=email, password=password)
+        Timerist.show()
+        self.setParent(Timerist)
+        self.destroy(True)
+        '''
 
     def Retry(self):
         self.email_field.setText("")
@@ -356,7 +378,14 @@ class RegisterWindow(QtWidgets.QDialog):
         f = f
         f.setPointSize(12)
         self.loginLbl.setFont(f)
-        self.loginBtn = QCommandLinkButton("Login")
+        self.loginBtn = QtWidgets.QToolButton()
+        self.loginBtn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.loginBtn.setIcon(QIcon("../images/right-arrow-light.png"))
+        self.loginBtn.setIconSize(self.tool_btn_size)
+        self.loginBtn.setText("Login")
+        self.loginBtn.setStyleSheet("QToolButton {border-radius: 5px; background-color: #dc3545; color: white;} QToolButton:hover {background-color: #c42d3c;}")
+        self.loginBtn.setFont(btnfont)
+        self.loginBtn.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
         self.loginBtn.setMaximumHeight(50)
         self.loginBtn.clicked.connect(self.loginWin)
 
@@ -412,9 +441,11 @@ class RegisterWindow(QtWidgets.QDialog):
                         auth.create_user_with_email_and_password(email,password)
                         try:
                             os.mkdir(f"../users/{email}")
-                            os.system(f"""cd ../users/{email} && mkdir database && python -c "file = open('data.txt', 'a').close()" """)
+                            executePlatformCompatibleAuthCMD(email)
                             self.success.setVisible(True)
                             self.close_success_msg.setVisible(True)
+                            self.giveToLogin(self)
+                            self.destroy(True)
                         except:
                             pass
                     except:
@@ -425,9 +456,11 @@ class RegisterWindow(QtWidgets.QDialog):
                     auth.create_user_with_email_and_password(email,password)
                     try:
                         os.mkdir(f"../users/{email}")
-                        os.system(f"""cd ../users/{email} && mkdir database && python -c "file = open('data.txt', 'a').close()" """)
+                        executePlatformCompatibleAuthCMD(email)
                         self.success.setVisible(True)
                         self.close_success_msg.setVisible(True)
+                        self.giveToLogin(self)
+                        self.destroy(True)
                     except:
                         pass
                 except:
@@ -438,9 +471,11 @@ class RegisterWindow(QtWidgets.QDialog):
                 auth.create_user_with_email_and_password(email,password)
                 try:
                     os.mkdir(f"../users/{email}")
-                    os.system(f"""cd ../users/{email} && mkdir database && python -c "file = open('data.txt', 'a').close()" """)
+                    executePlatformCompatibleAuthCMD(email)
                     self.success.setVisible(True)
                     self.close_success_msg.setVisible(True)
+                    self.giveToLogin(self)
+                    self.destroy(True)
                 except:
                     pass
             except:
@@ -465,6 +500,11 @@ class RegisterWindow(QtWidgets.QDialog):
     def loginWin(self):
         login = LoginWindow()
         login.exec_()
+
+    def giveToLogin(self, child):
+        login = LoginWindow()
+        child.setParent(login)
+        login.show()
 
 def run():
     app.setPalette(QtWidgets.QApplication.style().standardPalette())

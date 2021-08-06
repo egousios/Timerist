@@ -124,6 +124,17 @@ def edit_item(item_to_edit, date, todo, status, path):
                 file.write(f"{elem}\n")
         file.close()
 
+def is_item(item_to_edit, path):
+    file = open(f"{path}", "r", encoding='utf-8')
+    data = file.readlines()
+    file.close()
+    data = [line.replace('\n', '') for line in data]
+    desired_lines = data[0::1]
+    fov = slice_per(desired_lines, 3)
+    if item_to_edit in fov:
+        return True
+    return False
+
 
 
 def fetch_sorted_todos(path, fetchType):

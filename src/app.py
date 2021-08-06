@@ -7,8 +7,8 @@ A module that combines all other source files, and runs the application.
 from PyQt5 import QtCore, QtGui, QtWidgets, QtMultimedia, QtPrintSupport, QtWebEngineWidgets, Qsci
 from PyQt5.QtCore import *
 from PyQt5.QtMultimedia import *
-from PyQt5.QtGui import QCloseEvent, QCursor, QDesktopServices, QFont, QIcon, QMovie, QFontDatabase, QPainter, QPixmap, QTextImageFormat, QTextListFormat, QTextTableFormat, QTextCursor
-from PyQt5.QtWidgets import QApplication, QCommandLinkButton, QFontDialog, QColorDialog, QFormLayout, QLabel, QListWidgetItem, QSpacerItem, QTextEdit, QTimeEdit, QTreeWidgetItem, QVBoxLayout, QHBoxLayout
+from PyQt5.QtGui import QCloseEvent, QCursor, QDesktopServices, QFont, QIcon, QKeySequence, QMovie, QFontDatabase, QPainter, QPixmap, QTextImageFormat, QTextListFormat, QTextTableFormat, QTextCursor
+from PyQt5.QtWidgets import QAbstractItemView, QAction, QApplication, QCommandLinkButton, QFontDialog, QColorDialog, QFormLayout, QLabel, QListWidgetItem, QSpacerItem, QTextEdit, QTimeEdit, QTreeWidgetItem, QVBoxLayout, QHBoxLayout
 from backend.query import Tree
 from backend.query import slice_per
 from backend.query import read_contents_from_query
@@ -17,6 +17,7 @@ from backend.query import change_item_from_query
 from backend.query import delete_item_from_query
 from backend.query import edit_item
 from backend.query import return_contents_from_query
+from backend.query import is_item
 from backend.time import days_in_between, StopWatch, get_current_time
 from datetime import datetime
 import os
@@ -28,6 +29,17 @@ class User:
     def __init__(self, email, password):
         self.email = email
         self.password = password
+
+class CollapseButton(QtWidgets.QPushButton):
+    def __init__(self, parent=None):
+        super(CollapseButton, self).__init__(parent)
+        self.setIcon(QtGui.QIcon("../images/left-arrow.png"))
+
+    def mouseReleaseEvent(self, event):
+        super(CollapseButton, self).mouseReleaseEvent(event)
+        self.setIcon(
+            QtGui.QIcon("../images/right-arrow.png" if self.isChecked() else "../images/left-arrow.png")
+        )
 
 class TabBar(QtWidgets.QTabBar):
     def tabSizeHint(self, index):
@@ -282,6 +294,7 @@ class AddTodoForm(QtWidgets.QMainWindow):
         self.taskLabel = QtWidgets.QLabel(self.centralwidget)
         self.taskLabel.setGeometry(QtCore.QRect(85, 410, 411, 51))
         self.lineEdit = QtWidgets.QLineEdit(self)
+        self.lineEdit.setObjectName("line")
         self.lineEdit.setGeometry(QtCore.QRect(30, 420, 411, 31))
         self.lineEdit.returnPressed.connect(self.taskUpdate)
         self.pushButton = QtWidgets.QPushButton(self)
@@ -322,29 +335,32 @@ class AddTodoForm(QtWidgets.QMainWindow):
         date = self.datetime.selectedDate().toString("yyyy-MM-dd")
         time = self.timeEdit.time().toString("hh:mm:ss a")
         date_and_time = f"{date} {time}"
-        if len(self.lineEdit.text()) < 1:
-            self.msg = QtWidgets.QMessageBox()
-            self.msg.setWindowTitle("Error")
-            self.msg.setWindowIcon(QtGui.QIcon('../images/icon.png'))
-            self.msg.setIcon(QtWidgets.QMessageBox.Warning)
-            self.msg.setText("Your task must be at least 1 character.")
-            self.msg.exec_()
-        else:
-            data = [f'{date_and_time}', f'{self.lineEdit.text()}', "Incomplete ❌"]
+        data = [f'{date_and_time}', f'{self.lineEdit.text()}', "Incomplete ❌"]
+        if len(self.lineEdit.text()) > 1 and is_item(data, f"../users/{self.user}/data.txt") == False:
             branch = Tree(branches={
-                "end_time":data[0],
-                "task":data[1],
-                "status":data[2],
-            })
+                    "end_time":data[0],
+                    "task":data[1],
+                    "status":data[2],
+                })
             branch.save(branch.branches, id="all", path=f"../users/{self.user}/data.txt")
             self.wid.addTopLevelItem(QTreeWidgetItem(data))
+        elif len(self.lineEdit.text()) < 1:
+                self.msg = QtWidgets.QMessageBox()
+                self.msg.setWindowTitle("Error")
+                self.msg.setWindowIcon(QtGui.QIcon('../images/icon.png'))
+                self.msg.setIcon(QtWidgets.QMessageBox.Warning)
+                self.msg.setText("Your task must be at least 1 character.")
+                self.msg.exec_()
+        elif is_item(data, f"../users/{self.user}/data.txt") == True:
+            QtWidgets.QMessageBox.critical(self, "Error!", "A todo already exists with this title.")
+
 
 
 class EditWindow(QtWidgets.QMainWindow):
     def __init__(self, Parent, title, text, user=User("a", "b"), database=None):
         super().__init__(parent=Parent)
         self.user = user
-        self.resize(400, 400)
+        self.resize(500, 400)
         self.setWindowTitle(f"{title}")
         self.title = title
         self.database = database
@@ -365,18 +381,20 @@ class EditWindow(QtWidgets.QMainWindow):
         self.pushButtonCreate.setToolTip("Create")
         self.pushButtonCreate.setIconSize(self.tool_btn_size)
         self.pushButtonCreate.setGeometry(QtCore.QRect(150, 360, 110, 30))
-        self.pushButtonCreate.clicked.connect(self.createNote)
+        self.pushButtonCreate.clicked.connect(self.createdocument)
         self.pushButtonOpen = QtWidgets.QToolButton(self.widget)
         self.pushButtonOpen.setIcon(QtGui.QIcon("../images/open.png"))
         self.pushButtonOpen.setToolTip("Open")
+        self.pushButtonOpen.setShortcut("Ctrl+O")
         self.pushButtonOpen.setIconSize(self.tool_btn_size)
         self.pushButtonOpen.setGeometry(QtCore.QRect(150, 360, 110, 30))
-        self.pushButtonOpen.clicked.connect(self.openNote)
+        self.pushButtonOpen.clicked.connect(self.opendocument)
 
 
         self.pushButton = QtWidgets.QToolButton(self.widget)
         self.pushButton.setIcon(QtGui.QIcon("../images/save.png"))
         self.pushButton.setToolTip("Save")
+        self.pushButton.setShortcut("Ctrl+S")
         self.pushButton.setIconSize(self.tool_btn_size)
         self.pushButton.setGeometry(QtCore.QRect(150, 360, 110, 30))
         self.pushButton.clicked.connect(self.save)
@@ -525,7 +543,7 @@ class EditWindow(QtWidgets.QMainWindow):
                 f.close()
             QtWidgets.QMessageBox.information(Timerist, "Saved!", f"Your changes were saved successfully.")
         except:
-            QtWidgets.QMessageBox.warning(Timerist, "Saving Error", "Please open an existing note to save your changes.")
+            QtWidgets.QMessageBox.warning(Timerist, "Saving Error", "Please open an existing document to save your changes.")
 
 
     def color_change(self):
@@ -928,11 +946,11 @@ class EditWindow(QtWidgets.QMainWindow):
                     f.close()
                 QtWidgets.QMessageBox.information(self, "Saved!", f"Your changes were saved successfully.")
             except:
-                QtWidgets.QMessageBox.warning(self, "Saving Error", "Please open an existing note to save your changes.")
+                QtWidgets.QMessageBox.warning(self, "Saving Error", "Please open an existing document to save your changes.")
         else:
             pass
 
-    def createNote(self):
+    def createdocument(self):
         if self.database != None:
             create = CreateWindow(self, self.textEdit.toHtml(), database=self.database, user=self.user)
             create.show()
@@ -941,7 +959,7 @@ class EditWindow(QtWidgets.QMainWindow):
             create.show()
         
 
-    def openNote(self):
+    def opendocument(self):
         self.openWin = OpenWindow(self, self.textEdit, winTitle=self, user=self.user)
         self.openWin.show()
 
@@ -972,17 +990,17 @@ class EditWindow(QtWidgets.QMainWindow):
 
 
 class CreateWindow(QtWidgets.QMainWindow):
-    def __init__(self, Parent, user, text=None, database=None):
+    def __init__(self, Parent, text=None, database=None, user=None):
         super().__init__(parent=Parent)
         self.user = user
         self.setFixedSize(320, 150)
-        self.setWindowTitle("New Note")
+        self.setWindowTitle("New document")
         self.text = text
         self.database = database
         self.centralwidget = QtWidgets.QWidget(self)
-        self.lineEdit = QtWidgets.QLineEdit("Note Title", self.centralwidget)
+        self.lineEdit = QtWidgets.QLineEdit("Document Title", self.centralwidget)
+        self.lineEdit.setObjectName("line")
         self.lineEdit.setGeometry(20, 20, 280, 60)
-        self.lineEdit.setObjectName("saveNoteTitle")
         self.font = QFont("Times", 12)
         self.lineEdit.setFont(self.font)
         self.pushButton = QtWidgets.QPushButton("Create", self.centralwidget)
@@ -993,7 +1011,7 @@ class CreateWindow(QtWidgets.QMainWindow):
     def save(self):
         selected = f"../users/{self.user}/database/{self.lineEdit.text()}.html"
         if os.path.isfile(selected):
-            QtWidgets.QMessageBox.critical(self, "Error!", "A note already exists with this title.")
+            QtWidgets.QMessageBox.critical(self, "Error!", "A document already exists with this title.")
         else:
             with open(selected, "a", encoding='utf-8') as f:
                 f.write(" ")
@@ -1088,7 +1106,7 @@ class ReadWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(scrollWidget)
 
     def printDialog(self):
-        QtWidgets.QMessageBox.information(self, "Coming Soon...", "The functionality of printing out your notes is coming out in the future!")
+        QtWidgets.QMessageBox.information(self, "Coming Soon...", "The functionality of printing out your documents is coming out in the future!")
 
     def HtmlDialog(self):
         dialog = EmbedHtmlWindow(self, "Embed Html", self.textEdit, filename=f"../users/{self.user}/database/{self.title}")
@@ -1099,7 +1117,7 @@ class OpenWindow(QtWidgets.QMainWindow):
         super().__init__(parent=Parent)
         self.user = user
         self.setFixedSize(500, 500)
-        self.setWindowTitle("Open A Note")
+        self.setWindowTitle("Open A Document")
         self.to = textTo
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
@@ -1109,7 +1127,7 @@ class OpenWindow(QtWidgets.QMainWindow):
         font = QtGui.QFont()
         font.setPointSize(20)
         self.label.setFont(font)
-        self.label.setText("Notes")
+        self.label.setText("Documents: ")
         self.listWidget = QtWidgets.QListWidget(self)
         self.listWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.listWidget.setGeometry(QtCore.QRect(100, 100, 320, 200))
@@ -1141,9 +1159,8 @@ class OpenWindow(QtWidgets.QMainWindow):
             self.opened = True
             self.destroy()
             return self.filename 
-        except Exception as E:
-            #QtWidgets.QMessageBox.warning(self, "Select a Note", "Please select a note to open.")
-            QtWidgets.QMessageBox.warning(self, "Select a Note", f"{E}")
+        except:
+            QtWidgets.QMessageBox.warning(self, "Select a document", "Please select a document to open.")
 
     def isOpened(self):
         return self.opened
@@ -1158,13 +1175,15 @@ class Ui_Timerist(object):
         self.TodoOptionsLayout = QHBoxLayout()
         self.TodoLayout = QVBoxLayout()
 
-        self.NotesOptionsLayout = QHBoxLayout()
-        self.NotesLayout = QVBoxLayout()
+        self.documentsOptionsLayout = QHBoxLayout()
+        self.documentsLayout = QVBoxLayout()
 
         self.MainWidget = QtWidgets.QWidget()
 
         self.opened = False
         self.tool_btn_size = QtCore.QSize(400, 400)
+        self.tool_btn_size_2 = QtCore.QSize(35, 35)
+        self.tool_btn_size_3 = QtCore.QSize(15, 15)
         self.sound = sound
 
         self.email = email
@@ -1177,45 +1196,56 @@ class Ui_Timerist(object):
         self.todo_label.setFont(font)
         self.todo_label.setText("To Do List: ")
 
-        self.notes_label = QtWidgets.QLabel(self.MainWidget)
-        self.notes_label.setGeometry(QtCore.QRect(100, 2, 241, 51))
-        self.notes_label.setFont(font)
-        self.notes_label.setText("Notes: ")
-
+        self.documents_label = QtWidgets.QLabel(self.MainWidget)
+        self.documents_label.setGeometry(QtCore.QRect(100, 2, 241, 51))
+        self.documents_label.setFont(font)
+        self.documents_label.setText("Documents: ")
         self.treeWidget = QtWidgets.QTreeWidget(self.MainWidget)
-        self.treeWidget.setGeometry(QtCore.QRect(20, 60, 360, 300))
+        self.treeWidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.treeWidget.setMinimumHeight(300)
         self.treeWidget.setObjectName("treeWidget")
         self.treeWidget.setHeaderLabels(["Date", "Task", "Status"])
+        self.fillTreeWidget()
 
-        self.NotesDatabase = QtWidgets.QListWidget(self.MainWidget)
-        self.NotesDatabase.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.NotesDatabase.setGeometry(QtCore.QRect(100, 100, 320, 200))
+
+        self.refresh = QtWidgets.QPushButton("Refresh")
+        self.refresh.setToolTip("Refresh Your Tasks")
+        self.refresh.clicked.connect(self.Refresh)
+
+        self.clear = QtWidgets.QPushButton("Clear")
+        self.clear.setToolTip("Clear Your Tasks")
+        self.clear.clicked.connect(self.Clear)
+
+        self.settings = QtWidgets.QToolButton(self.MainWidget)
+        self.settings.setIcon(QtGui.QIcon("../images/settings.png"))
+        self.settings.setToolTip("Settings")
+        self.settings.setIconSize(self.tool_btn_size_2)
+        self.settings.setGeometry(QtCore.QRect(150, 360, 110, 30))
+        self.settings.clicked.connect(self.SettingsWindow)
+
+        self.documentsDatabase = QtWidgets.QListWidget(self.MainWidget)
+        self.documentsDatabase.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.documentsDatabase.setMinimumHeight(300)
         for root, dirs, files in os.walk(f"../users/{self.email}/database"):
             for filename in files:
-                QtWidgets.QListWidgetItem(filename, self.NotesDatabase)
+                QtWidgets.QListWidgetItem(filename, self.documentsDatabase)
 
-        self.create_note = QtWidgets.QPushButton("Create", self.MainWidget)
-        self.create_note.setGeometry(QtCore.QRect(320, 320, 100, 30))
-        self.create_note.clicked.connect(self.CreateNote)
-        self.remove_note = QtWidgets.QPushButton("Remove", self.MainWidget)
-        self.remove_note.setGeometry(QtCore.QRect(100, 320, 100, 30))
-        self.remove_note.clicked.connect(self.remove)
-        self.edit_note = QtWidgets.QPushButton("Edit", self.MainWidget)
-        self.edit_note.setGeometry(QtCore.QRect(210, 320, 100, 30))
-        self.edit_note.clicked.connect(self.edit)
-        self.open_note = QtWidgets.QPushButton("Open", self.MainWidget)
-        self.open_note.setGeometry(QtCore.QRect(320, 320, 100, 30))
-        self.open_note.clicked.connect(self.OpenNote)
-        
-
-        file = open(f"../users/{self.email}/data.txt", "r", encoding='utf-8')
-        data = file.readlines()
-        file.close()
-        data = [line.replace('\n', '') for line in data]
-        desired_lines = data[0::1]
-        fov = slice_per(desired_lines, 3)
-        for e in fov:
-            self.treeWidget.addTopLevelItem(QTreeWidgetItem(e))
+        self.create_document = QtWidgets.QPushButton("Create", self.MainWidget)
+        self.create_document.setToolTip("Create A Document")
+        self.create_document.setGeometry(QtCore.QRect(320, 320, 100, 30))
+        self.create_document.clicked.connect(self.Createdocument)
+        self.remove_document = QtWidgets.QPushButton("Delete", self.MainWidget)
+        self.remove_document.setGeometry(QtCore.QRect(100, 320, 100, 30))
+        self.remove_document.setToolTip("Delete A Document")
+        self.remove_document.clicked.connect(self.remove)
+        self.edit_document = QtWidgets.QPushButton("Edit", self.MainWidget)
+        self.edit_document.setToolTip("Open In Editor")
+        self.edit_document.setGeometry(QtCore.QRect(210, 320, 100, 30))
+        self.edit_document.clicked.connect(self.edit)
+        self.open_document = QtWidgets.QPushButton("Export", self.MainWidget)
+        self.open_document.setToolTip("Print Or Embed")
+        self.open_document.setGeometry(QtCore.QRect(320, 320, 100, 30))
+        self.open_document.clicked.connect(self.Opendocument)
 
         self.pushButton = QtWidgets.QPushButton(self.MainWidget)
         self.pushButton.setGeometry(QtCore.QRect(20, 260, 83, 28))
@@ -1226,9 +1256,11 @@ class Ui_Timerist(object):
         self.pushButton_3 = QtWidgets.QPushButton(self.MainWidget)
         self.pushButton_3.setGeometry(QtCore.QRect(205, 260, 83, 28))
         self.pushButton_3.setText("Update")
+        self.pushButton_3.setToolTip("Update The Status")
         self.pushButton_4 = QtWidgets.QPushButton(self.MainWidget)
         self.pushButton_4.setGeometry(QtCore.QRect(295, 260, 83, 28))
         self.pushButton_4.setText("View")
+        self.pushButton_4.setToolTip("View the Timer")
         self.pushButton_3.clicked.connect(self.update_todo)
         self.pushButton_4.clicked.connect(self.view_todo)
         self.color_theme_btn = AnimatedToggle(checked_color="#4c5375")
@@ -1238,56 +1270,98 @@ class Ui_Timerist(object):
             lambda x: self.dark_theme() if x else self.light_theme()
         )
 
+        self.username = self.email.partition('@')[0]
+        self.usernameLabel = QLabel(f"Hello, {self.username}")
+        id = QFontDatabase.addApplicationFont("../backend/Poppins-Medium.ttf")
+        _fontstr = QFontDatabase.applicationFontFamilies(id)[0]
+        _font = QFont(_fontstr, 20)
+        self.usernameLabel.setFont(_font)
+
+        self.viewCopyright = QtWidgets.QToolButton(self.MainWidget)
+        self.viewCopyright.setIcon(QtGui.QIcon("../images/copyright.png"))
+        self.viewCopyright.setToolTip("View Copyright")
+        self.viewCopyright.setIconSize(self.tool_btn_size_2)
+        self.viewCopyright.setGeometry(QtCore.QRect(150, 360, 110, 30))
+        self.viewCopyright.clicked.connect(self.CopyrightShow)
+
+
         self.TodoOptionsLayout.addWidget(self.todo_label, alignment=Qt.AlignTop)
         self.TodoOptionsLayout.addWidget(self.pushButton, alignment=Qt.AlignLeft)
         self.TodoOptionsLayout.addWidget(self.pushButton_2, alignment=Qt.AlignLeft)
         self.TodoOptionsLayout.addWidget(self.pushButton_3, alignment=Qt.AlignLeft)
         self.TodoOptionsLayout.addWidget(self.pushButton_4, alignment=Qt.AlignLeft)
-        self.TodoOptionsLayout.addStretch(5)
+        self.TodoOptionsLayout.addWidget(self.refresh, alignment=Qt.AlignLeft)
+        self.TodoOptionsLayout.addWidget(self.clear, alignment=Qt.AlignLeft)
+        self.TodoOptionsLayout.addStretch(7)
+        self.TodoOptionsLayout.addWidget(self.usernameLabel, alignment=Qt.AlignRight)
         self.TodoOptionsLayout.addWidget(self.color_theme_btn, alignment=Qt.AlignRight)
+        self.TodoOptionsLayout.addWidget(self.settings, alignment=Qt.AlignRight)
+        self.TodoOptionsLayout.addWidget(self.viewCopyright, alignment=Qt.AlignRight)
         self.TodoOptionsLayout.addStretch()
         self.TodoLayout.addLayout(self.TodoOptionsLayout)
         self.TodoLayout.addWidget(self.treeWidget)
         self.TodoLayout.addStretch()
         # Newest Layout for MainWidget
-        self.NotesLayout.addLayout(self.TodoLayout)
-        self.NotesOptionsLayout.addWidget(self.notes_label, alignment=Qt.AlignTop)
-        self.NotesOptionsLayout.addWidget(self.create_note, alignment=Qt.AlignLeft)
-        self.NotesOptionsLayout.addWidget(self.remove_note, alignment=Qt.AlignLeft)
-        self.NotesOptionsLayout.addWidget(self.edit_note, alignment=Qt.AlignLeft)
-        self.NotesOptionsLayout.addWidget(self.open_note, alignment=Qt.AlignLeft)
-        self.NotesOptionsLayout.addStretch()
-        self.NotesLayout.addLayout(self.NotesOptionsLayout)
-        self.NotesLayout.addWidget(self.NotesDatabase)
-        self.MainWidget.setLayout(self.NotesLayout)
+        self.documentsLayout.addLayout(self.TodoLayout)
+        self.documentsOptionsLayout.addWidget(self.documents_label, alignment=Qt.AlignTop)
+        self.documentsOptionsLayout.addWidget(self.create_document, alignment=Qt.AlignLeft)
+        self.documentsOptionsLayout.addWidget(self.remove_document, alignment=Qt.AlignLeft)
+        self.documentsOptionsLayout.addWidget(self.edit_document, alignment=Qt.AlignLeft)
+        self.documentsOptionsLayout.addWidget(self.open_document, alignment=Qt.AlignLeft)
+        self.documentsOptionsLayout.addStretch()
+        self.documentsLayout.addLayout(self.documentsOptionsLayout)
+        self.documentsLayout.addWidget(self.documentsDatabase)
+        self.MainWidget.setLayout(self.documentsLayout)
         self.scrollWidget = QtWidgets.QScrollArea()
         self.scrollWidget.setWidget(self.MainWidget)
         self.scrollWidget.setWidgetResizable(True)
         Timerist.setCentralWidget(self.scrollWidget)
 
 
-        self.menubar = QtWidgets.QMenuBar(Timerist)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
-        self.menubar.setObjectName("menubar")
-        self.Copyright_menu = QtWidgets.QMenu("Copyright", self.menubar)
-        self.view_Copyright = QtWidgets.QAction(text="View", parent=self.Copyright_menu)
-        self.view_Copyright.triggered.connect(self.CopyrightShow)
-        self.Copyright_menu.addAction(self.view_Copyright)
-        self.menubar.addMenu(self.Copyright_menu)
-        Timerist.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(Timerist)
-        self.statusbar.setObjectName("statusbar")
-        Timerist.setStatusBar(self.statusbar)
+
         self.retranslateUi(Timerist)
         QtCore.QMetaObject.connectSlotsByName(Timerist)
+
+
+    def Clear(self):
+        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to delete all of your todos ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        if ask == QtWidgets.QMessageBox.Yes:
+            file=open(f"../users/{self.email}/data.txt", "w").close() # Erases all of the Data
+            self.treeWidget.clear()
+        else:
+            pass
     
+    def Refresh(self):
+        self.fillTreeWidget()
+
+    def fillTreeWidget(self):
+        self.treeWidget.clear()
+        file = open(f"../users/{self.email}/data.txt", "r", encoding='utf-8')
+        data = file.readlines()
+        file.close()
+        data = [line.replace('\n', '') for line in data]
+        desired_lines = data[0::1]
+        fov = slice_per(desired_lines, 3)
+        for e in fov:
+            if start_timer(e[0]) == 'yes' and e[2] == "Incomplete ❌": # Checks for overdue todos.
+                edit_item(e, e[0], e[1], 'Overdue ⌛', f"../users/{self.email}/data.txt")
+                Item = QTreeWidgetItem(e)
+                self.treeWidget.addTopLevelItem(Item)
+            else:
+                Item = QTreeWidgetItem(e)
+                self.treeWidget.addTopLevelItem(Item)
+
+    def SettingsWindow(self):
+        pass
 
     def retranslateUi(self, Timerist):
         _translate = QtCore.QCoreApplication.translate
         Timerist.setWindowTitle(_translate("Timerist", "Timerist"))
         self.pushButton.setText(_translate("Timerist", "Add"))
+        self.pushButton.setToolTip("Add A Task")
         self.pushButton.clicked.connect(self.add_todo)
         self.pushButton_2.setText(_translate("Timerist", "Remove"))
+        self.pushButton_2.setToolTip("Remove A Task")
         self.pushButton_2.clicked.connect(self.remove_todo)
 
     def add_todo(self):
@@ -1295,7 +1369,7 @@ class Ui_Timerist(object):
         add.show()
 
     def remove_todo(self):
-        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to delete this todo ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to delete these todo(s) ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
         if ask == QtWidgets.QMessageBox.Yes:
             items = self.treeWidget.selectedItems()
             if len(items) >= 0:
@@ -1304,7 +1378,7 @@ class Ui_Timerist(object):
                     self.treeWidget.takeTopLevelItem(self.treeWidget.indexOfTopLevelItem(item))
                     delete_item_from_query(item_text, path=f'../users/{self.email}/data.txt')
             else:
-                QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
+                QtWidgets.QMessageBox.warning(Timerist, "Select a document", "Please select a document so that an action can be completed.")
         else:
             pass
 
@@ -1312,9 +1386,18 @@ class Ui_Timerist(object):
         items = self.treeWidget.selectedItems()
         for item in items:
             item_text_prev = [item.text(0), item.text(1), item.text(2)]
-            item.setText(2, "Completed ✅")
-            item_text_new = [item.text(0), item.text(1), item.text(2)]
-            change_item_from_query(item_text_prev, item_text_new, f'../users/{self.email}/data.txt')
+            if item_text_prev[2] == "Incomplete ❌":
+                item.setText(2, "Completed ✅")
+                item_text_new = [item.text(0), item.text(1), item.text(2)]
+                change_item_from_query(item_text_prev, item_text_new, f'../users/{self.email}/data.txt')
+            elif item_text_prev[2] == "Overdue ⌛":
+                item.setText(2, "Completed ✅")
+                item_text_new = [item.text(0), item.text(1), item.text(2)]
+                change_item_from_query(item_text_prev, item_text_new, f'../users/{self.email}/data.txt')
+            elif item_text_prev[2] == "Completed ✅":
+                item.setText(2, "Incomplete ❌")
+                item_text_new = [item.text(0), item.text(1), item.text(2)]
+                change_item_from_query(item_text_prev, item_text_new, f'../users/{self.email}/data.txt')
 
     def view_todo(self):
         items = self.treeWidget.selectedItems()
@@ -1361,64 +1444,90 @@ class Ui_Timerist(object):
                 f.close()
             QtWidgets.QMessageBox.information(Timerist, "Saved!", f"Your changes were saved successfully.")
         except:
-            QtWidgets.QMessageBox.warning(Timerist, "Saving Error", "Please open an existing note to save your changes.")
+            QtWidgets.QMessageBox.warning(Timerist, "Saving Error", "Please open an existing document to save your changes.")
 
     def remove(self):
         items = []
-        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to delete this note ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to delete these document(s) ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
         if ask == QtWidgets.QMessageBox.Yes:
-            for item in self.NotesDatabase.selectedItems():
+            for item in self.documentsDatabase.selectedItems():
                 items.append(item)
                 if len(items) >= 1:
-                    self.NotesDatabase.takeItem(self.NotesDatabase.row(item))
+                    self.documentsDatabase.takeItem(self.documentsDatabase.row(item))
                     os.remove(f"../users/{self.email}/database/{item.text()}")
                 else:
-                    QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
+                    QtWidgets.QMessageBox.warning(Timerist, "Select a document", "Please select a document so that an action can be completed.")
         else:
             pass
 
     def edit(self):
         try:
-            selected = [item.text() for item in self.NotesDatabase.selectedItems()]
-            selected_str = ", ".join(selected)
-            file = open(f"../users/{self.email}/database/{selected_str}", "r", encoding='utf-8')
-            data = file.read()
-            file.close()
-            edit_window = EditWindow(Timerist, f"{selected_str}", f"{data}", database=self.NotesDatabase, user=self.email)
-            edit_window.show()
+            selected = [item.text() for item in self.documentsDatabase.selectedItems()]
+            for item in selected:
+                file = open(f"../users/{self.email}/database/{item}", "r", encoding='utf-8')
+                data = file.read()
+                file.close()
+                edit_window = EditWindow(Timerist, f"{item}", f"{data}", database=self.documentsDatabase, user=self.email)
+                edit_window.show()
         except:
-            QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
+            QtWidgets.QMessageBox.warning(Timerist, "Select a document", "Please select a document so that an action can be completed.")
 
-    def OpenNote(self):
-        try:
-            selected = [item.text() for item in self.NotesDatabase.selectedItems()]
-            selected_str = ", ".join(selected)
-            file = open(f"../users/{self.email}/database/{selected_str}", "r", encoding='utf-8')
+        # This is for code debugging
+        '''
+        selected = [item.text() for item in self.documentsDatabase.selectedItems()]
+        for item in selected:
+            file = open(f"../users/{self.email}/database/{item}", "r", encoding='utf-8')
             data = file.read()
             file.close()
-            read_window = ReadWindow(Timerist, f"{selected_str}", text=data, user=self.email)
+            edit_window = EditWindow(Timerist, f"{item}", f"{data}", database=self.documentsDatabase, user=self.email)
+            edit_window.show()
+        '''
+
+
+    def Opendocument(self):
+        try:
+            selected = [item.text() for item in self.documentsDatabase.selectedItems()]
+            for item in selected:
+                file = open(f"../users/{self.email}/database/{item}", "r", encoding='utf-8')
+                data = file.read()
+                file.close()
+                read_window = ReadWindow(Timerist, f"{item}", text=data, user=self.email)
+                read_window.show()
+        except:
+            QtWidgets.QMessageBox.warning(Timerist, "Select a document", "Please select a document so that an action can be completed.")
+
+        # Code debugging
+        '''
+        selected = [item.text() for item in self.documentsDatabase.selectedItems()]
+        print(selected)
+        for item in selected:
+            file = open(f"../users/{self.email}/database/{item}", "r", encoding='utf-8')
+            data = file.read()
+            file.close()
+            read_window = ReadWindow(Timerist, f"{item}", text=data, user=self.email)
             read_window.show()
-        except Exception as E:
-            QtWidgets.QMessageBox.warning(Timerist, "Select a Note", "Please select a note so that an action can be completed.")
+        '''
 
     def dark_theme(self):
+        # Loads the Dark Theme mode for the app
         app.setStyleSheet(load_from_stylesheet("../dark-theme.qss"))
         self.color_theme_btn.setToolTip("Dark Mode: On")
 
     def light_theme(self):
-        app.setStyleSheet("")
+        # Loads the Light Theme mode for the app
+        app.setStyleSheet(load_from_stylesheet("../light-theme.qss"))
         self.color_theme_btn.setToolTip("Dark Mode: Off")
 
 
-    def CreateNote(self):
-        create = CreateWindow(Timerist, database=self.NotesDatabase, user=self.email)
+    def Createdocument(self):
+        create = CreateWindow(Timerist, database=self.documentsDatabase, user=self.email)
         create.show()
 
     def CopyrightShow(self):
         CopyrightWin = QtWidgets.QMainWindow(Timerist)
         CopyrightWin.resize(500, 350)
         CopyrightWin.setWindowTitle("Copyright")
-        CopyrightWin.setWindowIcon(QIcon("../images/keys.png"))
+        CopyrightWin.setWindowIcon(QIcon("../images/copyright.png"))
         layout = QVBoxLayout()
         widget = QtWidgets.QWidget()
         copyright_text = QTextEdit(widget)
@@ -1435,6 +1544,8 @@ class Ui_Timerist(object):
         CopyrightWin.show()
 
 app = QtWidgets.QApplication(sys.argv)
+app.setStyle('Fusion')
+app.setStyleSheet(load_from_stylesheet('../light-theme.qss'))
 Timerist = QtWidgets.QMainWindow()
 Timerist.setObjectName("Timerist")
 ui = Ui_Timerist()
