@@ -19,11 +19,14 @@ from backend.query import edit_item
 from backend.query import return_contents_from_query
 from backend.query import is_item
 from backend.time import days_in_between, StopWatch, get_current_time
+from json_user_settings.editor import load_editor_settings
+from json_user_settings.editor import save_editor_settings
 from datetime import datetime
 import os
 import sys
 import qtwidgets
 from qtwidgets import AnimatedToggle
+import json
 
 class User:
     def __init__(self, email, password):
@@ -368,10 +371,31 @@ class EditWindow(QtWidgets.QMainWindow):
         self.layout = QHBoxLayout()
         self.layout2 = QVBoxLayout()
         self.widget = QtWidgets.QWidget(self)
+        self.editor_settings = load_editor_settings(f"../users/{self.user}/editor_settings.json")
         self.textEdit = QtWidgets.QTextEdit(self.widget)
         self.textEdit.setGeometry(QtCore.QRect(20, 20, 400, 350))
         self.textEdit.setObjectName("textEdit")
-        self.editor_background = None
+
+        if "'background-color'" in self.editor_settings:
+            color = self.editor_settings["'background-color'"]
+            ev = eval(color)
+            sheet = f"background-color: rgba{ev};"
+            self.textEdit.setStyleSheet(sheet)
+        elif "'background-image'" in self.editor_settings:
+            img = self.editor_settings["'background-image'"]
+            sheet = f"background-image: url({img});"
+            self.textEdit.setStyleSheet(sheet)
+        if "'save-on-close'" in self.editor_settings:
+            if eval(self.editor_settings["'save-on-close'"]) == True:
+                self.destroyed.connect(self.closeEvent)
+            elif eval(self.editor_settings["'save-on-close'"]) == False:
+                self.destroyed.connect(self.closeNoSave)
+
+        self.editor_bg_color_clicked = False
+        self.editor_bg_image_clicked = False
+        self.editor_save_on_close = True
+        self.bg_image_filename = None
+        self.bg_color = None  
         self.font = QFont("Times", 12)
         self.textEdit.setFont(self.font)
         self.textEdit.setText(text)
@@ -534,7 +558,6 @@ class EditWindow(QtWidgets.QMainWindow):
         scrollWidget.setWidget(self.widget)
         scrollWidget.setWidgetResizable(True)
         self.setCentralWidget(scrollWidget)
-        self.destroyed.connect(self.closeEvent)
 
     def save(self):
         try:
@@ -865,6 +888,9 @@ class EditWindow(QtWidgets.QMainWindow):
         else:
             self.textEdit.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
 
+    def closeNoSave(self, e):
+        self.destroy()
+
     def settings(self):
         self.settings_win = QtWidgets.QDialog(self)
         self.settings_win.resize(500, 400)
@@ -873,6 +899,8 @@ class EditWindow(QtWidgets.QMainWindow):
 
         label_font = QtGui.QFont()
         label_font.setPointSize(20)
+        detail_font = QtGui.QFont()
+        detail_font.setPointSize(15)
 
         tab_layout = QtWidgets.QVBoxLayout()
 
@@ -896,13 +924,22 @@ class EditWindow(QtWidgets.QMainWindow):
         background_field_label = QtWidgets.QLabel("Background")
         background_field_label.setFont(label_font)
 
-        theme_field_label = QtWidgets.QLabel("Color Theme")
-        theme_field_label.setFont(label_font)
+        selected_bg_label = QtWidgets.QLabel("Selected Background:")
+        selected_bg_label.setFont(detail_font)
 
         background_field_options_widget = QtWidgets.QWidget()
         background_field_options_layout = QHBoxLayout()
 
-        theme_field_options_widget = AnimatedToggle(checked_color="#3498DB", pulse_checked_color="#44FFB000")
+        
+        self.selected_bg_widget = QtWidgets.QLabel()
+        if not "'background-color'" in self.editor_settings:
+            self.selected_bg_widget.setText("(255,255,255)")
+            if not "'background-image'" in self.editor_settings:
+                self.selected_bg_widget.setText("(255,255,255)")
+            else:
+                self.selected_bg_widget.setText(eval(self.editor_settings["'background-image'"]))       
+        else:
+            self.selected_bg_widget.setText(eval(self.editor_settings["'background-color'"]))
         #theme_field_options_widget.stateChanged.connect(self.settings_change_theme)
 
         background_field_option1 = QtWidgets.QPushButton("Color")
@@ -917,7 +954,7 @@ class EditWindow(QtWidgets.QMainWindow):
         background_field_options_widget.setLayout(background_field_options_layout)
 
         apperance_form_layout.addRow(background_field_label, background_field_options_widget)
-        apperance_form_layout.addRow(theme_field_label, theme_field_options_widget)
+        apperance_form_layout.addRow(selected_bg_label, self.selected_bg_widget)
 
         apperance_buttonBox = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         apperance_buttonBox.accepted.connect(self.apperanceOk)
@@ -930,30 +967,85 @@ class EditWindow(QtWidgets.QMainWindow):
 
         apperance_tab.setLayout(apperance_tab_layout)
 
+        ###############################
+        preferances_tab_layout = QVBoxLayout()
+
+        preferances_form_layout = QFormLayout()
+        preferances_form_widget = QtWidgets.QWidget()
+
+        
+        show_save_on_close_label = QtWidgets.QLabel("Show Save Button On Close: ")
+        show_save_on_close_label.setFont(detail_font)
+
+
+        self.show_save_on_close_toggle = AnimatedToggle(checked_color="#36d1d1")
+        self.show_save_on_close_toggle.clicked.connect(lambda x: self.toggle_close_saving(x))
+        if not "'save-on-close'" in self.editor_settings:
+            self.show_save_on_close_toggle.setChecked(True)
+        else:
+            self.show_save_on_close_toggle.setChecked(False)
+
+
+        preferances_form_layout.addRow(show_save_on_close_label, self.show_save_on_close_toggle)
+
+        preferances_form_widget.setLayout(preferances_form_layout)
+
+        preferances_tab_layout.addWidget(preferances_form_widget)
+        preferances_tab_layout.addWidget(apperance_buttonBox)
+
+        preferances_tab.setLayout(preferances_tab_layout)
+
         self.settings_win.setLayout(tab_layout)
         self.settings_win.show()
 
+    def toggle_close_saving(self, x):
+        if x:
+            self.editor_save_on_close = True
+            self.destroyed.connect(self.closeEvent)
+        else:
+            self.editor_save_on_close = False
+            self.destroyed.connect(self.closeNoSave)
+
+
     def change_editor_bg_color(self):
-        self.editor_background = "color"
+        self.editor_bg_color_clicked = True
+        # get color from dialog
+        dialog = QColorDialog().getColor()
+        if dialog.isValid():
+            self.bg_color = dialog.getRgb()
+            self.textEdit.setStyleSheet(f"background-color: rgba{self.bg_color};")
+            self.selected_bg_widget.setText(str(self.bg_color))
+
 
     def change_editor_bg_image(self):
-        self.editor_background = "image"
+        self.editor_bg_image_clicked = True
+        # get image from file dialog
+        try:
+            file = QtWidgets.QFileDialog.getOpenFileName(self, "Insert Image", ".", "PNG (*.png);;JPG (*.jpg);;BMP (*.bmp)")
+            self.bg_image_filename = file[0]
+            self.textEdit.setStyleSheet(f"background-image: url({self.bg_image_filename});")
+            self.selected_bg_widget.setText(str(self.bg_image_filename))
+        except:
+            QtWidgets.QMessageBox.critical(self, "Fatal!", "Could not set selected image as background.") 
 
     def apperanceOk(self):
-        if self.editor_background == "color":
-            # get color from dialog
-            pass
-        elif self.editor_background == "image":
-            # get image from file dialog
-            try:
-                file = QtWidgets.QFileDialog.getOpenFileName(self, "Insert Image", ".", "PNG (*.png);;JPG (*.jpg);;BMP (*.bmp)")
-                filename = file[0]
-                self.textEdit.setStyleSheet(f"background-image: url({filename})")
-            except:
-                QtWidgets.QMessageBox.critical(self, "Fatal!", "Could not insert selected image.")
+        if self.editor_bg_color_clicked == True:
+            # save data to editor settings
+            fd = f"'{self.bg_color}'"
+            hh = f"'{self.editor_save_on_close}'"
+            ff = {"'background-color'":fd, "'save-on-close'":hh}
+            data = f"{ff}"
+            save_editor_settings(f"../users/{self.user}/editor_settings.json", data)
+        elif self.editor_bg_image_clicked == True:
+            # save data to editor settings
+            fd = f"'{self.bg_image_filename}'"
+            hh = f"'{self.editor_save_on_close}'"
+            ff = {"'background-image'":fd, "'save-on-close'":hh}
+            data = f"{ff}"
+            save_editor_settings(f"../users/{self.user}/editor_settings.json", data)
 
     def apperanceNo(self):
-        pass
+        self.settings_win.destroy()
 
     def closeEvent(self, e):
         msg_save = QtWidgets.QMessageBox.question(self, "Save Changes", "Would you like to save your changes?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
@@ -1481,6 +1573,7 @@ class Ui_Timerist(object):
             pass
 
     def edit(self):
+        '''
         try:
             selected = [item.text() for item in self.documentsDatabase.selectedItems()]
             for item in selected:
@@ -1491,9 +1584,10 @@ class Ui_Timerist(object):
                 edit_window.show()
         except:
             QtWidgets.QMessageBox.warning(Timerist, "Select a document", "Please select a document so that an action can be completed.")
+        '''
 
         # This is for code debugging
-        '''
+
         selected = [item.text() for item in self.documentsDatabase.selectedItems()]
         for item in selected:
             file = open(f"../users/{self.email}/database/{item}", "r", encoding='utf-8')
@@ -1501,7 +1595,7 @@ class Ui_Timerist(object):
             file.close()
             edit_window = EditWindow(Timerist, f"{item}", f"{data}", database=self.documentsDatabase, user=self.email)
             edit_window.show()
-        '''
+
 
 
     def Opendocument(self):
