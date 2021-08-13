@@ -66,8 +66,8 @@ License
 
 Code Insight
 ===
-<h2>How Timerist works:</h2>
-<h3>Timerist works alot with the user data of the logged in user. It requires a user before entering the application, and then profiles the user. On the exit of the application, Timerist saves the changes to the data done by the user. This is essentially the 'Flow of Auth' in our app.</h3>
+<h4>How Timerist works:</h4>
+<h4>Timerist works alot with the user data of the logged in user. It requires a user before entering the application, and then profiles the user. On the exit of the application, Timerist saves the changes to the data done by the user. This is essentially the 'Flow of Auth' in our app.</h4>
 
 ## Auth -> Application -> Exit
 
@@ -75,7 +75,7 @@ Code Insight
 
 Development Checklist
 ===
-<h5>The following checklist regards the development requirements for the first release of Timerist:<h5> 
+<h4>The following checklist regards the development requirements for the first release of Timerist:<h4> 
 
 - [ ] More Features
 - [ ] Bug Free
