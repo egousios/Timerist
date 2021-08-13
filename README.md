@@ -75,7 +75,7 @@ Code Insight
 
 Development Checklist
 ===
-<h2>The following checklist regards the development requirements for the first release of Timerist:<h2> 
+<h5>The following checklist regards the development requirements for the first release of Timerist:<h5> 
 
 - [ ] More Features
 - [ ] Bug Free
@@ -90,9 +90,9 @@ Development Checklist
 
 Settings-API
 ===
-<h2>Here, I would like to introduce to you our new JSON Settings API. It is still in development, but I will update it's progress and document it here.</h2>
+<h5>Here, I would like to introduce to you our new JSON Settings API. It is still in development, but I will update it's progress and document it here.</h5>
 
-<h2>So far we have an JSON api for the text-editor settings. Another JSON api will be made for the user settings.</h2>
+<h5>So far we have an JSON api for the text-editor settings. Another JSON api will be made for the user settings.</h5>
 
 
 ## Tutorial #1: Your First Script.
