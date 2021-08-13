@@ -115,9 +115,9 @@ Settings-API
 
 <p>Now, we can open up our 'editor_settings.json' file and edit it. Here, we will write the following: </p>
 
-`{"'background-color'": "'(255, 0, 13, 255)` 
+`{"'background-color'": "'(255, 0, 13, 255)"'` 
 or 
-`{"'background-image'": "'path-to-image`
+`{"'background-image'": "'path-to-image"'`
 
 <p>The background color property must have a value of rgb or rgba. The background image property must have a path to an image file. (.jpg, .png, etc.). Note: We don't have support for diffrent types of strings yet, so please just use the following string format when writing/editing these properties.This file contains the settings properties for the text editor in Timerist, so the background color/image will apply to the editor!. So, the editor's settings can be changed through this json script, or directyly within the settings menu of the editor. The settings menu of the editor saves and loads the data to this script.</p>
 
