@@ -393,6 +393,7 @@ class EditWindow(QtWidgets.QMainWindow):
 
         self.editor_bg_color_clicked = False
         self.editor_bg_image_clicked = False
+        self.toggle_close_saving_clicked = False
         self.editor_save_on_close = True
         self.bg_image_filename = None
         self.bg_color = None  
@@ -979,19 +980,26 @@ class EditWindow(QtWidgets.QMainWindow):
 
 
         self.show_save_on_close_toggle = AnimatedToggle(checked_color="#36d1d1")
-        self.show_save_on_close_toggle.clicked.connect(lambda x: self.toggle_close_saving(x))
         if not "'save-on-close'" in self.editor_settings:
             self.show_save_on_close_toggle.setChecked(True)
         else:
-            self.show_save_on_close_toggle.setChecked(False)
+            if eval(self.editor_settings["'save-on-close'"]) == True:
+                self.show_save_on_close_toggle.setChecked(True)
+            elif eval(self.editor_settings["'save-on-close'"]) == False:
+                self.show_save_on_close_toggle.setChecked(False)
+        self.show_save_on_close_toggle.stateChanged.connect(lambda x: self.toggle_close_saving(x))
 
 
         preferances_form_layout.addRow(show_save_on_close_label, self.show_save_on_close_toggle)
 
         preferances_form_widget.setLayout(preferances_form_layout)
 
+        preferances_buttonBox = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
+        preferances_buttonBox.accepted.connect(self.preferancesOk)
+        preferances_buttonBox.rejected.connect(self.preferancesNo)
+
         preferances_tab_layout.addWidget(preferances_form_widget)
-        preferances_tab_layout.addWidget(apperance_buttonBox)
+        preferances_tab_layout.addWidget(preferances_buttonBox)
 
         preferances_tab.setLayout(preferances_tab_layout)
 
@@ -999,7 +1007,8 @@ class EditWindow(QtWidgets.QMainWindow):
         self.settings_win.show()
 
     def toggle_close_saving(self, x):
-        if x:
+        self.toggle_close_saving_clicked = True
+        if x == True:
             self.editor_save_on_close = True
             self.destroyed.connect(self.closeEvent)
         else:
@@ -1028,19 +1037,28 @@ class EditWindow(QtWidgets.QMainWindow):
         except:
             QtWidgets.QMessageBox.critical(self, "Fatal!", "Could not set selected image as background.") 
 
+    def preferancesOk(self):
+        if self.toggle_close_saving_clicked == True:
+            previous_data = load_editor_settings(f"../users/{self.user}/editor_settings.json")
+            previous_data["'save-on-close'"] = f"'{self.editor_save_on_close}'"
+            str_prev_data = f"{previous_data}"
+            save_editor_settings(f"../users/{self.user}/editor_settings.json", str_prev_data)
+
+    def preferancesNo(self):
+        self.settings_win.destroy()
+
+
     def apperanceOk(self):
         if self.editor_bg_color_clicked == True:
             # save data to editor settings
             fd = f"'{self.bg_color}'"
-            hh = f"'{self.editor_save_on_close}'"
-            ff = {"'background-color'":fd, "'save-on-close'":hh}
+            ff = {"'background-color'":fd}
             data = f"{ff}"
             save_editor_settings(f"../users/{self.user}/editor_settings.json", data)
         elif self.editor_bg_image_clicked == True:
             # save data to editor settings
             fd = f"'{self.bg_image_filename}'"
-            hh = f"'{self.editor_save_on_close}'"
-            ff = {"'background-image'":fd, "'save-on-close'":hh}
+            ff = {"'background-image'":fd}
             data = f"{ff}"
             save_editor_settings(f"../users/{self.user}/editor_settings.json", data)
 
