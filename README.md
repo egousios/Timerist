@@ -90,9 +90,9 @@ Development Checklist
 
 Settings-API
 ===
-<h5>Here, I would like to introduce to you our new JSON Settings API. It is still in development, but I will update it's progress and document it here.</h5>
+<h4>Here, I would like to introduce to you our new JSON Settings API. It is still in development, but I will update it's progress and document it here.</h4>
 
-<h5>So far we have an JSON api for the text-editor settings. Another JSON api will be made for the user settings.</h5>
+<h4>So far we have an JSON api for the text-editor settings. Another JSON api will be made for the user settings.</h4>
 
 
 ## Tutorial #1: Your First Script.
