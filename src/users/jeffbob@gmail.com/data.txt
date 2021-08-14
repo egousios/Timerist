@@ -9,10 +9,13 @@ Do homework
 Overdue ⌛
 2021-08-14 12:00:00 am
 Go to beach 
-Incomplete ❌
+Overdue ⌛
 2021-08-21 02:21:00 am
 Potions
 Incomplete ❌
 2021-08-12 12:00:00 am
 lisp
 Overdue ⌛
+2021-08-20 12:00:00 am
+eye check up
+Incomplete ❌

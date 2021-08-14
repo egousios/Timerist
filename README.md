@@ -115,10 +115,34 @@ Settings-API
 
 <p>Now, we can open up our 'editor_settings.json' file and edit it. Here, we will write the following: </p>
 
-`{"'background-color'": "'(255, 0, 13, 255)"'` 
-or 
-`{"'background-image'": "'path-to-image"'`
+<p>Make sure to add your json body (pair of curly braces): </p>
 
-<p>The background color property must have a value of rgb or rgba. The background image property must have a path to an image file. (.jpg, .png, etc.). Note: We don't have support for diffrent types of strings yet, so please just use the following string format when writing/editing these properties.This file contains the settings properties for the text editor in Timerist, so the background color/image will apply to the editor!. So, the editor's settings can be changed through this json script, or directyly within the settings menu of the editor. The settings menu of the editor saves and loads the data to this script.</p>
+1. `{}`
 
-<p>Note: In the future we will have support for more properties (for now we only have the background appearance), I hope you enjoy playing with the script.</p>
+2. 
+   `"'background-color'": "'(255, 0, 13, 255)"'` value: `rgb or rgba`
+   or 
+   `"'background-image'": "'path-to-image"'` value: `path`
+
+<p>If you put both properties for the background, it will not work.</p>
+
+<p>Note: We don't have support for diffrent types of strings yet, so please just use the following string format when writing/editing these properties.This file contains the settings properties for the text editor in Timerist, so the background color/image will apply to the editor!. So, the editor's settings can be changed through this json script, or directyly within the settings menu of the editor. The settings menu of the editor saves and loads the data to this script.</p>
+
+<p>After setting the background appearance of our editor, we can change 1 property that has
+to do with our preferances.</p>
+
+<p>If you haven't noticed yet, everytime we finish editing a document in the editor andwe decide to close it, there's a pop-up save dialog. This is to make sure that we don't forget to save our changes by hitting the save button or `ctrl-s`. We can choose wether we want this dialog to show or not simply by toggling it in the preferances tab. (Editor Settings->Preferances->Show Save Dialog On Close):</p>
+
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/toggle_settings.png">
+
+<p>In our JSON API, the equivalent is: </p>
+
+`"'save-on-close'": "'False'"` value: `boolean enclosed in string`
+
+<p>Now, our settings script should look like this: </p>
+
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_json.png">
+
+<p>Moving on with this tutorial, you can open & edit the json file directly in the settings menu instead of elsewhere using this 'settings to json' option that I just implemented recently.</p>
+
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_json.png">

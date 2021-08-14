@@ -8,7 +8,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, QtMultimedia, QtPrintSupport, QtWebE
 from PyQt5.QtCore import *
 from PyQt5.QtMultimedia import *
 from PyQt5.QtGui import QCloseEvent, QCursor, QDesktopServices, QFont, QIcon, QKeySequence, QMovie, QFontDatabase, QPainter, QPixmap, QTextImageFormat, QTextListFormat, QTextTableFormat, QTextCursor
-from PyQt5.QtWidgets import QAbstractItemView, QAction, QApplication, QCommandLinkButton, QFontDialog, QColorDialog, QFormLayout, QLabel, QListWidgetItem, QSpacerItem, QTextEdit, QTimeEdit, QTreeWidgetItem, QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QAbstractItemView, QAction, QApplication, QCommandLinkButton, QFontDialog, QColorDialog, QFormLayout, QLabel, QListWidgetItem, QPushButton, QSpacerItem, QTextEdit, QTimeEdit, QToolBar, QTreeWidgetItem, QVBoxLayout, QHBoxLayout, QWidget
 from backend.query import Tree
 from backend.query import slice_per
 from backend.query import read_contents_from_query
@@ -21,6 +21,7 @@ from backend.query import is_item
 from backend.time import days_in_between, StopWatch, get_current_time
 from json_user_settings.editor import load_editor_settings
 from json_user_settings.editor import save_editor_settings
+from json_editor import SimpleJSONEditor
 from datetime import datetime
 import os
 import sys
@@ -381,15 +382,16 @@ class EditWindow(QtWidgets.QMainWindow):
             ev = eval(color)
             sheet = f"background-color: rgba{ev};"
             self.textEdit.setStyleSheet(sheet)
-        elif "'background-image'" in self.editor_settings:
+        if "'background-image'" in self.editor_settings:
             img = self.editor_settings["'background-image'"]
             sheet = f"background-image: url({img});"
             self.textEdit.setStyleSheet(sheet)
         if "'save-on-close'" in self.editor_settings:
-            if eval(self.editor_settings["'save-on-close'"]) == True:
-                self.destroyed.connect(self.closeEvent)
-            elif eval(self.editor_settings["'save-on-close'"]) == False:
-                self.destroyed.connect(self.closeNoSave)
+            ev = eval(self.editor_settings["'save-on-close'"])
+            if ev == 'True':
+                self.toggle_close_saving(True)
+            elif ev == 'False':
+                self.toggle_close_saving(False)
 
         self.editor_bg_color_clicked = False
         self.editor_bg_image_clicked = False
@@ -894,9 +896,16 @@ class EditWindow(QtWidgets.QMainWindow):
 
     def settings(self):
         self.settings_win = QtWidgets.QDialog(self)
+        self.settings_win.setWindowFlags(Qt.WindowType.Window)
         self.settings_win.resize(500, 400)
         self.settings_win.setWindowIcon(QtGui.QIcon("../images/settings.png"))
         self.settings_win.setWindowTitle("Editor Settings")
+        self.edit_from_json = QAction()
+        self.edit_from_json.setIcon(QIcon("../images/gears.png"))
+        self.edit_from_json.setToolTip("Open Settings In JSON")
+        self.edit_from_json.triggered.connect(self.open_json)
+        tlb = QToolBar()
+        tlb.addAction(self.edit_from_json)
 
         label_font = QtGui.QFont()
         label_font.setPointSize(20)
@@ -915,6 +924,7 @@ class EditWindow(QtWidgets.QMainWindow):
         tabs.addTab(apperance_tab, "Apperance")
         tabs.addTab(preferances_tab, "Preferances")
 
+        tab_layout.addWidget(tlb)
         tab_layout.addWidget(tabs)
 
         apperance_tab_layout = QVBoxLayout()
@@ -975,19 +985,18 @@ class EditWindow(QtWidgets.QMainWindow):
         preferances_form_widget = QtWidgets.QWidget()
 
         
-        show_save_on_close_label = QtWidgets.QLabel("Show Save Button On Close: ")
+        show_save_on_close_label = QtWidgets.QLabel("Show Save Dialog On Close: ")
         show_save_on_close_label.setFont(detail_font)
 
-
         self.show_save_on_close_toggle = AnimatedToggle(checked_color="#36d1d1")
+        self.show_save_on_close_toggle.stateChanged.connect(lambda x: self.toggle_close_saving(True) if x else self.toggle_close_saving(False))
         if not "'save-on-close'" in self.editor_settings:
             self.show_save_on_close_toggle.setChecked(True)
-        else:
-            if eval(self.editor_settings["'save-on-close'"]) == True:
+        elif "'save-on-close'" in self.editor_settings:
+            if eval(self.editor_settings["'save-on-close'"]) == 'True':
                 self.show_save_on_close_toggle.setChecked(True)
-            elif eval(self.editor_settings["'save-on-close'"]) == False:
+            elif eval(self.editor_settings["'save-on-close'"]) == 'False':
                 self.show_save_on_close_toggle.setChecked(False)
-        self.show_save_on_close_toggle.stateChanged.connect(lambda x: self.toggle_close_saving(x))
 
 
         preferances_form_layout.addRow(show_save_on_close_label, self.show_save_on_close_toggle)
@@ -1006,6 +1015,42 @@ class EditWindow(QtWidgets.QMainWindow):
         self.settings_win.setLayout(tab_layout)
         self.settings_win.show()
 
+    def jsonOk(self):
+        data = self.JSONtext.text()
+        file=open(f"../users/{self.user}/editor_settings.json", "w").close()
+        with open(f"../users/{self.user}/editor_settings.json", "w") as f:
+            f.write(data)
+            f.close()
+
+    def jsonNo(self):
+        self.win.destroy()
+
+    def open_json(self):
+        self.win = QtWidgets.QMainWindow(Timerist)
+        self.win.resize(500, 350)
+        self.win.setWindowTitle("Editor Settings (JSON)")
+        self.win.setWindowIcon(QIcon("../images/settings.png"))
+        layout = QVBoxLayout()
+        widget = QtWidgets.QWidget()
+        data = open(f"../users/{self.user}/editor_settings.json", "r").read()
+        self.JSONtext = SimpleJSONEditor(widget)
+        self.JSONtext.setText(data)
+        save = QPushButton("Save")
+        save.setShortcut("Ctrl+S")
+        save.clicked.connect(self.jsonOk)
+        cancel = QPushButton("Cancel")
+        cancel.clicked.connect(self.jsonNo)
+        hl = QHBoxLayout()
+        hl.addWidget(save, 50)
+        hl.addWidget(cancel, 50)
+        wid = QWidget()
+        wid.setLayout(hl)
+        layout.addWidget(self.JSONtext)
+        layout.addWidget(wid)
+        widget.setLayout(layout)
+        self.win.setCentralWidget(widget)
+        self.win.show()
+
     def toggle_close_saving(self, x):
         self.toggle_close_saving_clicked = True
         if x == True:
@@ -1013,8 +1058,7 @@ class EditWindow(QtWidgets.QMainWindow):
             self.destroyed.connect(self.closeEvent)
         else:
             self.editor_save_on_close = False
-            self.destroyed.connect(self.closeNoSave)
-
+            self.destroyed.connect(self.closeEvent)
 
     def change_editor_bg_color(self):
         self.editor_bg_color_clicked = True
@@ -1041,43 +1085,58 @@ class EditWindow(QtWidgets.QMainWindow):
         if self.toggle_close_saving_clicked == True:
             previous_data = load_editor_settings(f"../users/{self.user}/editor_settings.json")
             previous_data["'save-on-close'"] = f"'{self.editor_save_on_close}'"
-            str_prev_data = f"{previous_data}"
-            save_editor_settings(f"../users/{self.user}/editor_settings.json", str_prev_data)
+            save_editor_settings(f"../users/{self.user}/editor_settings.json", previous_data)
 
     def preferancesNo(self):
         self.settings_win.destroy()
 
-
     def apperanceOk(self):
         if self.editor_bg_color_clicked == True:
-            # save data to editor settings
-            fd = f"'{self.bg_color}'"
-            ff = {"'background-color'":fd}
-            data = f"{ff}"
-            save_editor_settings(f"../users/{self.user}/editor_settings.json", data)
+            previous_data = load_editor_settings(f"../users/{self.user}/editor_settings.json")
+            previous_data["'background-color'"] = f"'{self.bg_color}'"
+            save_editor_settings(f"../users/{self.user}/editor_settings.json", previous_data)
         elif self.editor_bg_image_clicked == True:
-            # save data to editor settings
-            fd = f"'{self.bg_image_filename}'"
-            ff = {"'background-image'":fd}
-            data = f"{ff}"
-            save_editor_settings(f"../users/{self.user}/editor_settings.json", data)
+            previous_data = load_editor_settings(f"../users/{self.user}/editor_settings.json")
+            previous_data["'background-image'"] = f"'{self.bg_image_filename}'"
+            save_editor_settings(f"../users/{self.user}/editor_settings.json", previous_data)
 
     def apperanceNo(self):
         self.settings_win.destroy()
 
     def closeEvent(self, e):
-        msg_save = QtWidgets.QMessageBox.question(self, "Save Changes", "Would you like to save your changes?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
-        if msg_save == QtWidgets.QMessageBox.Yes:
-            try:
-                file = open(f"../users/{self.user}/database/{self.title}", 'w', encoding='utf-8').close()
-                with open(f"../users/{self.user}/database/{self.title}", "w", encoding='utf-8') as f:
-                    f.write(self.textEdit.toHtml())
-                    f.close()
-                QtWidgets.QMessageBox.information(self, "Saved!", f"Your changes were saved successfully.")
-            except:
-                QtWidgets.QMessageBox.warning(self, "Saving Error", "Please open an existing document to save your changes.")
+        if self.toggle_close_saving_clicked == True:
+            if self.editor_save_on_close == True:
+                msg_save = QtWidgets.QMessageBox.question(self, "Save Changes", "Would you like to save your changes?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+                if msg_save == QtWidgets.QMessageBox.Yes:
+                    try:
+                        file = open(f"../users/{self.user}/database/{self.title}", 'w', encoding='utf-8').close()
+                        with open(f"../users/{self.user}/database/{self.title}", "w", encoding='utf-8') as f:
+                            f.write(self.textEdit.toHtml())
+                            f.close()
+                        QtWidgets.QMessageBox.information(self, "Saved!", f"Your changes were saved successfully.")
+                    except:
+                        QtWidgets.QMessageBox.warning(self, "Saving Error", "Please open an existing document to save your changes.")
+                else:
+                    pass
+            elif self.editor_save_on_close == False:
+                pass
         else:
-            pass
+            if "'save-on-close'" in self.editor_settings:
+                if eval(self.editor_settings["'save-on-close'"]) == 'True':
+                    msg_save = QtWidgets.QMessageBox.question(self, "Save Changes", "Would you like to save your changes?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+                    if msg_save == QtWidgets.QMessageBox.Yes:
+                        try:
+                            file = open(f"../users/{self.user}/database/{self.title}", 'w', encoding='utf-8').close()
+                            with open(f"../users/{self.user}/database/{self.title}", "w", encoding='utf-8') as f:
+                                f.write(self.textEdit.toHtml())
+                                f.close()
+                            QtWidgets.QMessageBox.information(self, "Saved!", f"Your changes were saved successfully.")
+                        except:
+                            QtWidgets.QMessageBox.warning(self, "Saving Error", "Please open an existing document to save your changes.")
+                    else:
+                        pass
+                else:
+                    pass
 
     def createdocument(self):
         if self.database != None:

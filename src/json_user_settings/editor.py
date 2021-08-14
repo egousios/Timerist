@@ -10,5 +10,4 @@ def load_editor_settings(editor_settings_json_file):
 def save_editor_settings(editor_settings_json_file, data):
     file=open(editor_settings_json_file).close()
     with open(editor_settings_json_file, 'w') as f:
-        f.write(data)
-        f.close()
+        json.dump(data, f, indent=4)
