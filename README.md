@@ -145,4 +145,4 @@ to do with our preferances.</p>
 
 <p>Moving on with this tutorial, you can open & edit the json file directly in the settings menu instead of elsewhere using this 'settings to json' option that I just implemented recently.</p>
 
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_json.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/json.png">
