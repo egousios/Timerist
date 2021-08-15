@@ -17,7 +17,6 @@ Table of contents
    * [Table of contents](#Table-of-contents)
    * [Screenshots](#Screenshots)
    * [Running the Application from Source](#Running-the-Application-from-Source)
-   * [Code Insight](#Code-Insight)
    * [Settings API](#Settings-API)
    * [Development Checklist](#Development-Checklist)
    * [Notices](#Notices)
@@ -54,37 +53,6 @@ Open up your terminal, and type or paste in the following:
 ---
 #### Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
 `pip3 freeze`
-
-Notices
-===
-
-<p>Binaries and Executables will be realeased in the near future with the deployment of this app 😀.</p>
-
-License
-===
-<a href="https://github.com/TheEliteCoder1/Timerist/blob/main/src/LICENSE">BSD 2-Clause "Simplified"</a>
-
-Code Insight
-===
-<h4>How Timerist works:</h4>
-<h4>Timerist works alot with the user data of the logged in user. It requires a user before entering the application, and then profiles the user. On the exit of the application, Timerist saves the changes to the data done by the user. This is essentially the 'Flow of Auth' in our app.</h4>
-
-## Auth -> Application -> Exit
-
-<br>
-
-Development Checklist
-===
-<h4>The following checklist regards the development requirements for the first release of Timerist:<h4> 
-
-- [ ] More Features
-- [ ] Bug Free
-- [ ] Polishing
-- [ ] Migration from local User Data to Server Side
-- [x] Finish the Editor Settings
-- [ ] Finish User Settings
-- [ ] Create Executable & Installer
-- [ ] Django Website to Download for Free
 
 <br>
 
@@ -156,3 +124,25 @@ to do with our preferances.</p>
 | <p style="text-shadow: 2px 2px #55d5e0">background-color</p>  | `"'background-color'": "'(r, g, b, a)"'`  | <p>Sets the background appearance of the editor with a color.</p> 
 | <p style="text-shadow: 2px 2px #55d5e0">background-image</p>  | `"'background-image'": "'absolute path"'` | <p>Sets the background appearance of the editor with an image.</p>
 | <p style="text-shadow: 2px 2px #55d5e0">save-on-close</p>     | `"'save-on-close'": "'True or False"'`    | <p>Control wether the save dialog should show when you close the editor.</p>
+
+Development Checklist
+===
+<h4>The following checklist regards the development requirements for the first release of Timerist:<h4> 
+
+- [ ] More Features
+- [ ] Bug Free
+- [ ] Polishing
+- [ ] Migration from local User Data to Server Side
+- [x] Finish the Editor Settings
+- [ ] Finish User Settings
+- [ ] Create Executable & Installer
+- [ ] Django Website to Download for Free
+
+Notices
+===
+
+<p>Binaries and Executables will be realeased in the near future with the deployment of this app 😀.</p>
+
+License
+===
+<a href="https://github.com/TheEliteCoder1/Timerist/blob/main/src/LICENSE">BSD 2-Clause "Simplified"</a>
