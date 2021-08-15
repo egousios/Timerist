@@ -120,7 +120,7 @@ to do with our preferances.</p>
 ## All Settings Properties: editor_settings.json
 
 | Property                                                      | Code                                      | Purpose
-| :---:                                                         | :---:                                     | :---:
+| ---                                                           | ---                                       | ---
 | <p style="text-shadow: 2px 2px #55d5e0">background-color</p>  | `"'background-color'": "'(r, g, b, a)"'`  | <p>Sets the background appearance of the editor with a color.</p> 
 | <p style="text-shadow: 2px 2px #55d5e0">background-image</p>  | `"'background-image'": "'absolute path"'` | <p>Sets the background appearance of the editor with an image.</p>
 | <p style="text-shadow: 2px 2px #55d5e0">save-on-close</p>     | `"'save-on-close'": "'True or False"'`    | <p>Control wether the save dialog should show when you close the editor.</p>
