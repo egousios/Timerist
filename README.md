@@ -117,12 +117,14 @@ Settings-API
 
 <p>Make sure to add your json body (pair of curly braces): </p>
 
-1. `{}`
+<p>body: 
 
-2. 
-   `"'background-color'": "'(255, 0, 13, 255)"'` value: `rgb or rgba`
-   or 
-   `"'background-image'": "'path-to-image"'` value: `path`
+`{}`
+
+<p>Inside of our body, we can place either one of these properties: </p>
+
+1. `"'background-color'": "'(255, 0, 13, 255)"'` value: `rgb or rgba`
+2. `"'background-image'": "'path-to-image"'` value: `path`
 
 <p>If you put both properties for the background, it will not work.</p>
 
@@ -146,3 +148,11 @@ to do with our preferances.</p>
 <p>Moving on with this tutorial, you can open & edit the json file directly in the settings menu instead of elsewhere using this 'settings to json' option that I just implemented recently.</p>
 
 <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/json.png">
+
+## All Settings Properties: editor_settings.json
+
+| Property                                                      | Code                                      | Purpose
+| :---:                                                         | :---:                                     | :---:
+| <p style="text-shadow: 2px 2px #55d5e0">background-color</p>  | `"'background-color'": "'(r, g, b, a)"'`  | <p>Sets the background appearance of the editor with a color.</p> 
+| <p style="text-shadow: 2px 2px #55d5e0">background-image</p>  | `"'background-image'": "'absolute path"'` | <p>Sets the background appearance of the editor with an image.</p>
+| <p style="text-shadow: 2px 2px #55d5e0">save-on-close</p>     | `"'save-on-close'": "'True or False"'`    | <p>Control wether the save dialog should show when you close the editor.</p>
