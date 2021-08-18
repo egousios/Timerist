@@ -1,14 +1,21 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 import json, os
 
 app = FastAPI()
 
+def render_template(html_template):
+    with open(html_template, "r", encoding="utf-8") as outfile:
+        buffer = outfile.read()
+        outfile.close()
+    return buffer
+
 @app.get("/")
-def index():
-    return {"Index Message":"Welcome to Timerist's JSON api!"}
+async def index():
+    return HTMLResponse(content=render_template("templates/index.html"))
 
 @app.get("/users/{user_email}/{settings_filename}")
-def read_settings(user_email: str, settings_filename: str):
+async def read_settings(user_email: str, settings_filename: str):
     try:
         with open(f"../users/{user_email}/{settings_filename}", "r", encoding="utf-8") as f:
             data = f.read()

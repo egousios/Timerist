@@ -1,4 +1,5 @@
 {
-    "'background-color'": "'(255,255,0)'",
-    "'save-on-close'": "'False'"
+    "'background-color'": "'(68, 21, 255, 255)'",
+    "'save-on-close'": "'True'",
+    "'background-image'": "'C:/Users/SopheaRaphael/Documents/Cursor.png'"
 }
