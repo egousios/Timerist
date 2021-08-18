@@ -125,6 +125,42 @@ to do with our preferances.</p>
 | <p style="text-shadow: 2px 2px #55d5e0">background-image</p>  | `"'background-image'": "'absolute path"'` | <p>Sets the background appearance of the editor with an image.</p>
 | <p style="text-shadow: 2px 2px #55d5e0">save-on-close</p>     | `"'save-on-close'": "'True or False"'`    | <p>Control wether the save dialog should show when you close the editor.</p>
 
+## Fetching The Settings From the API
+<h4>I've created a web api for the settings, this way you can 
+access your json settings through a URL. The API is still in development, and is quite fast because it uses FastAPI for the backend:<h4>
+
+<a href="https://github.com/tiangolo/fastapi#readme">FastAPI</a>
+
+#### Running the Server
+<p>To run the server, you will need to do the following:</p>
+
+1. Install Uvicorn: `pip install uvicorn`.
+2. Go to the `json_settings_api` folder.
+3. And then run the following: `uvicorn main:app --reload`
+4. Now, you can access the API by going to: <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a>
+
+<p>If everything went well, then you will see this: </p>
+
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/message.png">
+
+
+#### Usage
+<p>Here's some sample usage of the API to fetch your editor_settings data: </p>
+
+The Root: `/`
+The Users Route: `/users`
+Accessing Your Account: `/users/<user_email>`
+Accessing Your Data: `/users/<user_email>/<settings_filename>`
+Sample: `/users/jeffbob@gmail.com/editor_settings.json`
+
+<p>If you're request URL was valid, you should see something like this: </p>
+
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/message2.png">
+
+<p>If you're request URL was not valid, you will recieve a 404 HTTP Response: </p>
+
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/message3.png">
+
 Development Checklist
 ===
 <h4>The following checklist regards the development requirements for the first release of Timerist:<h4> 

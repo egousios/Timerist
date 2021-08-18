@@ -19,8 +19,8 @@ from backend.query import edit_item
 from backend.query import return_contents_from_query
 from backend.query import is_item
 from backend.time import days_in_between, StopWatch, get_current_time
-from json_user_settings.editor import load_editor_settings
-from json_user_settings.editor import save_editor_settings
+from json_settings_pckg.editor import load_editor_settings
+from json_settings_pckg.editor import save_editor_settings
 from json_editor import SimpleJSONEditor
 from datetime import datetime
 import os
@@ -1541,7 +1541,38 @@ class Ui_Timerist(object):
                 self.treeWidget.addTopLevelItem(Item)
 
     def SettingsWindow(self):
-        pass
+        self.settings_win = QtWidgets.QDialog(Timerist)
+        self.settings_win.setWindowFlags(Qt.WindowType.Window)
+        self.settings_win.resize(500, 400)
+        self.settings_win.setWindowIcon(QtGui.QIcon("../images/settings.png"))
+        self.settings_win.setWindowTitle("App Settings")
+
+        label_font = QtGui.QFont()
+        label_font.setPointSize(20)
+        detail_font = QtGui.QFont()
+        detail_font.setPointSize(15)
+
+        tab_layout = QtWidgets.QVBoxLayout()
+        tabs = TabWidget()
+
+        # Tabs -> [account, general]
+        ###
+        ## Account -> Displays email, password, username, set profile picture
+        ## General -> Show menu bar (Icons on right of todo-list), clear all user data
+        ###
+
+        account_tab = QtWidgets.QWidget()
+        general_tab = QtWidgets.QWidget()
+
+        tabs.addTab(account_tab, "Account")
+        tabs.addTab(general_tab, "General")
+
+        tab_layout.addWidget(tabs)
+
+        self.settings_win.setLayout(tab_layout)
+        self.settings_win.show()
+
+
 
     def retranslateUi(self, Timerist):
         _translate = QtCore.QCoreApplication.translate
