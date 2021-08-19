@@ -28,12 +28,12 @@ Table of contents
 Screenshots
 ===
 #### light and dark theme mode:
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/main_light.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/main_dark.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_light.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_dark.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/add_todo_light.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/view_todo_light.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/main_light.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/main_dark.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/editor_light.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/editor_dark.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/add_todo_light.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/view_todo_light.png">
 
 Running the Application from Source
 ===
@@ -68,20 +68,20 @@ Settings-API
 ## Tutorial #1: Your First Script.
 <p>Every user has an 'editor_settings.json' file located in thier user data folder. This folder is local. We will be migrating it to server side later (to prevent the auth errors that come locally and etc.). You can find your user data in the following directory: </p>
 
-`/src/users/<your-email>/`
+`//users/<your-email>/`
 
 <p>For this, I have registered an example account. So, the path to the user data of my account will look like this: </p>
 
-`/src/users/jeffbob@gmail.com/`
+`//users/jeffbob@gmail.com/`
 
 <p>Now, to see our user data we must cd into that directory and list the directory: </p>
 
-1. `cd /src/users/jeffbob@gmail.com`
+1. `cd //users/jeffbob@gmail.com`
 2. `ls` or `dir` or equivalent on your platform.
 
 <p>Here, we will see this: </p>
 
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_settings.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/editor_settings.png">
 
 <p>Now, we can open up our 'editor_settings.json' file and edit it. Here, we will write the following: </p>
 
@@ -105,7 +105,7 @@ to do with our preferances.</p>
 
 <p>If you haven't noticed yet, everytime we finish editing a document in the editor andwe decide to close it, there's a pop-up save dialog. This is to make sure that we don't forget to save our changes by hitting the save button or `ctrl-s`. We can choose wether we want this dialog to show or not simply by toggling it in the preferances tab. (Editor Settings->Preferances->Show Save Dialog On Close):</p>
 
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/toggle_settings.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/toggle_settings.png">
 
 <p>In our JSON API, the equivalent is: </p>
 
@@ -113,11 +113,11 @@ to do with our preferances.</p>
 
 <p>Now, our settings script should look like this: </p>
 
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_json.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/editor_json.png">
 
 <p>Moving on with this tutorial, you can open & edit the json file directly in the settings menu instead of elsewhere using this 'settings to json' option that I just implemented recently.</p>
 
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/json.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/json.png">
 
 ## All Settings Properties: editor_settings.json
 
@@ -143,7 +143,7 @@ access your json settings through a URL. The API is still in development, and is
 
 <p>If everything went well, then you will see this: </p>
 
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/message.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/message.png">
 
 
 #### Usage
@@ -157,11 +157,11 @@ access your json settings through a URL. The API is still in development, and is
 
 <p>If you're request URL was valid, you should see something like this: </p>
 
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/message2.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/message2.png">
 
 <p>If you're request URL was invalid, you will recieve a 404 HTTP Response: </p>
 
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/message3.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/message3.png">
 
 Development Checklist
 ===
@@ -182,4 +182,4 @@ Notices
 
 License
 ===
-<a href="https://github.com/TheEliteCoder1/Timerist/blob/main/src/LICENSE">BSD 2-Clause "Simplified"</a>
+<a href="https://github.com/TheEliteCoder1/Timerist/blob/main/LICENSE">BSD 2-Clause "Simplified"</a>
