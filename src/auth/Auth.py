@@ -4,7 +4,7 @@ import os
 import subprocess
 sys.path.insert(0, "../")
 from app import *
-from platforms import executePlatformCompatibleAuthCMD
+from .platforms import executePlatformCompatibleAuthCMD
 import pyrebase
 
 firebaseConfig = {
@@ -29,7 +29,7 @@ class User:
 def give(s):
     return s
 
-id = QFontDatabase.addApplicationFont("../backend/Poppins-Medium.ttf")
+id = QFontDatabase.addApplicationFont("assets/Poppins-Medium.ttf")
 _fontstr = QFontDatabase.applicationFontFamilies(id)[0]
 _font = QFont(_fontstr, 10)
 
@@ -39,21 +39,21 @@ class LoginWindow(QtWidgets.QDialog):
         # Window properties
         self.title = 'Login'
         self.setWindowTitle(self.title)
-        self.setWindowIcon(QIcon("../images/icon.png"))
+        self.setWindowIcon(QIcon("images/icon.png"))
         self.setWindowFlags(Qt.Window)
         self.resize(200, 200)
         self.tool_btn_size = QSize(50, 50)
 
         # Fonts
-        id = QFontDatabase.addApplicationFont("../backend/Poppins-Medium.ttf")
+        id = QFontDatabase.addApplicationFont("assets/Poppins-Medium.ttf")
         _fontstr = QFontDatabase.applicationFontFamilies(id)[0]
         _font = QFont(_fontstr, 30)
 
-        id2 = QFontDatabase.addApplicationFont("../backend/Segoe UI.ttf")
+        id2 = QFontDatabase.addApplicationFont("assets/Segoe UI.ttf")
         _fontstr2 = QFontDatabase.applicationFontFamilies(id2)[0]
         field_font = QFont(_fontstr2, 15)
 
-        id3 = QFontDatabase.addApplicationFont("../backend/Ubuntu-Medium.ttf")
+        id3 = QFontDatabase.addApplicationFont("assets/Ubuntu-Medium.ttf")
         _fontstr3 = QFontDatabase.applicationFontFamilies(id3)[0]
         font3 = QFont(_fontstr3, 30)
 
@@ -65,7 +65,7 @@ class LoginWindow(QtWidgets.QDialog):
         self.invalid.setVisible(False)
         self.retry = QtWidgets.QToolButton()
         self.retry.setStyleSheet("border: none;")
-        self.retry.setIcon(QIcon("../images/retry.png"))
+        self.retry.setIcon(QIcon("images/retry.png"))
         self.retry.setIconSize(self.tool_btn_size)
         self.retry.clicked.connect(self.Retry)
         self.retry.setVisible(False)
@@ -91,12 +91,12 @@ class LoginWindow(QtWidgets.QDialog):
 
         self.email_icon = QtWidgets.QToolButton()
         self.email_icon.setStyleSheet("border: none;")
-        self.email_icon.setIcon(QIcon("../images/email.png"))
+        self.email_icon.setIcon(QIcon("images/email.png"))
         self.email_icon.setIconSize(self.tool_btn_size)
         
         self.password_icon = QtWidgets.QToolButton()
         self.password_icon.setStyleSheet("border: none;")
-        self.password_icon.setIcon(QIcon("../images/password.png"))
+        self.password_icon.setIcon(QIcon("images/password.png"))
         self.password_icon.setIconSize(self.tool_btn_size)
 
         self.email_field = QtWidgets.QLineEdit(self.groupWidget)
@@ -143,7 +143,7 @@ class LoginWindow(QtWidgets.QDialog):
         self.registerLbl.setFont(f)
         self.registerBtn = QtWidgets.QToolButton()
         self.registerBtn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
-        self.registerBtn.setIcon(QIcon("../images/right-arrow-light.png"))
+        self.registerBtn.setIcon(QIcon("images/right-arrow-light.png"))
         self.registerBtn.setIconSize(self.tool_btn_size)
         self.registerBtn.setText("Sign Up")
         self.registerBtn.setStyleSheet("QToolButton {border-radius: 5px; background-color: #28a745; color: white;} QToolButton:hover {background-color: #218f3a;}")
@@ -175,11 +175,12 @@ class LoginWindow(QtWidgets.QDialog):
     def loginToApp(self):
         email = self.email_field.text()
         password = self.password_field.text()
+        '''
         try:
             auth.sign_in_with_email_and_password(email,password)
             app.setFont(_font)
             clipboard=app.clipboard()
-            sound_file = '../alarm.wav'
+            sound_file = 'assets/alarm.wav'
             sound = QtMultimedia.QSoundEffect()
             sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
             sound.setLoopCount(QtMultimedia.QSoundEffect.Infinite)
@@ -191,13 +192,14 @@ class LoginWindow(QtWidgets.QDialog):
         except:
             self.invalid.setVisible(True)
             self.retry.setVisible(True)
+        '''
 
         # This is to check for errors in the code
-        '''
+
         auth.sign_in_with_email_and_password(email,password)
         app.setFont(_font)
         clipboard=app.clipboard()
-        sound_file = '../alarm.wav'
+        sound_file = 'assets/alarm.wav'
         sound = QtMultimedia.QSoundEffect()
         sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
         sound.setLoopCount(QtMultimedia.QSoundEffect.Infinite)
@@ -206,7 +208,7 @@ class LoginWindow(QtWidgets.QDialog):
         Timerist.show()
         self.setParent(Timerist)
         self.destroy(True)
-        '''
+
 
     def Retry(self):
         self.email_field.setText("")
@@ -224,21 +226,21 @@ class RegisterWindow(QtWidgets.QDialog):
         # Window properties
         self.title = 'Register'
         self.setWindowTitle(self.title)
-        self.setWindowIcon(QIcon("../images/icon.png"))
+        self.setWindowIcon(QIcon("images/icon.png"))
         self.setWindowFlags(Qt.Window)
         self.resize(200, 200)
         self.tool_btn_size = QSize(50, 50)
 
         # Fonts
-        id = QFontDatabase.addApplicationFont("../backend/Poppins-Medium.ttf")
+        id = QFontDatabase.addApplicationFont("assets/Poppins-Medium.ttf")
         _fontstr = QFontDatabase.applicationFontFamilies(id)[0]
         _font = QFont(_fontstr, 30)
 
-        id2 = QFontDatabase.addApplicationFont("../backend/Segoe UI.ttf")
+        id2 = QFontDatabase.addApplicationFont("assets/Segoe UI.ttf")
         _fontstr2 = QFontDatabase.applicationFontFamilies(id2)[0]
         field_font = QFont(_fontstr2, 15)
 
-        id3 = QFontDatabase.addApplicationFont("../backend/Ubuntu-Medium.ttf")
+        id3 = QFontDatabase.addApplicationFont("assets/Ubuntu-Medium.ttf")
         _fontstr3 = QFontDatabase.applicationFontFamilies(id3)[0]
         font3 = QFont(_fontstr3, 30)
 
@@ -256,21 +258,21 @@ class RegisterWindow(QtWidgets.QDialog):
         self.invalid3.setVisible(False)
         self.retry = QtWidgets.QToolButton()
         self.retry.setStyleSheet("border: none;")
-        self.retry.setIcon(QIcon("../images/retry.png"))
+        self.retry.setIcon(QIcon("images/retry.png"))
         self.retry.setIconSize(self.tool_btn_size)
         self.retry.clicked.connect(self.Retry)
         self.retry.setVisible(False)
         
         self.retry2 = QtWidgets.QToolButton()
         self.retry2.setStyleSheet("border: none;")
-        self.retry2.setIcon(QIcon("../images/retry.png"))
+        self.retry2.setIcon(QIcon("images/retry.png"))
         self.retry2.setIconSize(self.tool_btn_size)
         self.retry2.clicked.connect(self.Retry)
         self.retry2.setVisible(False)
 
         self.retry3 = QtWidgets.QToolButton()
         self.retry3.setStyleSheet("border: none;")
-        self.retry3.setIcon(QIcon("../images/retry.png"))
+        self.retry3.setIcon(QIcon("images/retry.png"))
         self.retry3.setIconSize(self.tool_btn_size)
         self.retry3.clicked.connect(self.Retry)
         self.retry3.setVisible(False)
@@ -282,7 +284,7 @@ class RegisterWindow(QtWidgets.QDialog):
 
         self.close_success_msg = QtWidgets.QToolButton()
         self.close_success_msg.setStyleSheet("border: none;")
-        self.close_success_msg.setIcon(QIcon("../images/remove.png"))
+        self.close_success_msg.setIcon(QIcon("images/remove.png"))
         self.close_success_msg.setIconSize(self.tool_btn_size)
         self.close_success_msg.setToolTip("Dismiss")
         self.close_success_msg.clicked.connect(self.CloseSuccessMsg)
@@ -314,17 +316,17 @@ class RegisterWindow(QtWidgets.QDialog):
 
         self.email_icon = QtWidgets.QToolButton()
         self.email_icon.setStyleSheet("border: none;")
-        self.email_icon.setIcon(QIcon("../images/email.png"))
+        self.email_icon.setIcon(QIcon("images/email.png"))
         self.email_icon.setIconSize(self.tool_btn_size)
         
         self.password_icon = QtWidgets.QToolButton()
         self.password_icon.setStyleSheet("border: none;")
-        self.password_icon.setIcon(QIcon("../images/password.png"))
+        self.password_icon.setIcon(QIcon("images/password.png"))
         self.password_icon.setIconSize(self.tool_btn_size)
 
         self.confirm_password_icon = QtWidgets.QToolButton()
         self.confirm_password_icon.setStyleSheet("border: none;")
-        self.confirm_password_icon.setIcon(QIcon("../images/password.png"))
+        self.confirm_password_icon.setIcon(QIcon("images/password.png"))
         self.confirm_password_icon.setIconSize(self.tool_btn_size)
 
         self.email_field = QtWidgets.QLineEdit(self.groupWidget)
@@ -380,7 +382,7 @@ class RegisterWindow(QtWidgets.QDialog):
         self.loginLbl.setFont(f)
         self.loginBtn = QtWidgets.QToolButton()
         self.loginBtn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
-        self.loginBtn.setIcon(QIcon("../images/right-arrow-light.png"))
+        self.loginBtn.setIcon(QIcon("images/right-arrow-light.png"))
         self.loginBtn.setIconSize(self.tool_btn_size)
         self.loginBtn.setText("Login")
         self.loginBtn.setStyleSheet("QToolButton {border-radius: 5px; background-color: #dc3545; color: white;} QToolButton:hover {background-color: #c42d3c;}")
@@ -440,7 +442,7 @@ class RegisterWindow(QtWidgets.QDialog):
                     try:
                         auth.create_user_with_email_and_password(email,password)
                         try:
-                            os.mkdir(f"../users/{email}")
+                            os.mkdir(f"users/{email}")
                             executePlatformCompatibleAuthCMD(email)
                             self.success.setVisible(True)
                             self.close_success_msg.setVisible(True)
@@ -455,7 +457,7 @@ class RegisterWindow(QtWidgets.QDialog):
                 try:
                     auth.create_user_with_email_and_password(email,password)
                     try:
-                        os.mkdir(f"../users/{email}")
+                        os.mkdir(f"users/{email}")
                         executePlatformCompatibleAuthCMD(email)
                         self.success.setVisible(True)
                         self.close_success_msg.setVisible(True)
@@ -470,7 +472,7 @@ class RegisterWindow(QtWidgets.QDialog):
             try:
                 auth.create_user_with_email_and_password(email,password)
                 try:
-                    os.mkdir(f"../users/{email}")
+                    os.mkdir(f"users/{email}")
                     executePlatformCompatibleAuthCMD(email)
                     self.success.setVisible(True)
                     self.close_success_msg.setVisible(True)
@@ -505,11 +507,3 @@ class RegisterWindow(QtWidgets.QDialog):
         login = LoginWindow()
         child.setParent(login)
         login.show()
-
-def run():
-    app.setPalette(QtWidgets.QApplication.style().standardPalette())
-    login = LoginWindow()
-    login.show()
-    sys.exit(app.exec_())
-
-run()

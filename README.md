@@ -60,7 +60,7 @@ Settings-API
 ===
 <h4>Here, I would like to introduce to you our new JSON Settings API. It is still in development, but I will update it's progress and document it here.</h4>
 
-<h4>So far we have an JSON api for the text-editor settings. Another JSON api will be made for the user settings.</h4>
+<h4>So far we have an JSON api for the text-editor settings.</h4>
 
 
 ## Tutorial #1: Your First Script.
@@ -147,30 +147,29 @@ access your json settings through a URL. The API is still in development, and is
 #### Usage
 <p>Here's some sample usage of the API to fetch your editor_settings data: </p>
 
-The Root: `/`
-The Users Route: `/users`
-Accessing Your Account: `/users/<user_email>`
-Accessing Your Data: `/users/<user_email>/<settings_filename>`
-Sample: `/users/jeffbob@gmail.com/editor_settings.json`
+1. The Root: `/`
+   2. The Users Route: `/users`
+      3. Accessing Your Account: `/users/<user_email>`
+         4. Accessing Your Data: `/users/<user_email>/<settings_filename>`
+            5. Sample: `/users/jeffbob@gmail.com/editor_settings.json`
 
 <p>If you're request URL was valid, you should see something like this: </p>
 
 <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/message2.png">
 
-<p>If you're request URL was not valid, you will recieve a 404 HTTP Response: </p>
+<p>If you're request URL was invalid, you will recieve a 404 HTTP Response: </p>
 
 <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/message3.png">
 
 Development Checklist
 ===
-<h4>The following checklist regards the development requirements for the first release of Timerist:<h4> 
+<h4>The following checklist regards the development requirements for the first release of Timerist:</h4> 
 
 - [ ] More Features
 - [ ] Bug Free
 - [ ] Polishing
 - [ ] Migration from local User Data to Server Side
 - [x] Finish the Editor Settings
-- [ ] Finish User Settings
 - [ ] Create Executable & Installer
 - [ ] Django Website to Download for Free
 

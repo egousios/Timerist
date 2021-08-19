@@ -16,7 +16,7 @@ def executePlatformCompatibleAuthCMD(email):
     data private and secure from each other. 
     '''
     if sys.platform.startswith(PLATFORMS["Windows"]): # If we are in Windows
-        os.system(f"""cd ../users/{email} && mkdir database && python -c "file = open('data.txt', 'a').close()" && python -c "file = open('editor_settings.json', 'a').close()" """)
+        os.system(f"""cd users/{email} && mkdir database && python -c "file = open('data.txt', 'a').close()" && python -c "file = open('editor_settings.json', 'a').close()" """)
     elif sys.platform.startswith(PLATFORMS["MacOS"]) or sys.platform.startswith(PLATFORMS["linux"]): # Otherwise, if we are in MacOS or Linux
         # Linux & MacOS come with a pre-installed version of Python2 instead of Python3, so we will have to specify that here.
-        os.system(f"""cd ../users/{email} && mkdir database && python3 -c "file = open('data.txt', 'a').close()" && python -c "file = open('editor_settings.json', 'a').close()" """)
+        os.system(f"""cd users/{email} && mkdir database && python3 -c "file = open('data.txt', 'a').close()" && python -c "file = open('editor_settings.json', 'a').close()" """)

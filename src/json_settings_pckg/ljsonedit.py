@@ -8,7 +8,7 @@ colorama.init(autoreset=True)
 @click.argument('user', required=True)
 def get(user, getjson):
     try:
-        with open(f"../users/{user}/editor_settings.json") as file:
+        with open(f"users/{user}/editor_settings.json") as file:
             data = file.readlines()
             file.close()
         ln_num = 0
@@ -23,7 +23,7 @@ def get(user, getjson):
 @click.argument('user', required=True)
 def clear(user, clear):
     try:
-        with open(f"../users/{user}/editor_settings.json") as file:
+        with open(f"users/{user}/editor_settings.json") as file:
             data = file.readlines()
             file.close()
         ln_num = 0

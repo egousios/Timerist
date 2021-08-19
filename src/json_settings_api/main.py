@@ -17,7 +17,7 @@ async def index():
 @app.get("/users/{user_email}/{settings_filename}")
 async def read_settings(user_email: str, settings_filename: str):
     try:
-        with open(f"../users/{user_email}/{settings_filename}", "r", encoding="utf-8") as f:
+        with open(f"users/{user_email}/{settings_filename}", "r", encoding="utf-8") as f:
             data = f.read()
             f.close()
             return {"user_email": user_email,"settings_filename": settings_filename,"settings": json.loads(data)} 
