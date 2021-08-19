@@ -5,6 +5,8 @@
 <img alt="Language" src="https://img.shields.io/badge/language-python-blue.svg">
 <img alt="Language" src="https://img.shields.io/badge/language-golang-red.svg">
 <img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
+<img alt="Framework" src="https://img.shields.io/badge/framework-FastAPI-cyan.svg">
+<img alt="Framework" src="https://img.shields.io/badge/framework-Click-purple.svg">
   
 <h4>An application that will help students organize their day at school :)</h4>
 </div>
@@ -40,7 +42,7 @@ Make sure that you have 'pip' installed on your system, and that you have added 
 If you have completed the step above, you may move on to completing the steps below.
 Open up your terminal, and type or paste in the following:
 1. `git clone "https://github.com/DaEliteCoder/Timerist.git"`
-2. `cd Timerist && cd src && pip install -r requirements.txt && cd auth && python -u Auth.py`
+2. `cd Timerist && cd src && pip install -r requirements.txt && python -u Timerist.py`
 ---
 #### Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
 `pip freeze`
@@ -49,7 +51,7 @@ Make sure that you have 'pip' installed on your system, and that you have added 
 If you have completed the step above, you may move on to completing the steps below. Remember, Python version 2 is pre-installed on your operating system, so you will have to say pip3 and python3 to specify that you're not using version 2.
 Open up your terminal, and type or paste in the following:
 1. `git clone "https://github.com/DaEliteCoder/Timerist.git"`
-2. `cd Timerist && cd src && pip install -r requirements.txt && cd auth && python3 -u Auth.py`
+2. `cd Timerist && cd src && pip install -r requirements.txt && python3 -u Timerist.py`
 ---
 #### Optional: To check if the dependencies were installed properly, type or paste in the following in your terminal: 
 `pip3 freeze`
