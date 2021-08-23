@@ -5,14 +5,15 @@
     <em>An application that will help students organize their day at school :)</em>
 </p>
 <br>
-<div style="margin-left: 50px">
-<img alt="Stars" src="https://img.shields.io/badge/build-passing-brightgreen">
-<img alt="Issues" src="https://img.shields.io/github/issues-raw/DaEliteCoder/Timerist">
-<img alt="Language" src="https://img.shields.io/badge/language-python-blue.svg">
-<img alt="Language" src="https://img.shields.io/badge/language-golang-red.svg">
-<img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
-<img alt="Framework" src="https://img.shields.io/badge/framework-FastAPI-cyan.svg">
-<img alt="Framework" src="https://img.shields.io/badge/framework-Click-purple.svg">
+<p align="center">
+   <img alt="Stars" src="https://img.shields.io/badge/build-passing-brightgreen">
+   <img alt="Issues" src="https://img.shields.io/github/issues-raw/DaEliteCoder/Timerist">
+   <img alt="Language" src="https://img.shields.io/badge/language-python-blue.svg">
+   <img alt="Language" src="https://img.shields.io/badge/language-golang-red.svg">
+   <img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
+   <img alt="Framework" src="https://img.shields.io/badge/framework-FastAPI-cyan.svg">
+   <img alt="Framework" src="https://img.shields.io/badge/framework-Click-purple.svg">
+</p>
 
 
 Table of contents
