@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://fastapi.tiangolo.com"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/timer_icon.png"></a>
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/timer_icon.png">
 </p>
 <p align="center">
     <em>An application that will help students organize their day at school :)</em>
