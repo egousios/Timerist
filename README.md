@@ -12,7 +12,6 @@
    <img alt="Language" src="https://img.shields.io/badge/language-golang-red.svg">
    <img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
    <img alt="Framework" src="https://img.shields.io/badge/framework-FastAPI-cyan.svg">
-   <img alt="Framework" src="https://img.shields.io/badge/framework-Click-purple.svg">
 </p>
 
 
