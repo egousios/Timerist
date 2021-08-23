@@ -1,5 +1,6 @@
 <div style="margin-left: 50px">
-<h1>Timerist (In Construction 👷 🚧)</h1>
+<h1>Timerist</h1>
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/app_icon.ico">
 <img alt="Stars" src="https://img.shields.io/badge/build-passing-brightgreen">
 <img alt="Issues" src="https://img.shields.io/github/issues-raw/DaEliteCoder/Timerist">
 <img alt="Language" src="https://img.shields.io/badge/language-python-blue.svg">
@@ -167,13 +168,13 @@ Development Checklist
 ===
 <h4>The following checklist regards the development requirements for the first release of Timerist:</h4> 
 
-- [ ] More Features
-- [ ] Bug Free
-- [ ] Polishing
-- [ ] Migration from local User Data to Server Side
-- [x] Finish the Editor Settings
-- [ ] Create Executable & Installer
-- [ ] Django Website to Download for Free
+- [x] More Features (Version 1)
+- [x] Bug Free (Version 1)
+- [x] Polishing (Version 1)
+- [ ] Migration from local User Data to Server Side (Version 1.0.9)
+- [x] Finish the Editor Settings (Version 1)
+- [x] Create Executable & Installer (Version 1)
+- [ ] Django Website to Download for Free (Version 1.0.2)
 
 Notices
 ===
