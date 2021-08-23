@@ -1,5 +1,5 @@
 <p align="center">
-   <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/timer_icon.png">
+   <a href="https://github.com/TheEliteCoder1/Timerist/blob/main/timer_icon.png"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/timer_icon.png"></a>
 </p>
 <p align="center">
     <em>An application that will help students organize their day at school :)</em>
