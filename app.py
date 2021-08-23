@@ -1,10 +1,11 @@
 from imports import *
+from forms import AddTodoForm
 
 class Ui_Timerist(object):
     def setupUi(self, Timerist, sound, email, password):
         Timerist.setObjectName("Timerist")
         Timerist.resize(650, 550)
-        Timerist.setWindowIcon(QtGui.QIcon('images/icon.png'))
+        Timerist.setWindowIcon(QtGui.QIcon('app_icon.ico'))
 
         self.TodoOptionsLayout = QHBoxLayout()
         self.TodoLayout = QVBoxLayout()

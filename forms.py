@@ -96,7 +96,7 @@ class AddTodoForm(QtWidgets.QMainWindow):
         elif len(self.lineEdit.text()) < 1:
                 self.msg = QtWidgets.QMessageBox()
                 self.msg.setWindowTitle("Error")
-                self.msg.setWindowIcon(QtGui.QIcon('images/icon.png'))
+                self.msg.setWindowIcon(QtGui.QIcon('app_icon.ico'))
                 self.msg.setIcon(QtWidgets.QMessageBox.Warning)
                 self.msg.setText("Your task must be at least 1 character.")
                 self.msg.exec_()

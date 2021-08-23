@@ -1,4 +1,8 @@
+from PyQt5.QtPrintSupport import QPrintDialog
 from imports import *
+from windows import *
+from code_editors import *
+from edit_tabs import *
 
 class EditTodoWindow(QtWidgets.QMainWindow):
     def __init__(self, Parent, title, text, sound=None, isCompletedTask=False, taskToComplete='', soundAlarm=False, newText='', isTimeShowing=False, prev_date='', prev_status='', tree=None):
@@ -72,7 +76,9 @@ class EmbedHtmlWindow(QtWidgets.QMainWindow):
         super().__init__(parent=Parent)
         self.setWindowTitle(title)
         self.widget = QtWidgets.QWidget()
+        self.main_l = QVBoxLayout()
         self.layout = QHBoxLayout()
+        self.layout2 = QHBoxLayout()
         self.tool_btn_size = QtCore.QSize(35, 35)
 
 
@@ -85,18 +91,50 @@ class EmbedHtmlWindow(QtWidgets.QMainWindow):
         self.htmlPreview = HTMLEditor(self.widget, text=textdata)
         self.htmlPreview.setReadOnly(True)
 
+        self.htmlPreviewLbl = QtWidgets.QLabel("Embed HTML: ")
+        self.htmlPreviewLbl.setStyleSheet("margin-left: 50px;")
+        ftg = QFont()
+        ftg.setPointSize(20)
+        self.htmlPreviewLbl.setFont(ftg)
+
+        self.browserLbl = QtWidgets.QLabel("Browser Preview: ")
+        ftg = QFont()
+        ftg.setPointSize(20)
+        self.browserLbl.setFont(ftg)
+
+        self.copyHtmlBtn = QtWidgets.QToolButton()
+        self.copyHtmlBtn.setStyleSheet("margin-right: 50px;")
+        self.copyHtmlBtn.setToolTip("Copy")
+        self.copyHtmlBtn.setIcon(QIcon("images/copy.png"))
+        self.copyHtmlBtn.setIconSize(self.tool_btn_size)
+        self.copyHtmlBtn.clicked.connect(self.copyHtml)
+
         self.webbrowser = QtWebEngineWidgets.QWebEngineView(self.widget)
         self.webbrowser.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath(filename)))
 
         self.setCentralWidget(self.widget)
+        self.layout2.addWidget(self.htmlPreviewLbl, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.layout2.addWidget(self.copyHtmlBtn, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.layout2.addStretch(2)
+        self.layout2.addWidget(self.browserLbl, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.layout2.addSpacerItem(QSpacerItem(50, 0))
+        self.layout2.addStretch(2)
+        self.main_l.addLayout(self.layout2)
         self.layout.addWidget(self.htmlPreview, 50)
         self.layout.addWidget(self.webbrowser, 50)
+        self.main_l.addLayout(self.layout)
 
-        self.widget.setLayout(self.layout)
+        self.widget.setLayout(self.main_l)
         scrollWidget = QtWidgets.QScrollArea()
         scrollWidget.setWidget(self.widget)
         scrollWidget.setWidgetResizable(True)
         self.setCentralWidget(scrollWidget)
+
+    def copyHtml(self):
+        self.htmlPreview.selectAll()
+        self.htmlPreview.copy()
+
+    
 
 
 class ReadWindow(QtWidgets.QMainWindow):
@@ -145,7 +183,9 @@ class ReadWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(scrollWidget)
 
     def printDialog(self):
-        QtWidgets.QMessageBox.information(self, "Coming Soon...", "The functionality of printing out your documents is coming out in the future!")
+        dialog = QPrintDialog()
+        if dialog.exec_() == QDialog.Accepted:
+            self.textEdit.document().print_(dialog.printer())
 
     def HtmlDialog(self):
         dialog = EmbedHtmlWindow(self, "Embed Html", self.textEdit, filename=f"users/{self.user}/database/{self.title}")
@@ -155,7 +195,7 @@ class OpenWindow(QtWidgets.QMainWindow):
     def __init__(self, Parent, textTo, user, winTitle=None):
         super().__init__(parent=Parent)
         self.user = user
-        self.setFixedSize(500, 500)
+        self.setFixedSize(500, 300)
         self.setWindowTitle("Open A Document")
         self.to = textTo
         self.centralwidget = QtWidgets.QWidget(self)
@@ -176,6 +216,13 @@ class OpenWindow(QtWidgets.QMainWindow):
         self.pushButton = QtWidgets.QPushButton("Open", self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(210, 320, 100, 30))
         self.pushButton.clicked.connect(self.get)
+
+        lay = QVBoxLayout()
+        lay.addWidget(self.label, alignment=Qt.AlignCenter)
+        lay.addWidget(self.listWidget, alignment=Qt.AlignCenter)
+        lay.addWidget(self.pushButton, alignment=Qt.AlignCenter)
+        lay.addStretch(3)
+        self.centralwidget.setLayout(lay)
         self.setCentralWidget(self.centralwidget)
         self.opened = False
 

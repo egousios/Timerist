@@ -1,4 +1,7 @@
 from imports import *
+from tabs import *
+from code_editors import *
+from windows import *
 
 class EditWindow(QtWidgets.QMainWindow):
     def __init__(self, Parent, title, text, user=None, database=None):
@@ -208,9 +211,9 @@ class EditWindow(QtWidgets.QMainWindow):
             with open(f"users/{self.user}/database/{self.title}", "w", encoding='utf-8') as f:
                 f.write(self.textEdit.toHtml())
                 f.close()
-            QtWidgets.QMessageBox.information(Timerist, "Saved!", f"Your changes were saved successfully.")
+            QtWidgets.QMessageBox.information(self, "Saved!", f"Your changes were saved successfully.")
         except:
-            QtWidgets.QMessageBox.warning(Timerist, "Saving Error", "Please open an existing document to save your changes.")
+            QtWidgets.QMessageBox.warning(self, "Saving Error", "Please open an existing document to save your changes.")
 
 
     def color_change(self):
@@ -670,7 +673,7 @@ class EditWindow(QtWidgets.QMainWindow):
         self.win.destroy()
 
     def open_json(self):
-        self.win = QtWidgets.QMainWindow(Timerist)
+        self.win = QtWidgets.QMainWindow(self)
         self.win.resize(500, 350)
         self.win.setWindowTitle("Editor Settings (JSON)")
         self.win.setWindowIcon(QIcon("images/settings.png"))

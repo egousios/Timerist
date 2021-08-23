@@ -3,15 +3,12 @@ Run to the mall
 Overdue ⌛
 2021-08-21 12:00:00 am
 Find a job
-Incomplete ❌
+Overdue ⌛
 2021-08-06 12:00:00 am
 Do homework
 Overdue ⌛
 2021-08-14 12:00:00 am
 Go to beach 
-Overdue ⌛
-2021-08-12 12:00:00 am
-lisp
 Overdue ⌛
 2021-08-20 12:00:00 am
 eye check up
