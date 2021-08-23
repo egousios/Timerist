@@ -1,6 +1,8 @@
+<div style="display: flex; justify-content: center;">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/repo_icon.png">
+</div>
+<br>
 <div style="margin-left: 50px">
-<h1>Timerist</h1>
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/app_icon.ico">
 <img alt="Stars" src="https://img.shields.io/badge/build-passing-brightgreen">
 <img alt="Issues" src="https://img.shields.io/github/issues-raw/DaEliteCoder/Timerist">
 <img alt="Language" src="https://img.shields.io/badge/language-python-blue.svg">
