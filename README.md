@@ -1,5 +1,5 @@
 <div style="display: flex; justify-content: center;">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/repo_icon.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/timer_icon.png">
 </div>
 <br>
 <div style="margin-left: 50px">
