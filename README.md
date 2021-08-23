@@ -1,6 +1,9 @@
-<div style="display: flex; justify-content: center;">
-   <img style="margin-left: 50px;" src="https://github.com/TheEliteCoder1/Timerist/blob/main/timer_icon.png">
-</div>
+<p align="center">
+  <a href="https://fastapi.tiangolo.com"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/timer_icon.png"></a>
+</p>
+<p align="center">
+    <em>An application that will help students organize their day at school :)</em>
+</p>
 <br>
 <div style="margin-left: 50px">
 <img alt="Stars" src="https://img.shields.io/badge/build-passing-brightgreen">
@@ -10,10 +13,6 @@
 <img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
 <img alt="Framework" src="https://img.shields.io/badge/framework-FastAPI-cyan.svg">
 <img alt="Framework" src="https://img.shields.io/badge/framework-Click-purple.svg">
-  
-<h4>An application that will help students organize their day at school :)</h4>
-</div>
-<br>
 
 
 Table of contents
