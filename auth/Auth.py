@@ -175,7 +175,6 @@ class LoginWindow(QtWidgets.QDialog):
     def loginToApp(self):
         email = self.email_field.text()
         password = self.password_field.text()
-        '''
         try:
             auth.sign_in_with_email_and_password(email,password)
             app.setFont(_font)
@@ -192,10 +191,9 @@ class LoginWindow(QtWidgets.QDialog):
         except:
             self.invalid.setVisible(True)
             self.retry.setVisible(True)
-        '''
 
         # This is to check for errors in the code
-
+        '''
         auth.sign_in_with_email_and_password(email,password)
         app.setFont(_font)
         clipboard=app.clipboard()
@@ -208,6 +206,7 @@ class LoginWindow(QtWidgets.QDialog):
         Timerist.show()
         self.setParent(Timerist)
         self.destroy(True)
+        '''
 
 
     def Retry(self):

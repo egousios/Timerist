@@ -1,5 +1,4 @@
 ### Timerist.py combines all other source files and runs the app.
-
 import sys
 sys.path.insert(0, "../")
 from auth import Auth, platforms

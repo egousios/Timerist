@@ -1,5 +1,5 @@
 from imports import *
-from forms import AddTodoForm
+from forms import *
 
 class Ui_Timerist(object):
     def setupUi(self, Timerist, sound, email, password):
@@ -286,17 +286,16 @@ class Ui_Timerist(object):
             pass
 
     def edit(self):
-        try:
-            selected = [item.text() for item in self.documentsDatabase.selectedItems()]
-            for item in selected:
-                file = open(f"users/{self.email}/database/{item}", "r", encoding='utf-8')
-                data = file.read()
-                file.close()
-                edit_window = EditWindow(Timerist, f"{item}", f"{data}", database=self.documentsDatabase, user=self.email)
-                edit_window.show()
-        except:
-            QtWidgets.QMessageBox.warning(Timerist, "Select a document", "Please select a document so that an action can be completed.")
-
+        #try:
+        selected = [item.text() for item in self.documentsDatabase.selectedItems()]
+        for item in selected:
+            file = open(f"users/{self.email}/database/{item}", "r", encoding='utf-8')
+            data = file.read()
+            file.close()
+            edit_window = EditWindow(Timerist, f"{item}", f"{data}", database=self.documentsDatabase, user=self.email)
+            edit_window.show()
+        #except:
+            #QtWidgets.QMessageBox.warning(Timerist, "Select a document", "Please select a document so that an action can be completed.")
 
 
 
