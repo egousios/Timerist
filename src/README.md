@@ -1,5 +1,5 @@
 <p align="center">
-   <a href="https://github.com/TheEliteCoder1/Timerist/blob/main/timer_icon.png"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/timer_icon.png"></a>
+   <a href="https://github.com/TheEliteCoder1/Timerist/blob/main/src/timer_icon.png"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/timer_icon.png"></a>
 </p>
 <p align="center">
     <em>An application that will help students organize their day at school :)</em>
@@ -25,12 +25,12 @@ Table of contents
 Screenshots
 ===
 #### light and dark theme mode:
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/main_light.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/main_dark.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/editor_light.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/editor_dark.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/add_todo_light.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/images/view_todo_light.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/main_light.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/main_dark.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_light.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_dark.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/add_todo_light.png">
+<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/view_todo_light.png">
 
 Running the Application from Source
 ===
