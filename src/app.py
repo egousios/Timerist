@@ -2,6 +2,10 @@ from imports import *
 from forms import *
 sys.path.insert(0, "../")
 from auth import Auth
+from todo_side_menu.archive_manager import ArchiveManager
+from todo_side_menu.recycle_bin import RecycleBin
+import qdarkstyle
+
 
 def start_timer(end_date):
     current_date_time = QtCore.QDateTime.currentDateTime()
@@ -13,13 +17,10 @@ def start_timer(end_date):
 
 
 class QTreeWidgetCustom(QtWidgets.QTreeWidget):
-
-    def __init__(self, parent, email):
+    def __init__(self, parent, email, extended_widget):
         super().__init__(parent=parent)
         self.email = email
-        self.itemChanged.connect(self.getItemText)
-
-    def getItemText()
+        self.extended_widget = extended_widget # main window to acess methods and functions.
 
     def contextMenuEvent(self, event):
         contextMenu = QMenu(self)
@@ -43,15 +44,14 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
     def Edit(self):
         items = self.selectedItems()
         for item in items:
-            a = [item.text(0), item.text(1), item.text(2)]
-            item.setFlags(Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable)
-            self.editItem(item, 1)
-            if len(item.text(1)) < 1:
-                item.setText(1, a[1])
-            self.itemChanged(item, 1)
-            b = [item.text(0), item.text(1), item.text(2)]
-            
-            change_item_from_query(a, b, f"users/{self.email}/data.txt")
+            editDlg = EditTodoForm(
+                self, 
+                f"Editing Todo - {item.text(1)}", 
+                self, 
+                user=self.email, 
+                item_to_edit=item, 
+                prev_data=[item.text(0), item.text(1), item.text(2)])
+            editDlg.show()
 
 
 class Ui_Timerist(object):
@@ -80,7 +80,7 @@ class Ui_Timerist(object):
         self.todo_label.setGeometry(QtCore.QRect(100, 2, 241, 51))
         self.todo_label.setFont(font)
         self.todo_label.setText("To Do List: ")
-        self.treeWidget = QTreeWidgetCustom(self.MainWidget, self.email)
+        self.treeWidget = QTreeWidgetCustom(self.MainWidget, self.email, self)
         self.treeWidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.treeWidget.setMinimumHeight(300)
         self.treeWidget.setObjectName("treeWidget")
@@ -113,6 +113,7 @@ class Ui_Timerist(object):
         self.pushButton_4.setToolTip("View the Timer")
         self.pushButton_3.clicked.connect(self.update_todo)
         self.pushButton_4.clicked.connect(self.view_todo)
+
         self.color_theme_btn = AnimatedToggle(checked_color="#4c5375")
         self.color_theme_btn.setMinimumSize(80, 10)
         self.color_theme_btn.setToolTip("Dark Mode: Off")
@@ -141,6 +142,23 @@ class Ui_Timerist(object):
         self.logout.setGeometry(QtCore.QRect(150, 360, 110, 30))
         self.logout.clicked.connect(self.Logout)
 
+        """Context Menu UI"""
+        self.TodoContextMenu=QTabWidget()
+        ### Context Menu Tabs 
+        self.ArchivedTodos = QWidget()
+        self.RecycledTodos = QWidget()
+        ### Tab Titles and Icons
+        self.TodoContextMenu.addTab(self.ArchivedTodos, "Archived")
+        self.TodoContextMenu.setTabIcon(0, QIcon("images/open.png"))
+        self.TodoContextMenu.addTab(self.RecycledTodos, "Recycled")
+        self.TodoContextMenu.setTabIcon(1, QIcon("images/recycle.png"))
+        ### Context Menu Font
+        self.TodoContextMenuFont = QFont()
+        self.TodoContextMenuFont.setPointSize(15)
+        self.TodoContextMenu.setFont(self.TodoContextMenuFont)
+        self.TodoContextMenu.setIconSize(QtCore.QSize(32, 32))
+        """Context Menu UI"""
+
         self.TodoOptionsLayout.addWidget(self.todo_label, alignment=Qt.AlignTop)
         self.TodoOptionsLayout.addWidget(self.pushButton, alignment=Qt.AlignLeft)
         self.TodoOptionsLayout.addWidget(self.pushButton_2, alignment=Qt.AlignLeft)
@@ -154,22 +172,24 @@ class Ui_Timerist(object):
         self.TodoOptionsLayout.addWidget(self.viewCopyright, alignment=Qt.AlignRight)
         self.TodoOptionsLayout.addWidget(self.logout, alignment=Qt.AlignRight)
         self.TodoOptionsLayout.addStretch()
+
+        self.docked_panel_layout = QHBoxLayout()
+        self.hide_context_menu = QtWidgets.QToolButton(self.MainWidget)
+        self.hide_context_menu.setIcon(QIcon("images/right-arrow.png"))
+        self.hide_context_menu.setToolTip("Hide Side Menu")
+        self.hide_context_menu.setIconSize(self.tool_btn_size_2)
+        self.hide_context_menu.clicked.connect(self.hide_side_menu)
+        self.docked_panel_layout.addWidget(self.hide_context_menu, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.docked_panel_layout.addWidget(self.TodoContextMenu)
+        self.docked_panel_layout.setSpacing(0)
+        self.docked_panel = QWidget()
+        self.docked_panel.setLayout(self.docked_panel_layout)
+
         self.main_layout = QHBoxLayout()
-        self.TodoContextMenu=QTabWidget()
-        self.ArchivedTodos = QWidget()
-        self.RecycledTodos = QWidget()
-        self.TodoContextMenu.addTab(self.ArchivedTodos, "Archived")
-        self.TodoContextMenu.setTabIcon(0, QIcon("images/open.png"))
-        self.TodoContextMenu.addTab(self.RecycledTodos, "Recycled")
-        self.TodoContextMenu.setTabIcon(1, QIcon("images/recycle.png"))
-        qf = QFont()
-        qf.setPointSize(15)
-        self.TodoContextMenu.setFont(qf)
-        self.TodoContextMenu.setIconSize(QtCore.QSize(32, 32))
-
-
-        self.main_layout.addWidget(self.treeWidget, 50)
-        self.main_layout.addWidget(self.TodoContextMenu, 50)
+        self.main_layout.addWidget(self.treeWidget)
+        self.main_layout.addWidget(self.docked_panel)
+        self.main_layout.setStretch(0, 50)
+        self.main_layout.setStretch(1, 50)
         self.TodoLayout.addLayout(self.TodoOptionsLayout)
         self.TodoLayout.addLayout(self.main_layout)
         self.TodoLayout.setStretch(1, 1)
@@ -188,15 +208,20 @@ class Ui_Timerist(object):
         QtCore.QMetaObject.connectSlotsByName(Timerist)
 
 
-    def contextMenuEvent(self, event):
-        contextMenu = QMenu(self)
-        archive = contextMenu.addAction("Archive")
-        recycle = contextMenu.addAction("Recycle")
-        action = contextMenu.exec_(self.mapToGlobal(event.pos()))
-        if action == archive:
-            self.Archive()
-        elif action == recycle:
-            self.Recycle()
+    def show_side_menu(self):
+        self.TodoContextMenu.setHidden(False)
+        self.hide_context_menu.setIcon(QIcon("images/right-arrow.png"))
+        self.hide_context_menu.setToolTip("Hide Side Menu")
+        self.hide_context_menu.clicked.connect(self.hide_side_menu)
+        self.main_layout.setStretch(1, 50)
+
+    def hide_side_menu(self):
+        self.TodoContextMenu.setHidden(True)
+        self.hide_context_menu.setIcon(QIcon("images/left-arrow.png"))
+        self.hide_context_menu.setToolTip("Show Side Menu")
+        self.hide_context_menu.clicked.connect(self.show_side_menu)
+        self.main_layout.setStretch(1, 1)
+        self.docked_panel_layout.setAlignment(self.hide_context_menu, Qt.AlignRight)
     
     def Logout(self):
         Timerist.destroy()
@@ -310,7 +335,7 @@ class Ui_Timerist(object):
 
     def dark_theme(self):
         # Loads the Dark Theme mode for the app
-        app.setStyleSheet(load_from_stylesheet("assets/dark-theme.qss"))
+        app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         self.color_theme_btn.setToolTip("Dark Mode: On")
 
     def light_theme(self):
@@ -341,6 +366,8 @@ class Ui_Timerist(object):
 app = QtWidgets.QApplication(sys.argv)
 app.setStyle('Fusion')
 app.setStyleSheet(load_from_stylesheet('assets/light-theme.qss'))
+pallete = app.palette()
+pallete.setColor(QtGui.QPalette.ColorRole.Background, QColor(255, 255, 255))
 Timerist = QtWidgets.QDialog()
 Timerist.setWindowFlags(Qt.WindowType.Window)
 Timerist.setObjectName("Timerist")

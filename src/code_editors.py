@@ -1,5 +1,6 @@
 from imports import *
 
+
 class HTMLEditor(Qsci.QsciScintilla):
     def __init__(self, parent=None, text=''):
         super().__init__(parent)

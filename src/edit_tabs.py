@@ -90,6 +90,7 @@ class EditTodoTabs(QtWidgets.QWidget):
         
         self.tell_time_layout.addWidget(self.labelTime)
         self.tell_time_layout.addLayout(self.gh)
+        self.tell_time_layout.addStretch()
         self.tab1.setLayout(self.tell_time_layout)
         self.layout.addWidget(self.tab1)
         self.setLayout(self.layout)
