@@ -85,7 +85,7 @@ class AddTodoForm(QtWidgets.QMainWindow):
         time = self.timeEdit.time().toString("hh:mm:ss a")
         date_and_time = f"{date} {time}"
         data = [f'{date_and_time}', f'{self.lineEdit.text()}', "Incomplete ❌"]
-        if len(self.lineEdit.text()) > 1 and is_item(data, f"users/{self.user}/data.txt") == False:
+        if len(self.lineEdit.text()) >= 1 and is_item(data, f"users/{self.user}/data.txt") == False:
             branch = Tree(branches={
                     "end_time":data[0],
                     "task":data[1],
@@ -159,11 +159,11 @@ class EditTodoForm(QtWidgets.QMainWindow):
         self.lineEdit.setText(self.item_to_edit.text(1))
         self.lineEdit.returnPressed.connect(self.taskUpdate)
         self.pushButton = QtWidgets.QPushButton(self)
-        self.pushButton.setGeometry(QtCore.QRect(30, 480, 90, 30))
+        self.pushButton.setGeometry(QtCore.QRect(30, 480, 110, 30))
         self.pushButton.setText("Save Changes")
         self.pushButton.clicked.connect(self.edit)
         self.pushButton2 = QtWidgets.QPushButton(self)
-        self.pushButton2.setGeometry(QtCore.QRect(150, 480, 90, 30))
+        self.pushButton2.setGeometry(QtCore.QRect(150, 480, 115, 30))
         self.pushButton2.setText("Cancel Changes")
         self.pushButton2.clicked.connect(self.cancel)
         self.setCentralWidget(self.centralwidget)
@@ -210,3 +210,4 @@ class EditTodoForm(QtWidgets.QMainWindow):
                 self.msg.setIcon(QtWidgets.QMessageBox.Warning)
                 self.msg.setText("Your new must be at least 1 character.")
                 self.msg.exec_()
+

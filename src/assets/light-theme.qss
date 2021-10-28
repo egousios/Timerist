@@ -2,6 +2,10 @@ QToolButton {
     border: none; 
 }
 
+QTreeWidget QHeaderView::section {
+    font-size: 12pt;
+}
+
 QTreeWidget {
     font-size: 15px;
 }
@@ -97,8 +101,8 @@ QWindow, QMainWindow {
     background: #fff;
 }
 
-QTabWidget::pane { /* The tab widget frame */
-    background-color: 2px solid #fff;
+ArchivedTodoManager {
+    background-color: rgb(255, 255, 255);
 }
 
 /* Style the tab using the tab sub-control. Note that
@@ -124,8 +128,4 @@ QTabBar::tab:selected, QTabBar::tab:hover {
 QTabBar::tab:selected {
     border-color: #0d98ba;
     border-bottom-color: #0d98ba; /* same as pane color */
-}
-
-QTabBar::tab:!selected {
-    margin-top: 4px; /* make non-selected tabs look smaller */
 }

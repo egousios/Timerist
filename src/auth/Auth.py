@@ -8,14 +8,14 @@ from .platforms import executePlatformCompatibleAuthCMD
 import pyrebase
 
 firebaseConfig = {
-    "apiKey":"AIzaSyBYIyUt7I8Jd6vV-1RYUATDgPlnKVK_Jpw",
-    "authDomain": "timerist-9d725.firebaseapp.com",
-    "databaseURL":"https://timerist-9d725-default-rtdb.firebaseio.com",
-    "projectId": "timerist-9d725",
-    "storageBucket": "timerist-9d725.appspot.com",
-    "messagingSenderId": "424236008804",
-    "appId": "1:424236008804:web:3fb371125c619263216671",
-    "measurementId": "G-NSXBB0V9MD"
+    "apiKey":"AIzaSyA6ct9DXoP9bFJPLdNLjyiycGbmjtLdKVY",
+    "authDomain":"timerist-f6564.firebaseapp.com",
+    "databaseURL":"https://timerist-f6564-default-rtdb.firebaseio.com",
+    "projectId":"timerist-f6564",
+    "storageBucket":"timerist-f6564.appspot.com",
+    "messagingSenderId":"424996934722",
+    "appId":"1:424996934722:web:f4403dcbf2494af0f009db",
+    "measurementId":"G-Q30JJLH8QZ"
 }
 
 firebase=pyrebase.initialize_app(firebaseConfig)
@@ -39,7 +39,7 @@ class LoginWindow(QtWidgets.QDialog):
         # Window properties
         self.title = 'Login'
         self.setWindowTitle(self.title)
-        self.setWindowIcon(QIcon("images/icon.png"))
+        self.setWindowIcon(QIcon("app_icon.ico"))
         self.setWindowFlags(Qt.Window)
         self.resize(200, 200)
         self.tool_btn_size = QSize(50, 50)
@@ -186,7 +186,7 @@ class LoginWindow(QtWidgets.QDialog):
             sound.setLoopCount(QtMultimedia.QSoundEffect.Infinite)
             sound.setVolume(50)
             ui.setupUi(Timerist, sound, email=email, password=password)
-            Timerist.show()
+            Timerist.showMaximized()
             self.setParent(Timerist)
             self.destroy()
         except:
@@ -204,7 +204,7 @@ class LoginWindow(QtWidgets.QDialog):
         sound.setLoopCount(QtMultimedia.QSoundEffect.Infinite)
         sound.setVolume(50)
         ui.setupUi(Timerist, sound, email=email, password=password)
-        Timerist.show()
+        Timerist.showMaximized()
         self.setParent(Timerist)
         self.destroy(True)
 
@@ -226,7 +226,7 @@ class RegisterWindow(QtWidgets.QDialog):
         # Window properties
         self.title = 'Register'
         self.setWindowTitle(self.title)
-        self.setWindowIcon(QIcon("images/icon.png"))
+        self.setWindowIcon(QIcon("app_icon.ico"))
         self.setWindowFlags(Qt.Window)
         self.resize(200, 200)
         self.tool_btn_size = QSize(50, 50)

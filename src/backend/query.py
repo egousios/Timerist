@@ -52,6 +52,18 @@ def delete_item_from_query(item_to_delete, path):
                 file.write(f"{elem}\n")
         file.close()
 
+def check_if_item_exists(item_to_find, path):
+    file = open(f"{path}", "r", encoding='utf-8')
+    data = file.readlines()
+    file.close()
+    data = [line.replace('\n', '') for line in data]
+    desired_lines = data[0::1]
+    fov = slice_per(desired_lines, 3)
+    if item_to_find in fov:
+        return True
+    return False
+    
+
 def change_item_from_query(prev_item, new_item, path):
     file = open(f"{path}", "r", encoding='utf-8')
     data = file.readlines()
