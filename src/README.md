@@ -25,11 +25,6 @@ Screenshots
 ===
 #### light and dark theme mode:
 <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/main_light.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/main_dark.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_light.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/editor_dark.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/add_todo_light.png">
-<img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/view_todo_light.png">
 
 <br>
 
