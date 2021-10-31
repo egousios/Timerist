@@ -4,7 +4,7 @@ from code_editors import *
 from edit_tabs import *
 
 class EditTodoWindow(QtWidgets.QDialog):
-    def __init__(self, Parent, title, text, sound=None, isCompletedTask=False, taskToComplete='', soundAlarm=False, newText='', isTimeShowing=False, prev_date='', prev_status='', tree=None):
+    def __init__(self, Parent, title, text, sound=None, isCompletedTask=False, taskToComplete='', soundAlarm=False, newText='', isTimeShowing=False, prev_date='', prev_status='', tree=None, shouldPlayOnStart=False):
         super().__init__(parent=Parent)
         self.title = title
         self.text = text
@@ -20,9 +20,11 @@ class EditTodoWindow(QtWidgets.QDialog):
         self.prev_date = prev_date
         self.prev_status = prev_status
         self.tree = tree
+        self.shouldPlayOnStart = shouldPlayOnStart
         if self.sound != None:
             if self.isTimeShowing == False:
-                self.sound.play()
+                if self.shouldPlayOnStart == True:
+                    self.sound.play()
         self.width = 520
         self.height = 240
         self.setWindowTitle(self.title)

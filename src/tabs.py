@@ -41,7 +41,7 @@ class TabBar(QtWidgets.QTabBar):
             painter.restore()
 
 
-class TabWidget(QtWidgets.QTabWidget):
+class CustomTabWidget(QtWidgets.QTabWidget):
     def __init__(self, *args, **kwargs):
         QtWidgets.QTabWidget.__init__(self, *args, **kwargs)
         self.setTabBar(TabBar(self))

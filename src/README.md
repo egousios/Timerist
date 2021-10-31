@@ -2,7 +2,7 @@
    <a href="https://github.com/TheEliteCoder1/Timerist/blob/main/src/timer_icon.png"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/timer_icon.png"></a>
 </p>
 <p align="center">
-    <em>An application that will help students organize their day at school :)</em>
+    <em>A functional & usable to-do-list app with percise deadlines and time tracking.</em>
 </p>
 <br>
 <p align="center">
@@ -12,30 +12,7 @@
    <img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
 </p>
 
-
-Table of contents
-=================
-<!--ts-->
-   * [Table of contents](#Table-of-contents)
-   * [Screenshots](#Screenshots)
-   * [Development Checklist](#Development-Checklist)
-<!--te-->
-
-Screenshots
+Screenshot
 ===
-#### light and dark theme mode:
 <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/main_light.png">
-
 <br>
-
-Development Checklist for v1
-===
-<h4>The following checklist regards the development requirements for the first release of Timerist:</h4> 
-
-- [x] More Features 
-- [x] Bug Free 
-- [x] Polishing 
-- [ ] Migration from local User Data to Server Side 
-- [x] Finish the Editor Settings 
-- [x] Create Executable & Installer 
-- [ ] Django Website to Download for Free 

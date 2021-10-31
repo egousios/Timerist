@@ -16,13 +16,15 @@ def get_file_size_in_bytes(file_path):
 
 class RecycleBin(QtWidgets.QWidget):
     """Recycled Todos Will be Managed Here."""
-    def __init__(self, parent, data_source, todo_data: List[List[str]], email, maker, manager):
+    def __init__(self, parent, data_source, todo_data: List[List[str]], email, maker, manager, showConfirmationBeforeEmpty, showBinStorage):
         self.Parent = parent
         self.data_source = data_source # Keeps the source of the data for restoration later.
         self.todo_data = todo_data # List of Recycled todos.
         self.email = email
         self.maker = maker
         self.manager = manager
+        self.showConfirmationBeforeEmpty = showConfirmationBeforeEmpty
+        self.showBinStorage = showBinStorage
         self.selectedTodos = []
         self.todos = []
         self.main_layout = QtWidgets.QVBoxLayout()
@@ -75,6 +77,7 @@ class RecycleBin(QtWidgets.QWidget):
         self.selected_count = QtWidgets.QLabel(f"Selected: {selection_amount}")
         self.selected_count.setFont(self.std_font)
 
+
         storage_amount = get_file_size_in_bytes(f"users/{self.email}/recycled.txt") / 4000
         self.storage = QtWidgets.QLabel(f"Storage: {storage_amount} KB")
         self.storage.setFont(self.std_font)
@@ -123,9 +126,8 @@ class RecycleBin(QtWidgets.QWidget):
         self.menu_layout.addWidget(self.empty_btn, alignment=Qt.AlignTop)
         self.menu_layout.addStretch(4)
         self.menu_layout.addWidget(self.selected_count, alignment=Qt.AlignTop)
-        self.menu_layout.addStretch(1)
-        self.menu_layout.addWidget(self.storage, alignment=Qt.AlignTop)
-        self.menu_layout.addStretch()
+        if self.showBinStorage == True:
+            self.menu_layout.addWidget(self.storage, alignment=Qt.AlignTop)
 
         for todo in self.todo_data:
             todo_object = RecycledTodo(self, todo)
@@ -188,8 +190,25 @@ class RecycleBin(QtWidgets.QWidget):
         self.manager.Refresh()
 
     def empty_bin(self):
-        ask = QtWidgets.QMessageBox.question(self, "Are you sure ?", "Are you sure that you want to permenantly delete all of your todos ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
-        if ask == QtWidgets.QMessageBox.Yes:
+        if self.manager.showConfirmationDialogBeforeEmptyBin == True:
+            ask = QtWidgets.QMessageBox.question(self, "Are you sure ?", "Are you sure that you want to permenantly delete all of your todos ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+            if ask == QtWidgets.QMessageBox.Yes:
+                for todo in self.todos:
+                    data = [todo.todo_data[0], todo.todo_data[1], todo.todo_data[2]]
+                    items = []
+                    for i in reversed(range(self.main_layout.count())): 
+                        item = self.main_layout.itemAt(i)
+                        items.append(item)
+                    for item in items:
+                        wid = item.widget()
+                        if isinstance(wid, RecycledTodo):
+                            if wid.todo_data == todo.todo_data:
+                                wid.setParent(None)
+                    self.todos.remove(todo)
+                    storage_amount = get_file_size_in_bytes(f"users/{self.email}/recycled.txt") / 4000
+                    self.storage.setText(f"Storage: {storage_amount} KB")
+                    delete_item_from_query(data, f"users/{self.email}/recycled.txt")
+        else:
             for todo in self.todos:
                 data = [todo.todo_data[0], todo.todo_data[1], todo.todo_data[2]]
                 items = []

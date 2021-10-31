@@ -7,6 +7,7 @@ sys.path.insert(0, "../")
 from auth import Auth
 from todo_side_menu.archive_manager import ArchiveManager
 from todo_side_menu.recycle_bin import RecycleBin, get_file_size_in_bytes
+import subprocess
 
 def start_timer(end_date):
     current_date_time = QtCore.QDateTime.currentDateTime()
@@ -35,12 +36,13 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
         elif action == edit:
             self.Edit()
 
+
     def Archive(self):
         for item in self.selectedItems():
             data = [item.text(0), item.text(1), item.text(2)]
 
             if is_item(data, f"users/{self.email}/archived.txt"):
-                QMessageBox.critical(self, "Error", "Couldn't archive todo because todo is already archived.")
+                QMessageBox.critical(Timerist, "Error", "Couldn't archive todo because todo is already archived.")
             else:
                 branch = Tree(branches={
                         "end_time":data[0],
@@ -60,7 +62,7 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
             data = [item.text(0), item.text(1), item.text(2)]
 
             if is_item(data, f"users/{self.email}/recycled.txt"):
-                QMessageBox.critical(self, "Error", "Couldn't recycle todo because todo is already recycled.")
+                QMessageBox.critical(Timerist, "Error", "Couldn't recycle todo because todo is already recycled.")
             else:
                 branch = Tree(branches={
                         "end_time":data[0],
@@ -91,7 +93,7 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
 
 
 class Ui_Timerist(object):
-    def setupUi(self, Timerist, sound, email, password):
+    def setupUi(self, Timerist, sound, email, password, cached_password, uid, email_verified, auth, idToken):
         Timerist.setObjectName("Timerist")
         Timerist.resize(650, 550)
         Timerist.setWindowIcon(QtGui.QIcon('app_icon.ico'))
@@ -109,13 +111,21 @@ class Ui_Timerist(object):
 
         self.email = email
         self.password = password
+        self.cached_password = cached_password
+        self.user_id = uid
+        self.email_verified = email_verified
+        self.auth = auth
+        self.idToken = idToken
+        self.shouldPlayTimerOnOpen = True
+        self.showConfirmationDialogBeforeEmptyBin = True
+        self.showBinStorage = True 
 
         font = QtGui.QFont()
         font.setPointSize(20)
 
         ### Context Menu Tabs 
         self.ArchivedTodos = ArchiveManager(Timerist, f"users/{self.email}/data.txt", return_contents_from_query(f"users/{self.email}/archived.txt"), email=self.email, maker=self, manager=self)
-        self.RecycledTodos = RecycleBin(Timerist, f"users/{self.email}/data.txt", return_contents_from_query(f"users/{self.email}/recycled.txt"), email=self.email, maker=self, manager=self)
+        self.RecycledTodos = RecycleBin(Timerist, f"users/{self.email}/data.txt", return_contents_from_query(f"users/{self.email}/recycled.txt"), email=self.email, maker=self, manager=self, showConfirmationBeforeEmpty=self.showConfirmationDialogBeforeEmptyBin, showBinStorage=self.showBinStorage)
 
         self.treeWidget = QTreeWidgetCustom(self.MainWidget, self.email)
         self.treeWidget.archiveWid = self.ArchivedTodos
@@ -190,6 +200,13 @@ class Ui_Timerist(object):
         _font = QFont(_fontstr, 20)
         self.usernameLabel.setFont(_font)
 
+        self.settings = QtWidgets.QToolButton(self.MainWidget)
+        self.settings.setIcon(QtGui.QIcon("images/settings.png"))
+        self.settings.setToolTip("Settings")
+        self.settings.setIconSize(self.tool_btn_size_2)
+        self.settings.setGeometry(QtCore.QRect(150, 360, 110, 30))
+        self.settings.clicked.connect(self.settingsWindow)
+
         self.viewCopyright = QtWidgets.QToolButton(self.MainWidget)
         self.viewCopyright.setIcon(QtGui.QIcon("images/copyright.png"))
         self.viewCopyright.setToolTip("View Copyright")
@@ -212,6 +229,7 @@ class Ui_Timerist(object):
         self.TodoOptionsLayout.addWidget(self.clear, alignment=Qt.AlignLeft)
         self.TodoOptionsLayout.addStretch(8)
         self.TodoOptionsLayout.addWidget(self.usernameLabel, alignment=Qt.AlignRight)
+        self.TodoOptionsLayout.addWidget(self.settings, alignment=Qt.AlignRight)
         self.TodoOptionsLayout.addWidget(self.viewCopyright, alignment=Qt.AlignRight)
         self.TodoOptionsLayout.addWidget(self.logout, alignment=Qt.AlignRight)
         self.TodoOptionsLayout.addStretch()
@@ -252,7 +270,7 @@ class Ui_Timerist(object):
                 if isinstance(item, QTreeWidgetItem):
                     data = [item.text(0), item.text(1), item.text(2)]
                     if is_item(data, f"users/{self.email}/recycled.txt"):
-                        QMessageBox.critical(self, "Error", "Couldn't recycle todo because todo is already recycled.")
+                        QMessageBox.critical(Timerist, "Error", "Couldn't recycle todo because todo is already recycled.")
                     else:
                         branch = Tree(branches={
                                 "end_time":data[0],
@@ -297,6 +315,174 @@ class Ui_Timerist(object):
         self.pushButton.setToolTip("Add A Task")
         self.pushButton.clicked.connect(self.add_todo)
 
+
+    def settingsWindow(self):
+        self.settings_win = QtWidgets.QDialog(Timerist)
+        self.settings_win.resize(QSize(550, 400))
+        self.settings_win.setWindowTitle("Settings")
+        self.settings_win.setWindowIcon(QIcon("images/settings.png"))
+        self.settings_win_tabs = CustomTabWidget()
+        self.settings_win_account_tab = QWidget()
+        self.settings_win_todolist_tab = QWidget()
+        self.settings_win_tabs.addTab(self.settings_win_account_tab, "Account")
+        self.settings_win_tabs.addTab(self.settings_win_todolist_tab, "To-Do-List")
+        layout = QVBoxLayout()
+        layout.addWidget(self.settings_win_tabs)
+        ui_font = QFont("Poppins", 20)
+        ui_font_smaller = QFont("Poppins", 14)
+        value_font = QFont("Segoe UI", 20)
+        btn_font = QFont("Poppins", 13)
+
+        self.account_field_layout = QFormLayout()
+
+        self.email_field = QLabel("Email: ")
+        self.email_field.setFont(ui_font)
+
+        if self.email_verified == False:
+            email_text = f"{self.email} (Not Verified)"
+        else:
+            email_text = self.email
+        self.email_value = QLabel(email_text)
+        self.email_value.setFont(value_font)
+
+        self.hashed_password_field = QLabel("Password: ")
+        self.hashed_password_field.setFont(ui_font)
+        pswd = ", ".join(["*" for c in self.password]).replace(", ", "")
+        self.hashed_password_value = QLabel(pswd)
+        self.hashed_password_value.setFont(value_font)
+
+        self.user_id_field = QLabel("Unique Id: ")
+        self.user_id_field.setFont(ui_font)
+        self.user_id_value = QLabel(self.user_id)
+        self.user_id_value.setFont(value_font)
+
+        if self.email_verified == True:
+            self.account_field_layout.addRow(self.email_field, self.email_value)
+        else:
+            self.email_value_wid = QWidget()
+            self.email_value_wid_layout = QHBoxLayout()
+            self.verify_email = QtWidgets.QPushButton()
+            self.verify_email.setText("Verify Email")
+            self.verify_email.setStyleSheet("QPushButton {border-radius: 5px; background-color: #0d6efd; color: white;} QPushButton:hover {background-color: #0b60de;}")
+            self.verify_email.setMinimumSize(120, 50)
+            self.verify_email.setFont(btn_font)
+            self.verify_email.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+            self.verify_email.clicked.connect(self.verifyEmail)
+            self.email_value_wid_layout.addWidget(self.email_value)
+            self.email_value_wid_layout.addSpacerItem(QSpacerItem(10, 0))
+            self.email_value_wid_layout.addWidget(self.verify_email)
+            self.email_value_wid.setLayout(self.email_value_wid_layout)
+            self.account_field_layout.addRow(self.email_field, self.email_value_wid)
+
+
+        self.hashed_password_wid = QWidget()
+        self.hashed_password_wid_layout = QHBoxLayout()
+        self.change_password = QtWidgets.QPushButton()
+        self.change_password.setText("Reset Password")
+        self.change_password.setStyleSheet("QPushButton {border-radius: 5px; background-color: #d9534f; color: white;} QPushButton:hover {background-color: #b84744;}")
+        self.change_password.setMinimumSize(140, 50)
+        self.change_password.setFont(btn_font)
+        self.change_password.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+        self.change_password.clicked.connect(self.reset_password)
+        self.hashed_password_wid_layout.addWidget(self.hashed_password_value)
+        self.hashed_password_wid_layout.addSpacerItem(QSpacerItem(10, 0))
+        self.hashed_password_wid_layout.addWidget(self.change_password)
+        self.hashed_password_wid.setLayout(self.hashed_password_wid_layout)
+
+        self.account_field_layout.addRow(self.hashed_password_field, self.hashed_password_wid)
+
+        self.user_id_wid = QWidget()
+        self.user_id_wid_layout = QHBoxLayout()
+        self.user_id_copy = QtWidgets.QToolButton()
+        self.user_id_copy.setIcon(QtGui.QIcon("images/copy.png"))
+        self.user_id_copy.setToolTip("Copy")
+        self.user_id_copy.setIconSize(self.tool_btn_size_2)
+        self.user_id_copy.setGeometry(QtCore.QRect(150, 360, 110, 30))
+        self.user_id_copy.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+        self.user_id_copy.clicked.connect(self.copy_user_id)
+        self.user_id_wid_layout.addWidget(self.user_id_value)
+        self.user_id_wid_layout.addSpacerItem(QSpacerItem(10, 0))
+        self.user_id_wid_layout.addWidget(self.user_id_copy)
+        self.user_id_wid.setLayout(self.user_id_wid_layout)
+
+        self.account_field_layout.addRow(self.user_id_field, self.user_id_wid)
+
+        self.settings_win_account_tab.setLayout(self.account_field_layout)
+
+        self.todolist_tab_layout = QFormLayout()
+
+        self.should_play_timer_on_open_label = QLabel("Ring Alarm When Task Is Overdue: ")
+        self.should_play_timer_on_open_label.setFont(ui_font_smaller)
+        self.should_play_timer_on_open = AnimatedToggle()
+        self.should_play_timer_on_open.setChecked(self.shouldPlayTimerOnOpen)
+        self.should_play_timer_on_open.setMaximumSize(90, 40)
+        self.should_play_timer_on_open.stateChanged.connect(lambda x: self.toggle_timer_on_open(True) if x else self.toggle_timer_on_open(False))
+
+        self.show_confirmation_dlg_before_empty_bin_lbl = QLabel("Show Confirmation Dialog Before Emptying Bin: ")
+        self.show_confirmation_dlg_before_empty_bin_lbl.setFont(ui_font_smaller)
+        self.show_confirmation_dlg_before_empty_bin = AnimatedToggle()
+        self.show_confirmation_dlg_before_empty_bin.setChecked(self.showConfirmationDialogBeforeEmptyBin)
+        self.show_confirmation_dlg_before_empty_bin.setMaximumSize(90, 40)
+        self.show_confirmation_dlg_before_empty_bin.stateChanged.connect(lambda x: self.show_confirmation_before_empty_bin(True) if x else self.show_confirmation_before_empty_bin(False))
+
+        self.show_bin_storage_label = QLabel("Show Bin Storage: ")
+        self.show_bin_storage_label.setFont(ui_font_smaller)
+        self.show_bin_storage = AnimatedToggle()
+        self.show_bin_storage.setChecked(self.showBinStorage)
+        self.show_bin_storage.setMaximumSize(90, 40)
+        self.show_bin_storage.stateChanged.connect(lambda x: self.show_bin_storage_func(True) if x else self.show_bin_storage_func(False))
+
+
+        self.todolist_tab_layout.addRow(self.should_play_timer_on_open_label, self.should_play_timer_on_open)
+        self.todolist_tab_layout.addRow(self.show_confirmation_dlg_before_empty_bin_lbl, self.show_confirmation_dlg_before_empty_bin)
+        self.todolist_tab_layout.addRow(self.show_bin_storage_label, self.show_bin_storage)
+
+        self.settings_win_todolist_tab.setLayout(self.todolist_tab_layout)
+
+        self.settings_win.setLayout(layout)
+        self.settings_win.show()
+
+    
+    def toggle_timer_on_open(self, should):
+        if should == True:
+            self.shouldPlayTimerOnOpen = True
+        else:
+            self.shouldPlayTimerOnOpen = False
+
+    
+    def show_confirmation_before_empty_bin(self, should):
+        if should == True:
+            self.showConfirmationDialogBeforeEmptyBin = True
+        else:
+            self.showConfirmationDialogBeforeEmptyBin = False
+
+    def show_bin_storage_func(self, should):
+        if should == True:
+            self.showBinStorage = True
+            if not hasattr(self.RecycledTodos, "storage"):
+                self.RecycledTodos.menu_layout.addWidget(self.RecycledTodos.storage, alignment=Qt.AlignTop)
+        else:
+            self.showBinStorage = False
+            self.RecycledTodos.menu_layout.removeWidget(self.RecycledTodos.storage)
+
+
+    def verifyEmail(self):
+        try:
+            self.auth.send_email_verification(self.idToken)
+            QMessageBox.information(Timerist, "Email Sent", f"Your email verification was sent to {self.email}")
+        except:
+            QMessageBox.critical(Timerist, "Too Many Attemps", f"A verification email was already sent to {self.email}")
+
+
+    def reset_password(self):
+        self.auth.send_password_reset_email(self.email)
+        QMessageBox.information(Timerist, "Email Sent", f"Your password reset email was sent to {self.email}")
+
+    def copy_user_id(self):
+        clipboard.setText(self.user_id_value.text(), QClipboard.Mode.Clipboard)
+        QMessageBox.information(Timerist, "Copied!", "Your UniqueID has been copied.")
+
+
     def add_todo(self):
         add = AddTodoForm(Timerist, "Add Todo", self.treeWidget, user=self.email)
         add.show()
@@ -335,17 +521,17 @@ class Ui_Timerist(object):
                 is_task_completed = False
             if text_data == "yes":
                 if is_task_completed == True:
-                    edit_todo_win = EditTodoWindow(Timerist, f"Viewing Task - {task_name}", task_closed_id, taskToComplete=item_text[1], tree=self.treeWidget)
+                    edit_todo_win = EditTodoWindow(Timerist, f"Viewing Task - {task_name}", task_closed_id, taskToComplete=item_text[1], tree=self.treeWidget, shouldPlayOnStart=self.shouldPlayTimerOnOpen)
                     edit_todo_win.show()
                 elif is_task_completed == False:
-                    edit_todo_win = EditTodoWindow(Timerist, f"Viewing Task - {task_name}", task_time_is_up_id, self.sound, is_task_completed, taskToComplete=item_text[1], soundAlarm=True, tree=self.treeWidget)
+                    edit_todo_win = EditTodoWindow(Timerist, f"Viewing Task - {task_name}", task_time_is_up_id, self.sound, is_task_completed, taskToComplete=item_text[1], soundAlarm=True, tree=self.treeWidget, shouldPlayOnStart=self.shouldPlayTimerOnOpen)
                     edit_todo_win.show()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
             else:
                 if is_task_completed == True:
-                    edit_todo_win = EditTodoWindow(Timerist, f"Viewing Task - {task_name}", task_closed_id, taskToComplete=item_text[1], tree=self.treeWidget)
+                    edit_todo_win = EditTodoWindow(Timerist, f"Viewing Task - {task_name}", task_closed_id, taskToComplete=item_text[1], tree=self.treeWidget, shouldPlayOnStart=self.shouldPlayTimerOnOpen)
                     edit_todo_win.show()
                 elif is_task_completed == False:
-                    edit_todo_win = EditTodoWindow(Timerist, f"Viewing Task - {task_name}", text_data, taskToComplete=item_text[1], soundAlarm=True, newText=item_text[0], sound=self.sound, isTimeShowing=True, prev_date=item_text[0], prev_status=item_text[2], tree=self.treeWidget)
+                    edit_todo_win = EditTodoWindow(Timerist, f"Viewing Task - {task_name}", text_data, taskToComplete=item_text[1], soundAlarm=True, newText=item_text[0], sound=self.sound, isTimeShowing=True, prev_date=item_text[0], prev_status=item_text[2], tree=self.treeWidget, shouldPlayOnStart=self.shouldPlayTimerOnOpen)
                     edit_todo_win.show()
 
     def CopyrightShow(self):
@@ -373,6 +559,7 @@ app.setStyle('Fusion')
 app.setStyleSheet(load_from_stylesheet('assets/light-theme.qss'))
 pallete = app.palette()
 pallete.setColor(QtGui.QPalette.ColorRole.Background, QColor(255, 255, 255))
+clipboard=app.clipboard()
 Timerist = QtWidgets.QDialog()
 Timerist.setWindowFlags(Qt.WindowType.Window)
 Timerist.setObjectName("Timerist")

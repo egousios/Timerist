@@ -18,8 +18,11 @@ firebaseConfig = {
     "measurementId":"G-Q30JJLH8QZ"
 }
 
+
+
 firebase=pyrebase.initialize_app(firebaseConfig)
 auth=firebase.auth()
+
 
 class User:
     def __init__(self, email, password):
@@ -177,7 +180,7 @@ class LoginWindow(QtWidgets.QDialog):
         password = self.password_field.text()
         '''
         try:
-            auth.sign_in_with_email_and_password(email,password)
+            user = auth.sign_in_with_email_and_password(email,password)
             app.setFont(_font)
             clipboard=app.clipboard()
             sound_file = 'assets/alarm.wav'
@@ -185,17 +188,19 @@ class LoginWindow(QtWidgets.QDialog):
             sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
             sound.setLoopCount(QtMultimedia.QSoundEffect.Infinite)
             sound.setVolume(50)
-            ui.setupUi(Timerist, sound, email=email, password=password)
+            password_hash = auth.get_account_info(user['idToken'])['users'][0]['passwordHash']
+            email_verified = auth.get_account_info(user['idToken'])['users'][0]['emailVerified']
+            ui.setupUi(Timerist, sound, email=email, password=password, cached_password=password_hash, uid=user['localId'], email_verified=email_verified)
             Timerist.showMaximized()
             self.setParent(Timerist)
-            self.destroy()
+            self.destroy(True)
         except:
             self.invalid.setVisible(True)
             self.retry.setVisible(True)
         '''
         # This is to check for errors in the code
 
-        auth.sign_in_with_email_and_password(email,password)
+        user = auth.sign_in_with_email_and_password(email,password)
         app.setFont(_font)
         clipboard=app.clipboard()
         sound_file = 'assets/alarm.wav'
@@ -203,7 +208,9 @@ class LoginWindow(QtWidgets.QDialog):
         sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
         sound.setLoopCount(QtMultimedia.QSoundEffect.Infinite)
         sound.setVolume(50)
-        ui.setupUi(Timerist, sound, email=email, password=password)
+        password_hash = auth.get_account_info(user['idToken'])['users'][0]['passwordHash']
+        email_verified = auth.get_account_info(user['idToken'])['users'][0]['emailVerified']
+        ui.setupUi(Timerist, sound, email=email, password=password, cached_password=password_hash, uid=user['localId'], email_verified=email_verified, auth=auth, idToken=user['idToken'])
         Timerist.showMaximized()
         self.setParent(Timerist)
         self.destroy(True)
