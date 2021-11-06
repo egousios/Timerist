@@ -12,7 +12,7 @@
    <img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
 </p>
 
-Screenshots
+Screenshot:
 ===
 <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/main_light.png">
 <br>
