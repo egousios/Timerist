@@ -104,14 +104,14 @@ class LoginWindow(QtWidgets.QDialog):
 
         self.email_field = QtWidgets.QLineEdit(self.groupWidget)
         self.email_field.setFont(field_font)
-        self.email_field.setMinimumSize(170, 50)
+        self.email_field.setMinimumSize(200, 50)
         self.email_field.setStyleSheet('QLineEdit {border-radius: 3px; border: 1px solid #000;} QLineEdit:hover {border: 3px solid #79bef2;}')
         self.email_field_layout.addWidget(self.email_icon, 0)
         self.email_field_layout.addWidget(self.email_field, 0)
 
         self.password_field = QtWidgets.QLineEdit(self.groupWidget)
         self.password_field.setFont(field_font)
-        self.password_field.setMinimumSize(170, 50)
+        self.password_field.setMinimumSize(200, 50)
         self.password_field.setStyleSheet('QLineEdit {border-radius: 3px; border: 1px solid #000;} QLineEdit:hover {border: 3px solid #79bef2;}')
         self.password_field.setEchoMode(QtWidgets.QLineEdit.Password)
         self.verticalLayout = QVBoxLayout()
@@ -190,7 +190,7 @@ class LoginWindow(QtWidgets.QDialog):
             sound.setVolume(50)
             password_hash = auth.get_account_info(user['idToken'])['users'][0]['passwordHash']
             email_verified = auth.get_account_info(user['idToken'])['users'][0]['emailVerified']
-            ui.setupUi(Timerist, sound, email=email, password=password, cached_password=password_hash, uid=user['localId'], email_verified=email_verified)
+            ui.setupUi(Timerist, sound, email=email, password=password, cached_password=password_hash, uid=user['localId'], email_verified=email_verified, auth=auth, idToken=user['idToken'])
             Timerist.showMaximized()
             self.setParent(Timerist)
             self.destroy(True)
@@ -338,14 +338,14 @@ class RegisterWindow(QtWidgets.QDialog):
 
         self.email_field = QtWidgets.QLineEdit(self.groupWidget)
         self.email_field.setFont(field_font)
-        self.email_field.setMinimumSize(170, 50)
+        self.email_field.setMinimumSize(200, 50)
         self.email_field.setStyleSheet('QLineEdit {border-radius: 3px; border: 1px solid #000;} QLineEdit:hover {border: 3px solid #79bef2;}')
         self.email_field_layout.addWidget(self.email_icon, 0)
         self.email_field_layout.addWidget(self.email_field, 0)
 
         self.password_field = QtWidgets.QLineEdit(self.groupWidget)
         self.password_field.setFont(field_font)
-        self.password_field.setMinimumSize(170, 50)
+        self.password_field.setMinimumSize(200, 50)
         self.password_field.setStyleSheet('QLineEdit {border-radius: 3px; border: 1px solid #000;} QLineEdit:hover {border: 3px solid #79bef2;}')
         self.password_field.setEchoMode(QtWidgets.QLineEdit.Password)
         self.password_field_layout.addWidget(self.password_icon, 0)
@@ -353,7 +353,7 @@ class RegisterWindow(QtWidgets.QDialog):
 
         self.confirm_password_field = QtWidgets.QLineEdit(self.groupWidget)
         self.confirm_password_field.setFont(field_font)
-        self.confirm_password_field.setMinimumSize(170, 50)
+        self.confirm_password_field.setMinimumSize(200, 50)
         self.confirm_password_field.setStyleSheet('QLineEdit {border-radius: 3px; border: 1px solid #000;} QLineEdit:hover {border: 3px solid #79bef2;}')
         self.confirm_password_field.setEchoMode(QtWidgets.QLineEdit.Password)
         self.confirm_password_field_layout.addWidget(self.confirm_password_icon, 0)

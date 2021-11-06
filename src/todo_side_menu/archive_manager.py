@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import *
 from typing import List, Optional
 from backend.query import Tree, delete_item_from_query, is_item, return_contents_from_query, is_item
 from todo_side_menu.Components.recycled_todo import RecycledTodo
-from todo_side_menu.recycle_bin import get_file_size_in_bytes
 from .Components.archived_todo import ArchivedTodo
 import time
 
@@ -176,7 +175,5 @@ class ArchiveManager(QtWidgets.QWidget):
                 todo_object.setStyleSheet("QFrame {border-width: 2;border-radius: 4;border-style: solid;border-color: #0d0e0f;}")
                 self.manager.RecycledTodos.todos.append(todo_object)
                 self.manager.RecycledTodos.main_layout.addWidget(todo_object)
-                storage_amount = get_file_size_in_bytes(f"users/{self.email}/recycled.txt") / 4000
-                self.manager.RecycledTodos.storage.setText(f"Storage: {storage_amount} KB")
 
             

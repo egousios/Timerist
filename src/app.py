@@ -6,8 +6,10 @@ from todo_side_menu.Components.recycled_todo import RecycledTodo
 sys.path.insert(0, "../")
 from auth import Auth
 from todo_side_menu.archive_manager import ArchiveManager
-from todo_side_menu.recycle_bin import RecycleBin, get_file_size_in_bytes
-import subprocess
+from todo_side_menu.recycle_bin import RecycleBin
+from custom_components.profile_pic_picker import ProfilePicPicker, BigProfilePicPicker
+from json_settings.user_settings import load_user_settings, save_user_settings
+import shutil
 
 def start_timer(end_date):
     current_date_time = QtCore.QDateTime.currentDateTime()
@@ -76,8 +78,6 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
                 todo_object.setStyleSheet("QFrame {border-width: 2;border-radius: 4;border-style: solid;border-color: #0d0e0f;}")
                 self.recycleWid.todos.append(todo_object)
                 self.recycleWid.main_layout.addWidget(todo_object)
-                storage_amount = get_file_size_in_bytes(f"users/{self.email}/recycled.txt") / 4000
-                self.recycleWid.storage.setText(f"Storage: {storage_amount} KB")
 
     def Edit(self):
         items = self.selectedItems()
@@ -92,11 +92,73 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
             editDlg.show()
 
 
+"""Settings Constants"""
+
+THEMES = ["Default", "Ubuntu", "Aqua"]
+
+THEME_FILES = [
+    "stylesheets/default.qss",
+    "stylesheets/ubuntu.qss",
+    "stylesheets/aqua.qss",
+]
+
+# Add this to the stylesheets to regulate system appearance.
+THEME_REGULATOR = """
+QTreeWidget QHeaderView::section {
+    font-size: 12pt;
+}
+
+QTreeWidget {
+    font-size: 15px;
+}
+
+QMenu { 
+    background-color: black; 
+    color: white; 
+    border: black solid 1px
+}
+
+QLineEdit {
+    font-size: 11.5px;
+}
+"""
+
+CURSORS = [
+    "Default", "Windows", "Large Windows", "Mega Windows", 
+    "Medium Windows", "Semi-Medium Windows", "Mac 1",
+    "Mac 2", "Mac 3", "Mac 4", 
+    "Mac 5", "Legacy 1", "Legacy 2",
+    "Legacy 3", "Legacy 4", "Legacy 5", 
+    "Linux"
+]
+
+CURSOR_FILES = [
+    "Default",
+    "cursors/windows/regular_win.png",
+    "cursors/windows/semi_mega_win.png",
+    "cursors/windows/mega_win.png",
+    "cursors/windows/medium_win.png",
+    "cursors/windows/semi_medium_win.png",
+    "cursors/mac/1_mac.png",
+    "cursors/mac/2_mac.png",
+    "cursors/mac/3_mac.png",
+    "cursors/mac/4_mac.png",
+    "cursors/mac/5_mac.png",
+    "cursors/legacy/legacy1.png",
+    "cursors/legacy/legacy2.png",
+    "cursors/legacy/legacy3.png",
+    "cursors/legacy/legacy4.png",
+    "cursors/legacy/legacy5.png",
+    "cursors/linux.png"
+]
+
+
 class Ui_Timerist(object):
     def setupUi(self, Timerist, sound, email, password, cached_password, uid, email_verified, auth, idToken):
         Timerist.setObjectName("Timerist")
         Timerist.resize(650, 550)
         Timerist.setWindowIcon(QtGui.QIcon('app_icon.ico'))
+        Timerist.destroyed.connect(self.closeEvent)
 
         self.TodoOptionsLayout = QHBoxLayout()
         self.TodoLayout = QVBoxLayout()
@@ -118,14 +180,20 @@ class Ui_Timerist(object):
         self.idToken = idToken
         self.shouldPlayTimerOnOpen = True
         self.showConfirmationDialogBeforeEmptyBin = True
-        self.showBinStorage = True 
+        self.user_settings_path = f"users/{self.email}/user_settings.json"
+        try:
+            self.user_settings = load_user_settings(self.user_settings_path)
+        except:
+            self.user_settings = {"background-image":"images/account.png"}
+
+        self.selected_theme, self.selected_cursor = "Default", "Default"
 
         font = QtGui.QFont()
         font.setPointSize(20)
 
         ### Context Menu Tabs 
         self.ArchivedTodos = ArchiveManager(Timerist, f"users/{self.email}/data.txt", return_contents_from_query(f"users/{self.email}/archived.txt"), email=self.email, maker=self, manager=self)
-        self.RecycledTodos = RecycleBin(Timerist, f"users/{self.email}/data.txt", return_contents_from_query(f"users/{self.email}/recycled.txt"), email=self.email, maker=self, manager=self, showConfirmationBeforeEmpty=self.showConfirmationDialogBeforeEmptyBin, showBinStorage=self.showBinStorage)
+        self.RecycledTodos = RecycleBin(Timerist, f"users/{self.email}/data.txt", return_contents_from_query(f"users/{self.email}/recycled.txt"), email=self.email, maker=self, manager=self, showConfirmationBeforeEmpty=self.showConfirmationDialogBeforeEmptyBin)
 
         self.treeWidget = QTreeWidgetCustom(self.MainWidget, self.email)
         self.treeWidget.archiveWid = self.ArchivedTodos
@@ -200,6 +268,10 @@ class Ui_Timerist(object):
         _font = QFont(_fontstr, 20)
         self.usernameLabel.setFont(_font)
 
+        self.profile_pic = ProfilePicPicker(self.MainWidget, profile_pic=self.user_settings["background-image"], save_to=self.user_settings_path, func=save_user_settings)
+        self.profile_pic.setFixedSize(QSize(50, 50))
+
+
         self.settings = QtWidgets.QToolButton(self.MainWidget)
         self.settings.setIcon(QtGui.QIcon("images/settings.png"))
         self.settings.setToolTip("Settings")
@@ -229,6 +301,7 @@ class Ui_Timerist(object):
         self.TodoOptionsLayout.addWidget(self.clear, alignment=Qt.AlignLeft)
         self.TodoOptionsLayout.addStretch(8)
         self.TodoOptionsLayout.addWidget(self.usernameLabel, alignment=Qt.AlignRight)
+        self.TodoOptionsLayout.addWidget(self.profile_pic, alignment=Qt.AlignRight)
         self.TodoOptionsLayout.addWidget(self.settings, alignment=Qt.AlignRight)
         self.TodoOptionsLayout.addWidget(self.viewCopyright, alignment=Qt.AlignRight)
         self.TodoOptionsLayout.addWidget(self.logout, alignment=Qt.AlignRight)
@@ -253,10 +326,13 @@ class Ui_Timerist(object):
         self.retranslateUi(Timerist)
         QtCore.QMetaObject.connectSlotsByName(Timerist)
 
+
     def get_tree(self):
         return self.treeWidget
     
     def Logout(self):
+        if hasattr(self, "settings_win"):
+            self.settings_win.destroy()
         Timerist.destroy()
         QApplication.instance().exit(0)
         os.system("python -u Timerist.py")
@@ -284,9 +360,12 @@ class Ui_Timerist(object):
                         todo_object.setStyleSheet("QFrame {border-width: 2;border-radius: 4;border-style: solid;border-color: #0d0e0f;}")
                         self.RecycledTodos.todos.append(todo_object)
                         self.RecycledTodos.main_layout.addWidget(todo_object)
-                        storage_amount = get_file_size_in_bytes(f"users/{self.email}/recycled.txt") / 4000
-                        self.RecycledTodos.storage.setText(f"Storage: {storage_amount} KB")
-    
+
+    def closeEvent(self, evt):
+        Timerist.destroy(destroyWindow=True, destroySubWindows=True)
+
+
+
     def Refresh(self):
         self.fillTreeWidget()
         
@@ -324,16 +403,22 @@ class Ui_Timerist(object):
         self.settings_win_tabs = CustomTabWidget()
         self.settings_win_account_tab = QWidget()
         self.settings_win_todolist_tab = QWidget()
+        self.settings_win_appearance_tab = QWidget()
+
         self.settings_win_tabs.addTab(self.settings_win_account_tab, "Account")
         self.settings_win_tabs.addTab(self.settings_win_todolist_tab, "To-Do-List")
+        self.settings_win_tabs.addTab(self.settings_win_appearance_tab, "Appearance")
         layout = QVBoxLayout()
         layout.addWidget(self.settings_win_tabs)
         ui_font = QFont("Poppins", 20)
         ui_font_smaller = QFont("Poppins", 14)
+        small_font = QFont("Poppins", 11.5)
         value_font = QFont("Segoe UI", 20)
         btn_font = QFont("Poppins", 13)
 
         self.account_field_layout = QFormLayout()
+        self.account_field_layout.setLabelAlignment(Qt.AlignLeft)
+        self.account_field_layout.setFormAlignment(Qt.AlignLeft)
 
         self.email_field = QLabel("Email: ")
         self.email_field.setFont(ui_font)
@@ -355,6 +440,15 @@ class Ui_Timerist(object):
         self.user_id_field.setFont(ui_font)
         self.user_id_value = QLabel(self.user_id)
         self.user_id_value.setFont(value_font)
+
+
+        self.account_profile_label = QLabel("Profile Picture: ")
+        self.account_profile_label.setFont(ui_font)
+        self.big_profile = BigProfilePicPicker(self.MainWidget, profile_pic=self.profile_pic.profile_pic, save_to=self.user_settings_path, func=save_user_settings, change_to=self.profile_pic)
+        self.profile_pic.make_big(self.big_profile)
+
+        self.account_field_layout.addWidget(self.account_profile_label)
+        self.account_field_layout.addWidget(self.big_profile)
 
         if self.email_verified == True:
             self.account_field_layout.addRow(self.email_field, self.email_value)
@@ -379,7 +473,7 @@ class Ui_Timerist(object):
         self.hashed_password_wid_layout = QHBoxLayout()
         self.change_password = QtWidgets.QPushButton()
         self.change_password.setText("Reset Password")
-        self.change_password.setStyleSheet("QPushButton {border-radius: 5px; background-color: #d9534f; color: white;} QPushButton:hover {background-color: #b84744;}")
+        self.change_password.setStyleSheet("QPushButton {border-radius: 5px; background-color: #5bc0de; color: white;} QPushButton:hover {background-color: #53aec9;}")
         self.change_password.setMinimumSize(140, 50)
         self.change_password.setFont(btn_font)
         self.change_password.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
@@ -407,6 +501,19 @@ class Ui_Timerist(object):
 
         self.account_field_layout.addRow(self.user_id_field, self.user_id_wid)
 
+        self.danger_zone_lbl = QLabel("Danger Zone: ")
+        self.danger_zone_lbl.setFont(ui_font)
+
+        self.delete_account = QPushButton()
+        self.delete_account.setText("Delete Account")
+        self.delete_account.setStyleSheet("QPushButton {border-radius: 5px; background-color: #d9534f; color: white;} QPushButton:hover {background-color: #b84744;}")
+        self.delete_account.setFixedSize(140, 50)
+        self.delete_account.setFont(btn_font)
+        self.delete_account.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+        self.delete_account.clicked.connect(self.deleteAccount)
+
+        self.account_field_layout.addRow(self.danger_zone_lbl, self.delete_account)
+
         self.settings_win_account_tab.setLayout(self.account_field_layout)
 
         self.todolist_tab_layout = QFormLayout()
@@ -425,22 +532,73 @@ class Ui_Timerist(object):
         self.show_confirmation_dlg_before_empty_bin.setMaximumSize(90, 40)
         self.show_confirmation_dlg_before_empty_bin.stateChanged.connect(lambda x: self.show_confirmation_before_empty_bin(True) if x else self.show_confirmation_before_empty_bin(False))
 
-        self.show_bin_storage_label = QLabel("Show Bin Storage: ")
-        self.show_bin_storage_label.setFont(ui_font_smaller)
-        self.show_bin_storage = AnimatedToggle()
-        self.show_bin_storage.setChecked(self.showBinStorage)
-        self.show_bin_storage.setMaximumSize(90, 40)
-        self.show_bin_storage.stateChanged.connect(lambda x: self.show_bin_storage_func(True) if x else self.show_bin_storage_func(False))
-
 
         self.todolist_tab_layout.addRow(self.should_play_timer_on_open_label, self.should_play_timer_on_open)
         self.todolist_tab_layout.addRow(self.show_confirmation_dlg_before_empty_bin_lbl, self.show_confirmation_dlg_before_empty_bin)
-        self.todolist_tab_layout.addRow(self.show_bin_storage_label, self.show_bin_storage)
 
         self.settings_win_todolist_tab.setLayout(self.todolist_tab_layout)
 
+        self.settings_win_appearance_layout = QFormLayout()
+
+        self.interface_theme = QLabel("Theme: ")
+        self.interface_theme.setFont(ui_font)
+
+        self.interface_theme_selector = QComboBox()
+        self.interface_theme_selector.setMaximumSize(QSize(120, 150))
+        self.interface_theme_selector.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+        self.interface_theme_selector.addItems(THEMES)
+        self.interface_theme_selector.setCurrentIndex(THEMES.index(self.selected_theme))
+        self.interface_theme_selector.activated.connect(self.change_theme)
+
+        self.cursors = QLabel("Cursor: ")
+        self.cursors.setFont(ui_font)
+
+        self.cursor_selector = QComboBox()
+        self.cursor_selector.setFont(small_font)
+        self.cursor_selector.setMaximumSize(QSize(140, 160))
+        self.cursor_selector.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+        self.cursor_selector.addItems(CURSORS)
+        self.cursor_selector.setCurrentIndex(CURSORS.index(self.selected_cursor))
+        for i, file in enumerate(CURSOR_FILES):
+            if i != 0:
+                self.cursor_selector.setItemIcon(i, QIcon(CURSOR_FILES[i]))
+        self.cursor_selector.setIconSize(QSize(40, 40))
+        self.cursor_selector.activated.connect(self.change_cursor)
+
+        self.settings_win_appearance_layout.addRow(self.interface_theme, self.interface_theme_selector)
+        self.settings_win_appearance_layout.addRow(self.cursors, self.cursor_selector)
+
+        self.settings_win_appearance_tab.setLayout(self.settings_win_appearance_layout)
+
         self.settings_win.setLayout(layout)
         self.settings_win.show()
+
+
+
+    def change_theme(self):
+        name = self.interface_theme_selector.currentText()
+        theme = load_from_stylesheet(THEME_FILES[THEMES.index(name)]) + THEME_REGULATOR
+        app.setStyleSheet(theme)
+        self.selected_theme = name
+
+
+    def change_cursor(self):
+        name = self.cursor_selector.currentText()
+        if name != "Default":
+            cursor = QCursor(QPixmap(CURSOR_FILES[CURSORS.index(name)]))
+        else:
+            cursor = Qt.ArrowCursor # Note: default system cursor
+        Timerist.setCursor(cursor)
+        self.settings_win.setCursor(cursor)
+        self.selected_cursor = name
+
+    def deleteAccount(self):
+        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to delete your account ?, This cannot be undone.", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        if ask == QtWidgets.QMessageBox.Yes:
+            self.auth.delete_user_account(self.idToken)
+            QMessageBox.information(Timerist, "Success!", "Your account has sucessfully been deleted.")
+            shutil.rmtree(f"users/{self.email}")
+        
 
     
     def toggle_timer_on_open(self, should):
@@ -455,15 +613,6 @@ class Ui_Timerist(object):
             self.showConfirmationDialogBeforeEmptyBin = True
         else:
             self.showConfirmationDialogBeforeEmptyBin = False
-
-    def show_bin_storage_func(self, should):
-        if should == True:
-            self.showBinStorage = True
-            if not hasattr(self.RecycledTodos, "storage"):
-                self.RecycledTodos.menu_layout.addWidget(self.RecycledTodos.storage, alignment=Qt.AlignTop)
-        else:
-            self.showBinStorage = False
-            self.RecycledTodos.menu_layout.removeWidget(self.RecycledTodos.storage)
 
 
     def verifyEmail(self):
@@ -556,7 +705,7 @@ class Ui_Timerist(object):
 
 app = QtWidgets.QApplication(sys.argv)
 app.setStyle('Fusion')
-app.setStyleSheet(load_from_stylesheet('assets/light-theme.qss'))
+app.setStyleSheet(load_from_stylesheet(THEME_FILES[0])) # default
 pallete = app.palette()
 pallete.setColor(QtGui.QPalette.ColorRole.Background, QColor(255, 255, 255))
 clipboard=app.clipboard()

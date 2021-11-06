@@ -5,18 +5,11 @@ from PyQt5.QtWidgets import *
 from typing import List, Optional
 from backend.query import Tree, delete_item_from_query, is_item, return_contents_from_query, is_item
 from todo_side_menu.Components.recycled_todo import RecycledTodo
-import time
-import os
-
-def get_file_size_in_bytes(file_path):
-    """Get size of file at given path in bytes"""
-    size = os.path.getsize(file_path)
-    return size
 
 
 class RecycleBin(QtWidgets.QWidget):
     """Recycled Todos Will be Managed Here."""
-    def __init__(self, parent, data_source, todo_data: List[List[str]], email, maker, manager, showConfirmationBeforeEmpty, showBinStorage):
+    def __init__(self, parent, data_source, todo_data: List[List[str]], email, maker, manager, showConfirmationBeforeEmpty):
         self.Parent = parent
         self.data_source = data_source # Keeps the source of the data for restoration later.
         self.todo_data = todo_data # List of Recycled todos.
@@ -24,7 +17,6 @@ class RecycleBin(QtWidgets.QWidget):
         self.maker = maker
         self.manager = manager
         self.showConfirmationBeforeEmpty = showConfirmationBeforeEmpty
-        self.showBinStorage = showBinStorage
         self.selectedTodos = []
         self.todos = []
         self.main_layout = QtWidgets.QVBoxLayout()
@@ -68,7 +60,7 @@ class RecycleBin(QtWidgets.QWidget):
     def RenderUI(self):
         # Ui Font(s)
         self.std_font = QFont()
-        self.std_font.setPointSizeF(14.5)
+        self.std_font.setPointSizeF(15.5)
 
         self.btn_font = QFont()
         self.btn_font.setPointSize(13.5)
@@ -76,11 +68,6 @@ class RecycleBin(QtWidgets.QWidget):
         selection_amount = self.getSelectedTodosCount()
         self.selected_count = QtWidgets.QLabel(f"Selected: {selection_amount}")
         self.selected_count.setFont(self.std_font)
-
-
-        storage_amount = get_file_size_in_bytes(f"users/{self.email}/recycled.txt") / 4000
-        self.storage = QtWidgets.QLabel(f"Storage: {storage_amount} KB")
-        self.storage.setFont(self.std_font)
 
         self.actions_label = QtWidgets.QLabel("Actions: ")
         self.actions_label.setFont(self.std_font)
@@ -126,8 +113,7 @@ class RecycleBin(QtWidgets.QWidget):
         self.menu_layout.addWidget(self.empty_btn, alignment=Qt.AlignTop)
         self.menu_layout.addStretch(4)
         self.menu_layout.addWidget(self.selected_count, alignment=Qt.AlignTop)
-        if self.showBinStorage == True:
-            self.menu_layout.addWidget(self.storage, alignment=Qt.AlignTop)
+        self.menu_layout.addStretch()
 
         for todo in self.todo_data:
             todo_object = RecycledTodo(self, todo)
@@ -155,8 +141,6 @@ class RecycleBin(QtWidgets.QWidget):
             self.todos.remove(todo)
             selection_amount = self.getSelectedTodosCount()
             self.selected_count.setText(f"Selected: {selection_amount}")
-            storage_amount = get_file_size_in_bytes(f"users/{self.email}/recycled.txt") / 4000
-            self.storage.setText(f"Storage: {storage_amount} KB")
             delete_item_from_query(data, f"users/{self.email}/recycled.txt")
 
     def restore_todo(self):
@@ -184,8 +168,6 @@ class RecycleBin(QtWidgets.QWidget):
                 self.todos.remove(todo)
                 selection_amount = self.getSelectedTodosCount()
                 self.selected_count.setText(f"Selected: {selection_amount}")
-                storage_amount = get_file_size_in_bytes(f"users/{self.email}/recycled.txt") / 4000
-                self.storage.setText(f"Storage: {storage_amount} KB")
                 delete_item_from_query(data, f"users/{self.email}/recycled.txt")
         self.manager.Refresh()
 
@@ -205,8 +187,6 @@ class RecycleBin(QtWidgets.QWidget):
                             if wid.todo_data == todo.todo_data:
                                 wid.setParent(None)
                     self.todos.remove(todo)
-                    storage_amount = get_file_size_in_bytes(f"users/{self.email}/recycled.txt") / 4000
-                    self.storage.setText(f"Storage: {storage_amount} KB")
                     delete_item_from_query(data, f"users/{self.email}/recycled.txt")
         else:
             for todo in self.todos:
@@ -221,6 +201,4 @@ class RecycleBin(QtWidgets.QWidget):
                         if wid.todo_data == todo.todo_data:
                             wid.setParent(None)
                 self.todos.remove(todo)
-                storage_amount = get_file_size_in_bytes(f"users/{self.email}/recycled.txt") / 4000
-                self.storage.setText(f"Storage: {storage_amount} KB")
                 delete_item_from_query(data, f"users/{self.email}/recycled.txt")

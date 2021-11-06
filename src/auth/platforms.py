@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, json
 
 # Operating Systems
 PLATFORMS = {
@@ -8,20 +8,20 @@ PLATFORMS = {
 }
 
 user_datas = {
-    "files":['data.txt', 'archived.txt', 'recycled.txt'],
+    "files":['data.txt', 'archived.txt', 'recycled.txt', 'user_settings.json'],
     "folders":['documents']
 }
 
 def WindowsUserDataInitialize(email):
     data, archived, recycled = user_datas["files"][0], user_datas["files"][1], user_datas["files"][2]
     initialization_command = f"""
-    cd users/{email} && python -c "file = open('{data}', 'a').close()" && python -c "file = open('{archived}', 'a').close()" && python -c "file = open('{recycled}', 'a').close()" """
+    cd users/{email} && python -c "file = open('{data}', 'a').close()" && python -c "file = open('{archived}', 'a').close()" && python -c "file = open('{recycled}', 'a').close()" && python -c "file = open('user_settings.json', 'a').close()" """
     return initialization_command
 
 def UnixKernelUserDataInitialize(email):
     data, archived, recycled = user_datas["files"][0], user_datas["files"][1], user_datas["files"][2]
     initialization_command = f"""
-    cd users/{email} && python -c "file = open('{data}', 'a').close()" && python -c "file = open('{archived}', 'a').close()" && python3 -c "file = open('{recycled}', 'a').close()" """
+    cd users/{email} && python3 -c "file = open('{data}', 'a').close()" && python3 -c "file = open('{archived}', 'a').close()" && python3 -c "file = open('{recycled}', 'a').close() && python3 -c "file = open('user_settings.json', 'a').close()" """
     return initialization_command
 
 

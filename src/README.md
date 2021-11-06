@@ -2,7 +2,7 @@
    <a href="https://github.com/TheEliteCoder1/Timerist/blob/main/src/timer_icon.png"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/timer_icon.png"></a>
 </p>
 <p align="center">
-    <em>A functional & usable to-do-list app with percise deadlines and time tracking.</em>
+   <em>A functional & easy-to-use to-do-list app with percise deadlines and time tracking.</em>
 </p>
 <br>
 <p align="center">
@@ -12,7 +12,7 @@
    <img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
 </p>
 
-Screenshot
+Screenshots
 ===
 <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/images/main_light.png">
 <br>
