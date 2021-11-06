@@ -1,0 +1,2 @@
+Note: You need to copy the source files from `Timerist` to the desired 
+      directory, and make the changes from there.

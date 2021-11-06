@@ -1,0 +1,126 @@
+QToolButton {
+    border: none; 
+}
+
+QTreeWidget QHeaderView::section {
+    font-size: 12pt;
+}
+
+QTreeWidget {
+    font-size: 15px;
+}
+
+QToolButton:hover {
+    border: 1px solid #098fb0;
+    border-radius: 3px;
+}
+
+QToolButton:pressed {
+    border: 1px solid #098fb0;
+    border-radius: 3px;
+}
+
+QToolTip {
+    color: #000000; 
+    background-color: #ffffff; 
+    border: 0px;
+}
+
+QScrollBar:horizontal
+{
+    height: 15px;
+    margin: 3px 15px 3px 15px;
+    border: 1px transparent #2A2929;
+    border-radius: 4px;
+    background-color: white;
+}
+
+QScrollBar::handle:horizontal
+{
+    background-color: black; 
+    min-width: 5px;
+    border-radius: 4px;
+}
+
+QScrollBar:vertical
+{
+    background-color: white;
+    width: 15px;
+    margin: 15px 3px 15px 3px;
+    border: 1px transparent #2A2929;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical
+{
+    background-color: black;
+    min-height: 5px;
+    border-radius: 4px;
+}
+
+QScrollBar::right-arrow:horizontal, QScrollBar::left-arrow:horizontal
+{
+    border: none;
+    background: none;
+    color: none;
+}
+
+QScrollBar::add-line:horizontal {
+    border: none;
+    background: none;
+}
+
+QScrollBar::sub-line:horizontal {
+    border: none;
+    background: none;
+}
+
+QScrollBar::right-arrow:vertical, QScrollBar::left-arrow:vertical
+{
+    border: none;
+    background: none;
+    color: none;
+}
+
+QScrollBar::add-line:vertical {
+    border: none;
+    background: none;
+}
+
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+}
+
+QWindow, QMainWindow {
+    background: #fff;
+}
+
+ArchivedTodoManager {
+    background-color: rgb(255, 255, 255);
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+    border: 2px solid #C4C4C3;
+    border-bottom-color: #C2C7CB; /* same as the pane color */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width: 8ex;
+    padding: 2px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+                                stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+}
+
+QTabBar::tab:selected {
+    border-color: #0d98ba;
+    border-bottom-color: #0d98ba; /* same as pane color */
+}
