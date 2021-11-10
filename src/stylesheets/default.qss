@@ -6,10 +6,6 @@ QTreeWidget QHeaderView::section {
     font-size: 12pt;
 }
 
-QTreeWidget {
-    font-size: 15px;
-}
-
 QToolButton:hover {
     border: 1px solid #098fb0;
     border-radius: 3px;

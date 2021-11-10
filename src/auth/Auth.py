@@ -60,6 +60,10 @@ class LoginWindow(QtWidgets.QDialog):
         _fontstr3 = QFontDatabase.applicationFontFamilies(id3)[0]
         font3 = QFont(_fontstr3, 30)
 
+        id4 = QFontDatabase.addApplicationFont("assets/RedHat.ttf")
+        _fontstr4 = QFontDatabase.applicationFontFamilies(id4)[0]
+        font4 = QFont(_fontstr4, 30)
+
         # Validity
         self.invalid = QLabel("Invalid Username Or Password!")
         f = field_font

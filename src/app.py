@@ -10,6 +10,7 @@ from todo_side_menu.recycle_bin import RecycleBin
 from custom_components.profile_pic_picker import ProfilePicPicker, BigProfilePicPicker
 from json_settings.user_settings import load_user_settings, save_user_settings
 import shutil
+from hash import hash_char_for_astrix
 
 def start_timer(end_date):
     current_date_time = QtCore.QDateTime.currentDateTime()
@@ -108,10 +109,6 @@ QTreeWidget QHeaderView::section {
     font-size: 12pt;
 }
 
-QTreeWidget {
-    font-size: 15px;
-}
-
 QMenu { 
     background-color: black; 
     color: white; 
@@ -152,6 +149,19 @@ CURSOR_FILES = [
     "cursors/linux.png"
 ]
 
+TASK_FONT_SIZE_RANGE = (14, 30)
+
+FONTS = [
+    "Default",
+    "Ubuntu",
+    "Segoe UI",
+    "Red Hat"
+]
+
+FONT_CHANGEABLE_WIDGETS = [
+    "QPushButton",
+    "QLabel"
+]
 
 class Ui_Timerist(object):
     def setupUi(self, Timerist, sound, email, password, cached_password, uid, email_verified, auth, idToken):
@@ -186,7 +196,9 @@ class Ui_Timerist(object):
         except:
             self.user_settings = {"background-image":"images/account.png"}
 
-        self.selected_theme, self.selected_cursor = "Default", "Default"
+        config = ("Default", "Default", 14, "Default")
+
+        self.selected_theme, self.selected_cursor, self.selected_task_font_size, self.selected_font = config
 
         font = QtGui.QFont()
         font.setPointSize(20)
@@ -202,6 +214,9 @@ class Ui_Timerist(object):
         self.treeWidget.setMinimumHeight(300)
         self.treeWidget.setMinimumWidth(500)
         self.treeWidget.setObjectName("treeWidget")
+        default_font = QFont("Poppins")
+        default_font.setPointSize(self.selected_task_font_size)
+        self.treeWidget.setFont(default_font)
         self.treeWidget.setHeaderLabels(["Due Date", "Task", "Status"])
         self.treeWidget.installEventFilter(Timerist)
         self.fillTreeWidget()
@@ -432,7 +447,7 @@ class Ui_Timerist(object):
 
         self.hashed_password_field = QLabel("Password: ")
         self.hashed_password_field.setFont(ui_font)
-        pswd = ", ".join(["*" for c in self.password]).replace(", ", "")
+        pswd = hash_char_for_astrix(self.password)
         self.hashed_password_value = QLabel(pswd)
         self.hashed_password_value.setFont(value_font)
 
@@ -507,7 +522,7 @@ class Ui_Timerist(object):
         self.delete_account = QPushButton()
         self.delete_account.setText("Delete Account")
         self.delete_account.setStyleSheet("QPushButton {border-radius: 5px; background-color: #d9534f; color: white;} QPushButton:hover {background-color: #b84744;}")
-        self.delete_account.setFixedSize(140, 50)
+        self.delete_account.setMinimumSize(140, 50)
         self.delete_account.setFont(btn_font)
         self.delete_account.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
         self.delete_account.clicked.connect(self.deleteAccount)
@@ -565,14 +580,55 @@ class Ui_Timerist(object):
         self.cursor_selector.setIconSize(QSize(40, 40))
         self.cursor_selector.activated.connect(self.change_cursor)
 
+        self.task_font_size = QLabel("Task Font Size: ")
+        self.task_font_size.setFont(ui_font)
+
+        self.task_font_size_selector = QSpinBox()
+        self.task_font_size_selector.setFont(small_font)
+        self.task_font_size_selector.setMaximumSize(QSize(140, 160))
+        self.task_font_size_selector.setRange(*TASK_FONT_SIZE_RANGE)
+        self.task_font_size_selector.setValue(self.selected_task_font_size)
+        self.task_font_size_selector.valueChanged.connect(self.change_task_font_size)
+
+        self.select_app_font = QLabel("App Font: ")
+        self.select_app_font.setFont(ui_font)
+
+        self.app_font_selector = QComboBox()
+        self.app_font_selector.setFont(small_font)
+        self.app_font_selector.setMaximumSize(QSize(140, 160))
+        self.app_font_selector.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+        self.app_font_selector.addItems(FONTS)
+        self.app_font_selector.setCurrentIndex(FONTS.index(self.selected_font))
+        self.app_font_selector.activated.connect(self.change_app_font)
+
         self.settings_win_appearance_layout.addRow(self.interface_theme, self.interface_theme_selector)
         self.settings_win_appearance_layout.addRow(self.cursors, self.cursor_selector)
+        self.settings_win_appearance_layout.addRow(self.task_font_size, self.task_font_size_selector)
+        self.settings_win_appearance_layout.addRow(self.select_app_font, self.app_font_selector)
 
         self.settings_win_appearance_tab.setLayout(self.settings_win_appearance_layout)
 
         self.settings_win.setLayout(layout)
         self.settings_win.show()
 
+    
+    def change_app_font(self):
+        name = self.app_font_selector.currentText()
+        if name != "Default":
+            font = QFont(name, 13)
+        else:
+            font = QFont("Poppins", 13)
+        for widget in FONT_CHANGEABLE_WIDGETS:
+            QApplication.setFont(font, widget)
+        self.selected_font = name
+
+    def change_task_font_size(self):
+        task_font_size = self.task_font_size_selector.value()
+        font = QFont("Poppins")
+        font.setPointSize(task_font_size)
+        self.treeWidget.setFont(font)
+        self.selected_task_font_size = task_font_size
+        
 
 
     def change_theme(self):

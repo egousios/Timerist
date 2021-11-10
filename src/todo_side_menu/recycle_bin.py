@@ -74,7 +74,7 @@ class RecycleBin(QtWidgets.QWidget):
 
         self.delete_btn = QtWidgets.QPushButton()
         self.delete_btn.setText("Delete")
-        self.delete_btn.setFixedSize(QSize(90, 40))
+        self.delete_btn.setMinimumSize(QSize(90, 40))
         self.delete_btn.setFont(self.btn_font)
         self.delete_btn.setToolTip("Delete A Todo")
         self.delete_btn.setStyleSheet("""QToolTip {background-color: black; 
@@ -85,7 +85,7 @@ class RecycleBin(QtWidgets.QWidget):
 
         self.restore_btn = QtWidgets.QPushButton()
         self.restore_btn.setText("Restore")
-        self.restore_btn.setFixedSize(QSize(90, 40))
+        self.restore_btn.setMinimumSize(QSize(90, 40))
         self.restore_btn.setFont(self.btn_font)
         self.restore_btn.setToolTip("Restore A Todo")
         self.restore_btn.setStyleSheet("""QToolTip {background-color: black; 
@@ -96,7 +96,7 @@ class RecycleBin(QtWidgets.QWidget):
 
         self.empty_btn = QtWidgets.QPushButton()
         self.empty_btn.setText("Empty")
-        self.empty_btn.setFixedSize(QSize(90, 40))
+        self.empty_btn.setMinimumSize(QSize(90, 40))
         self.empty_btn.setFont(self.btn_font)
         self.empty_btn.setToolTip("Empty the Bin")
         self.empty_btn.setStyleSheet("""QToolTip {background-color: black; 

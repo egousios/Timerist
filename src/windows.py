@@ -1,6 +1,5 @@
 from imports import *
 from windows import *
-from code_editors import *
 from edit_tabs import *
 
 class EditTodoWindow(QtWidgets.QDialog):

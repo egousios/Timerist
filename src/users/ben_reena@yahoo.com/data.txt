@@ -1,15 +1,24 @@
+2021-11-18 08:27:00 am
+Go to the malln
+Completed ✅
+2021-11-06 07:15:00 am
+Walk the Dog
+Completed ✅
+2021-11-21 01:00:00 am
+Do Homeworkm
+Completed ✅
+2021-11-01 01:00:00 am
+Ride a bike and go for a walk
+Overdue ⌛
 2021-11-25 06:12:00 pm
 Go skateboarding
 Completed ✅
 2021-11-08 09:00:00 am
 Go To Mall
-Incomplete ❌
-2021-11-06 07:15:00 am
-Walk the Dog
 Overdue ⌛
-2021-11-18 02:16:00 pm
-Do some hiking
-Incomplete ❌
 2021-12-05 12:00:00 am
 Go fishing
 Completed ✅
+2021-11-18 02:16:00 pm
+Do some hiking
+Incomplete ❌

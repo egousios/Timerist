@@ -77,7 +77,7 @@ class ArchiveManager(QtWidgets.QWidget):
 
         self.unarchive_btn = QtWidgets.QPushButton()
         self.unarchive_btn.setText("Unarchive")
-        self.unarchive_btn.setFixedSize(QSize(125, 40))
+        self.unarchive_btn.setMinimumSize(QSize(125, 40))
         self.unarchive_btn.setFont(self.btn_font)
         self.unarchive_btn.setToolTip("Unarchive A Todo")
         self.unarchive_btn.setStyleSheet("""QToolTip {background-color: black; 
@@ -89,7 +89,7 @@ class ArchiveManager(QtWidgets.QWidget):
 
         self.recycle_btn = QtWidgets.QPushButton()
         self.recycle_btn.setText("Recycle")
-        self.recycle_btn.setFixedSize(QSize(110, 40))
+        self.recycle_btn.setMinimumSize(QSize(110, 40))
         self.recycle_btn.setFont(self.btn_font)
         self.recycle_btn.setToolTip("Recycle A Todo")
         self.recycle_btn.setStyleSheet("""QToolTip {background-color: black; 
