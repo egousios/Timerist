@@ -1,3 +1,11 @@
 {
-    "background-image": "C:/Users/sophe/Pictures/Camera Roll/27012011(007).jpg"
+    "background-image": "C:/Users/sophe/Downloads/output-onlinepngtools (20).png",
+    "config": {
+        "theme": "Aqua",
+        "cursor": "Linux",
+        "task_font_size": 15,
+        "selected_font": "Ubuntu",
+        "should_play_timer_on_open": false,
+        "show_confirmation_dialog_before_emptying_bin": true
+    }
 }

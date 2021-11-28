@@ -95,12 +95,18 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
 
 """Settings Constants"""
 
-THEMES = ["Default", "Ubuntu", "Aqua"]
+THEMES = ["Default", "Ubuntu", "MacOS", "Aqua", "Thermal", "Forest", "Earth", "Gemstone", "Blackstone"]
 
 THEME_FILES = [
     "stylesheets/default.qss",
     "stylesheets/ubuntu.qss",
+    "styelsheets/macos.qss",
     "stylesheets/aqua.qss",
+    "stylesheets/thermal.qss",
+    "stylesheets/forest.qss",
+    "stylesheets/earth.qss",
+    "stylesheets/gemstone.qss",
+    "stylesheets/blackstone.qss"
 ]
 
 # Add this to the stylesheets to regulate system appearance.
@@ -149,7 +155,7 @@ CURSOR_FILES = [
     "cursors/linux.png"
 ]
 
-TASK_FONT_SIZE_RANGE = (14, 30)
+TASK_FONT_SIZE_RANGE = (6, 100)
 
 FONTS = [
     "Default",
@@ -191,14 +197,43 @@ class Ui_Timerist(object):
         self.shouldPlayTimerOnOpen = True
         self.showConfirmationDialogBeforeEmptyBin = True
         self.user_settings_path = f"users/{self.email}/user_settings.json"
+
+        self.default_config = {
+            "theme":"Default",
+            "cursor":"Default",
+            "task_font_size":14,
+            "selected_font":"Default",
+            "should_play_timer_on_open":True,
+            "show_confirmation_dialog_before_emptying_bin":True,
+        }
+
         try:
             self.user_settings = load_user_settings(self.user_settings_path)
         except:
-            self.user_settings = {"background-image":"images/account.png"}
+            self.user_settings = {"background-image":"images/account.png", "config":self.default_config}
 
-        config = ("Default", "Default", 14, "Default")
 
-        self.selected_theme, self.selected_cursor, self.selected_task_font_size, self.selected_font = config
+        try:
+            self.user_config = self.user_settings["config"]
+        except:
+            self.user_config = self.default_config
+
+
+        self.selected_theme = self.user_config["theme"]
+        self.selected_cursor = self.user_config["cursor"]
+        self.selected_task_font_size = self.user_config["task_font_size"]
+        self.selected_font = self.user_config["selected_font"]
+        self.shouldPlayTimerOnOpen = self.user_config["should_play_timer_on_open"]
+        self.showConfirmationDialogBeforeEmptyBin = self.user_config["show_confirmation_dialog_before_emptying_bin"]
+
+        self.config = {
+            "theme":self.selected_theme,
+            "cursor":self.selected_cursor,
+            "task_font_size":self.selected_task_font_size,
+            "selected_font":self.selected_font,
+            "should_play_timer_on_open":self.shouldPlayTimerOnOpen,
+            "show_confirmation_dialog_before_emptying_bin":self.showConfirmationDialogBeforeEmptyBin
+        }
 
         font = QtGui.QFont()
         font.setPointSize(20)
@@ -283,8 +318,16 @@ class Ui_Timerist(object):
         _font = QFont(_fontstr, 20)
         self.usernameLabel.setFont(_font)
 
-        self.profile_pic = ProfilePicPicker(self.MainWidget, profile_pic=self.user_settings["background-image"], save_to=self.user_settings_path, func=save_user_settings)
+        self.profile_pic = ProfilePicPicker(self.MainWidget, profile_pic=self.user_settings["background-image"], save_to=self.user_settings_path, func=save_user_settings, config=self.config)
         self.profile_pic.setFixedSize(QSize(50, 50))
+
+        self.settingsWindow()
+        self.change_theme()
+        self.change_cursor()
+        self.change_task_font_size()
+        self.change_app_font()
+        self.toggle_timer_on_open(self.shouldPlayTimerOnOpen)
+        self.show_confirmation_before_empty_bin(self.showConfirmationDialogBeforeEmptyBin)
 
 
         self.settings = QtWidgets.QToolButton(self.MainWidget)
@@ -346,11 +389,11 @@ class Ui_Timerist(object):
         return self.treeWidget
     
     def Logout(self):
-        if hasattr(self, "settings_win"):
-            self.settings_win.destroy()
-        Timerist.destroy()
+        background = load_user_settings(self.user_settings_path)["background-image"]
+        save_user_settings(self.user_settings_path, {"background-image":background, "config":self.config})
+        Timerist.destroy(destroyWindow=True, destroySubWindows=True)
         QApplication.instance().exit(0)
-        os.system("python -u Timerist.py")
+        os.system("python -u Timerist.py") # change to Timerist.exe
             
 
     def Clear(self):
@@ -377,6 +420,8 @@ class Ui_Timerist(object):
                         self.RecycledTodos.main_layout.addWidget(todo_object)
 
     def closeEvent(self, evt):
+        background = load_user_settings(self.user_settings_path)["background-image"]
+        save_user_settings(self.user_settings_path, {"background-image":background, "config":self.config})
         Timerist.destroy(destroyWindow=True, destroySubWindows=True)
 
 
@@ -459,7 +504,7 @@ class Ui_Timerist(object):
 
         self.account_profile_label = QLabel("Profile Picture: ")
         self.account_profile_label.setFont(ui_font)
-        self.big_profile = BigProfilePicPicker(self.MainWidget, profile_pic=self.profile_pic.profile_pic, save_to=self.user_settings_path, func=save_user_settings, change_to=self.profile_pic)
+        self.big_profile = BigProfilePicPicker(self.MainWidget, profile_pic=self.profile_pic.profile_pic, save_to=self.user_settings_path, func=save_user_settings, change_to=self.profile_pic, config=self.config)
         self.profile_pic.make_big(self.big_profile)
 
         self.account_field_layout.addWidget(self.account_profile_label)
@@ -621,6 +666,7 @@ class Ui_Timerist(object):
         for widget in FONT_CHANGEABLE_WIDGETS:
             QApplication.setFont(font, widget)
         self.selected_font = name
+        self.config["selected_font"] = self.selected_font
 
     def change_task_font_size(self):
         task_font_size = self.task_font_size_selector.value()
@@ -628,6 +674,7 @@ class Ui_Timerist(object):
         font.setPointSize(task_font_size)
         self.treeWidget.setFont(font)
         self.selected_task_font_size = task_font_size
+        self.config["task_font_size"] = self.selected_task_font_size
         
 
 
@@ -636,6 +683,7 @@ class Ui_Timerist(object):
         theme = load_from_stylesheet(THEME_FILES[THEMES.index(name)]) + THEME_REGULATOR
         app.setStyleSheet(theme)
         self.selected_theme = name
+        self.config["theme"] = self.selected_theme
 
 
     def change_cursor(self):
@@ -647,6 +695,7 @@ class Ui_Timerist(object):
         Timerist.setCursor(cursor)
         self.settings_win.setCursor(cursor)
         self.selected_cursor = name
+        self.config["cursor"] = self.selected_cursor
 
     def deleteAccount(self):
         ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to delete your account ?, This cannot be undone.", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
@@ -662,6 +711,7 @@ class Ui_Timerist(object):
             self.shouldPlayTimerOnOpen = True
         else:
             self.shouldPlayTimerOnOpen = False
+        self.config["should_play_timer_on_open"] = self.shouldPlayTimerOnOpen
 
     
     def show_confirmation_before_empty_bin(self, should):
@@ -669,6 +719,7 @@ class Ui_Timerist(object):
             self.showConfirmationDialogBeforeEmptyBin = True
         else:
             self.showConfirmationDialogBeforeEmptyBin = False
+        self.config["show_confirmation_dialog_before_emptying_bin"] = self.showConfirmationDialogBeforeEmptyBin
 
 
     def verifyEmail(self):
