@@ -1,8 +1,8 @@
 {
     "background-image": "C:/Users/sophe/Downloads/output-onlinepngtools (20).png",
     "config": {
-        "theme": "Aqua",
-        "cursor": "Linux",
+        "theme": "MacOS",
+        "cursor": "Windows",
         "task_font_size": 15,
         "selected_font": "Ubuntu",
         "should_play_timer_on_open": false,

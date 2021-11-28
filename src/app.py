@@ -95,12 +95,11 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
 
 """Settings Constants"""
 
-THEMES = ["Default", "Ubuntu", "MacOS", "Aqua", "Thermal", "Forest", "Earth", "Gemstone", "Blackstone"]
+THEMES = ["Default", "Ubuntu", "Aqua", "Thermal", "Forest", "Earth", "Gemstone", "Blackstone"]
 
 THEME_FILES = [
     "stylesheets/default.qss",
     "stylesheets/ubuntu.qss",
-    "stylesheets/macos.qss",
     "stylesheets/aqua.qss",
     "stylesheets/thermal.qss",
     "stylesheets/forest.qss",
