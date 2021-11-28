@@ -1,11 +1,11 @@
 {
     "background-image": "C:/Users/sophe/Downloads/output-onlinepngtools (20).png",
     "config": {
-        "theme": "MacOS",
-        "cursor": "Windows",
-        "task_font_size": 15,
+        "theme": "Thermal",
+        "cursor": "Linux",
+        "task_font_size": 12,
         "selected_font": "Ubuntu",
-        "should_play_timer_on_open": false,
+        "should_play_timer_on_open": true,
         "show_confirmation_dialog_before_emptying_bin": true
     }
 }
