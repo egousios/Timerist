@@ -3,9 +3,9 @@
     "config": {
         "theme": "Thermal",
         "cursor": "Linux",
-        "task_font_size": 12,
-        "selected_font": "Ubuntu",
-        "should_play_timer_on_open": true,
-        "show_confirmation_dialog_before_emptying_bin": true
+        "task_font_size": 13,
+        "selected_font": "Default",
+        "should_play_timer_on_open": false,
+        "show_confirmation_dialog_before_emptying_bin": false
     }
 }

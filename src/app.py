@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QScrollArea
+from dialogs import TreeWidgetFilterAdvancedOptionsDialog
 from imports import *
 from forms import *
 from todo_side_menu.Components.archived_todo import ArchivedTodo
@@ -105,7 +106,7 @@ THEME_FILES = [
     "stylesheets/forest.qss",
     "stylesheets/earth.qss",
     "stylesheets/gemstone.qss",
-    "stylesheets/blackstone.qss"
+    "stylesheets/blackstone.qss",
 ]
 
 # Add this to the stylesheets to regulate system appearance.
@@ -167,6 +168,8 @@ FONT_CHANGEABLE_WIDGETS = [
     "QPushButton",
     "QLabel"
 ]
+
+TREE_WIDGET_FILTERS = ["All", "Overdue ⌛", "Incomplete ❌", "Completed ✅"]
 
 class Ui_Timerist(object):
     def setupUi(self, Timerist, sound, email, password, cached_password, uid, email_verified, auth, idToken):
@@ -236,15 +239,20 @@ class Ui_Timerist(object):
 
         font = QtGui.QFont()
         font.setPointSize(20)
+        self.label_font = QFont("Poppins", 15)
 
         ### Context Menu Tabs 
         self.ArchivedTodos = ArchiveManager(Timerist, f"users/{self.email}/data.txt", return_contents_from_query(f"users/{self.email}/archived.txt"), email=self.email, maker=self, manager=self)
         self.RecycledTodos = RecycleBin(Timerist, f"users/{self.email}/data.txt", return_contents_from_query(f"users/{self.email}/recycled.txt"), email=self.email, maker=self, manager=self, showConfirmationBeforeEmpty=self.showConfirmationDialogBeforeEmptyBin)
 
+        self.tree_filter_mode = "All"
+
         self.treeWidget = QTreeWidgetCustom(self.MainWidget, self.email)
         self.treeWidget.archiveWid = self.ArchivedTodos
         self.treeWidget.recycleWid = self.RecycledTodos
         self.treeWidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        header = self.treeWidget.header()
+        header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.treeWidget.setMinimumHeight(300)
         self.treeWidget.setMinimumWidth(500)
         self.treeWidget.setObjectName("treeWidget")
@@ -254,6 +262,31 @@ class Ui_Timerist(object):
         self.treeWidget.setHeaderLabels(["Due Date", "Task", "Status"])
         self.treeWidget.installEventFilter(Timerist)
         self.fillTreeWidget()
+
+        self.treeWidgetFilterLabel = QLabel("Filter: ")
+        self.treeWidgetFilterLabel.setFont(self.label_font)
+
+        self.treeWidgetFilter = QComboBox()
+        self.treeWidgetFilter.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLength)
+
+        self.treeWidgetFilter.addItems(TREE_WIDGET_FILTERS)
+        self.treeWidgetFilter.setCurrentIndex(TREE_WIDGET_FILTERS.index("All"))
+        self.treeWidgetFilter.activated.connect(self.change_tree_filter_mode)
+
+        self.treeWidgetFilterAdvanced = QPushButton("Advanced...")
+        self.treeWidgetFilterAdvanced.setMaximumWidth(150)
+        self.treeWidgetFilterAdvanced.clicked.connect(self.tree_filter_advanced_dialog)
+
+        self.treeWidgetFilterLayout = QHBoxLayout()
+        self.treeWidgetFilterLayout.addWidget(self.treeWidgetFilter)
+        self.treeWidgetFilterLayout.addWidget(self.treeWidgetFilterAdvanced)
+
+        self.treeWidgetSection = QWidget()
+        self.treeWidgetSectionLayout = QVBoxLayout()
+        self.treeWidgetSectionLayout.addWidget(self.treeWidgetFilterLabel)
+        self.treeWidgetSectionLayout.addLayout(self.treeWidgetFilterLayout)
+        self.treeWidgetSectionLayout.addWidget(self.treeWidget)
+        self.treeWidgetSection.setLayout(self.treeWidgetSectionLayout)
 
         
         """Context Menu UI"""
@@ -320,7 +353,7 @@ class Ui_Timerist(object):
         self.profile_pic = ProfilePicPicker(self.MainWidget, profile_pic=self.user_settings["background-image"], save_to=self.user_settings_path, func=save_user_settings, config=self.config)
         self.profile_pic.setFixedSize(QSize(50, 50))
 
-        self.settingsWindow()
+        self.settingsWindow(show=False)
         self.change_theme()
         self.change_cursor()
         self.change_task_font_size()
@@ -365,7 +398,7 @@ class Ui_Timerist(object):
         self.TodoOptionsLayout.addStretch()
 
         self.main_layout = QHBoxLayout()
-        self.main_layout.addWidget(self.treeWidget)
+        self.main_layout.addWidget(self.treeWidgetSection)
         self.main_layout.addWidget(self.TodoContextMenu)
         self.main_layout.setStretch(0, 50)
         self.main_layout.setStretch(1, 50)
@@ -393,6 +426,9 @@ class Ui_Timerist(object):
         Timerist.destroy(destroyWindow=True, destroySubWindows=True)
         QApplication.instance().exit(0)
         os.system("python -u Timerist.py") # change to Timerist.exe
+
+    def Refresh(self):
+        self.fillTreeWidget(self.tree_filter_mode)
             
 
     def Clear(self):
@@ -418,17 +454,19 @@ class Ui_Timerist(object):
                         self.RecycledTodos.todos.append(todo_object)
                         self.RecycledTodos.main_layout.addWidget(todo_object)
 
+
+    def tree_filter_advanced_dialog(self):
+        dialog = TreeWidgetFilterAdvancedOptionsDialog(Timerist, fill_tree_function=self.fillTreeWidget)
+
     def closeEvent(self, evt):
         background = load_user_settings(self.user_settings_path)["background-image"]
         save_user_settings(self.user_settings_path, {"background-image":background, "config":self.config})
         Timerist.destroy(destroyWindow=True, destroySubWindows=True)
-
-
-
-    def Refresh(self):
-        self.fillTreeWidget()
         
-    def fillTreeWidget(self):
+    def fillTreeWidget(self, mode="All", date=None):
+        """Loads the data into the tree widget with the default mode being all.
+           When the mode is set to something else, it is filtering the data
+           by the target."""
         self.treeWidget.clear()
         file = open(f"users/{self.email}/data.txt", "r", encoding='utf-8')
         data = file.readlines()
@@ -437,13 +475,41 @@ class Ui_Timerist(object):
         desired_lines = data[0::1]
         fov = slice_per(desired_lines, 3)
         for e in fov:
-            if start_timer(e[0]) == 'yes' and e[2] == "Incomplete ❌": # Checks for overdue todos.
-                edit_item(e, e[0], e[1], 'Overdue ⌛', f"users/{self.email}/data.txt")
-                Item = QTreeWidgetItem(e)
-                self.treeWidget.addTopLevelItem(Item)
-            else:
-                Item = QTreeWidgetItem(e)
-                self.treeWidget.addTopLevelItem(Item)
+            if mode == "All":
+                if start_timer(e[0]) == 'yes' and e[2] == "Incomplete ❌": # Checks for overdue todos.
+                    edit_item(e, e[0], e[1], 'Overdue ⌛', f"users/{self.email}/data.txt")
+                    Item = QTreeWidgetItem(e)
+                    self.treeWidget.addTopLevelItem(Item)
+                else:
+                    Item = QTreeWidgetItem(e)
+                    self.treeWidget.addTopLevelItem(Item)
+
+            elif mode == "Overdue ⌛":
+                if e[2] == "Overdue ⌛":
+                    Item = QTreeWidgetItem(e)
+                    self.treeWidget.addTopLevelItem(Item)
+
+            elif mode == "Incomplete ❌":
+                if e[2] == "Incomplete ❌":
+                    Item = QTreeWidgetItem(e)
+                    self.treeWidget.addTopLevelItem(Item)
+
+            elif mode == "Completed ✅":
+                if e[2] == "Completed ✅":
+                    Item = QTreeWidgetItem(e)
+                    self.treeWidget.addTopLevelItem(Item)
+
+            elif mode == "Due Date":
+                if date != None:
+                    Date = e[0]
+                    year = int(Date[0:4])
+                    month = int(Date[5:7])
+                    day = int(Date[8:10])
+                    if QDate(year, month, day).toString("yyyy-MM-dd") == date:
+                        Item = QTreeWidgetItem(e)
+                        self.treeWidget.addTopLevelItem(Item)
+
+
 
 
     def retranslateUi(self, Timerist):
@@ -454,7 +520,7 @@ class Ui_Timerist(object):
         self.pushButton.clicked.connect(self.add_todo)
 
 
-    def settingsWindow(self):
+    def settingsWindow(self, show=True):
         self.settings_win = QtWidgets.QDialog(Timerist)
         self.settings_win.resize(QSize(550, 400))
         self.settings_win.setWindowTitle("Settings")
@@ -653,7 +719,15 @@ class Ui_Timerist(object):
         self.settings_win_appearance_tab.setLayout(self.settings_win_appearance_layout)
 
         self.settings_win.setLayout(layout)
-        self.settings_win.show()
+
+        if show != False:
+            self.settings_win.show()
+
+
+    def change_tree_filter_mode(self):
+        name = self.treeWidgetFilter.currentText()
+        self.tree_filter_mode = name
+        self.fillTreeWidget(mode=self.tree_filter_mode)
 
     
     def change_app_font(self):
