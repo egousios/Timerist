@@ -367,7 +367,7 @@ class Ui_Timerist(object):
         self.settings.setToolTip("Settings")
         self.settings.setIconSize(self.tool_btn_size_2)
         self.settings.setGeometry(QtCore.QRect(150, 360, 110, 30))
-        self.settings.clicked.connect(self.settingsWindow)
+        self.settings.clicked.connect(self.show_settings_win)
 
         self.viewCopyright = QtWidgets.QToolButton(self.MainWidget)
         self.viewCopyright.setIcon(QtGui.QIcon("images/copyright.png"))
@@ -463,18 +463,13 @@ class Ui_Timerist(object):
         save_user_settings(self.user_settings_path, {"background-image":background, "config":self.config})
         Timerist.destroy(destroyWindow=True, destroySubWindows=True)
         
-    def fillTreeWidget(self, mode="All", date=None):
+    def fillTreeWidget(self, mode="All", date=None, time_values=None, match_type=None):
         """Loads the data into the tree widget with the default mode being all.
            When the mode is set to something else, it is filtering the data
            by the target."""
         self.treeWidget.clear()
-        file = open(f"users/{self.email}/data.txt", "r", encoding='utf-8')
-        data = file.readlines()
-        file.close()
-        data = [line.replace('\n', '') for line in data]
-        desired_lines = data[0::1]
-        fov = slice_per(desired_lines, 3)
-        for e in fov:
+        contents_from_query = return_contents_from_query(path=f"users/{self.email}/data.txt")
+        for e in contents_from_query:
             if mode == "All":
                 if start_timer(e[0]) == 'yes' and e[2] == "Incomplete ❌": # Checks for overdue todos.
                     edit_item(e, e[0], e[1], 'Overdue ⌛', f"users/{self.email}/data.txt")
@@ -509,6 +504,40 @@ class Ui_Timerist(object):
                         Item = QTreeWidgetItem(e)
                         self.treeWidget.addTopLevelItem(Item)
 
+            elif mode == "Time Till Overdue":
+                if time_values != None:
+                    if match_type != None:
+                        years, months, days, hours, minutes, seconds = time_values
+                        mt = match_type
+                        Date = e[0]
+                        year = int(Date[0:4])
+                        month = int(Date[5:7])
+                        day = int(Date[8:10])
+                        hour = int(Date[9:11])
+                        minute = int(Date[14:16])
+                        second = int(Date[17:19])
+                        qdate_date = QDateTime(QDate(year, month, day), QTime(hour, minute, second))
+                        if match_type == "EXACTLY":
+                            if qdate_date.date().year() - QtCore.QDate.currentDate().year() == years:
+                                if qdate_date.date().month() - QtCore.QDate.currentDate().month() == months:
+                                    if qdate_date.date().day() - QtCore.QDate.currentDate().day() == days:
+                                        if qdate_date.time().hour() - QtCore.QTime.currentTime().hour() == hours:
+                                            if qdate_date.time().minute() - QtCore.QTime.currentTime().minute() == minutes:
+                                                if qdate_date.time().second() - QtCore.QTime.currentTime().second() == seconds:
+                                                    Item = QTreeWidgetItem(e)
+                                                    self.treeWidget.addTopLevelItem(Item)  
+                        if match_type == "LESS_THAN":
+                            if qdate_date.date().year() - QtCore.QDate.currentDate().year() < years:
+                                if qdate_date.date().month() - QtCore.QDate.currentDate().month() < months:
+                                    if qdate_date.date().day() - QtCore.QDate.currentDate().day() < days:
+                                        if qdate_date.time().hour() - QtCore.QTime.currentTime().hour() < hours:
+                                            if qdate_date.time().minute() - QtCore.QTime.currentTime().minute() < minutes:
+                                                if qdate_date.time().second() - QtCore.QTime.currentTime().second() < seconds:
+                                                    Item = QTreeWidgetItem(e)
+                                                    self.treeWidget.addTopLevelItem(Item)
+
+
+
 
 
 
@@ -518,6 +547,9 @@ class Ui_Timerist(object):
         self.pushButton.setText(_translate("Timerist", "Add"))
         self.pushButton.setToolTip("Add A Task")
         self.pushButton.clicked.connect(self.add_todo)
+
+    def show_settings_win(self):
+        self.settings_win.show()
 
 
     def settingsWindow(self, show=True):
@@ -720,7 +752,7 @@ class Ui_Timerist(object):
 
         self.settings_win.setLayout(layout)
 
-        if show != False:
+        if show == True:
             self.settings_win.show()
 
 
