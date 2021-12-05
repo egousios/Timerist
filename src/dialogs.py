@@ -3,6 +3,9 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QComboBox, QDateEdit, QDialog, QDialogButtonBox, QFormLayout, QGroupBox, QHBoxLayout, QLabel, QSpinBox, QVBoxLayout, QWidget
 
 
+# Constants
+MAXIMUM_TIME_INPUT = 2000
+
 class TreeWidgetFilterAdvancedOptionsDialog(QtWidgets.QDialog):
     """A dialog window for searching through tasks with advanced filters."""
     def __init__(self, parent, fill_tree_function):
@@ -20,8 +23,10 @@ class TreeWidgetFilterAdvancedOptionsDialog(QtWidgets.QDialog):
 
         self.filters = ["None", "Due Date", "Time Till Overdue"]
         self.match_types = ["EXACTLY", "LESS_THAN", "GREATER_THAN"] # exactly, less than, or greater than the time given to be due
+        self.time_units = ["Years", "Months", "Days", "Hours", "Minutes", "Seconds"]
         self.selected_filter = self.filters[0] # None
         self.selected_match_type = self.match_types[0] # Exactly
+        self.selected_time_unit = self.time_units[0] # Years
 
         self.filter_by_lbl = QLabel("Filter By: ")
         self.filter_by_lbl.setFont(self.label_font)
@@ -46,50 +51,30 @@ class TreeWidgetFilterAdvancedOptionsDialog(QtWidgets.QDialog):
 
         self.form_layout.addRow(self.due_date_label, self.due_date_picker)
 
-        self.time_values_label = QLabel("Time Till Overdue: ")
+        self.time_values_label = QLabel("Time Unit: ")
         self.time_values_label.setFont(self.label_font)
 
-        self.time_values_widget = QWidget()
-        self.time_values_layout = QHBoxLayout()
-        self.time_values_layout.setContentsMargins(0,0,0,0)
-        self.time_values_layout.setSpacing(0.2)
-
-        self.years = QSpinBox()
-        self.months = QSpinBox()
-        self.days = QSpinBox()
-        self.hours = QSpinBox()
-        self.minutes = QSpinBox()
-        self.seconds = QSpinBox()
-
-        labels_to_add = [
-        QLabel("yrs: "), 
-        QLabel("mnths: "),
-        QLabel("dys: "), 
-        QLabel("hrs: "), 
-        QLabel("mins: "),
-        QLabel("secs: "),
-        ]
-
-        self.widgets_to_add = [
-            self.years,
-            self.months,
-            self.days,
-            self.hours,
-            self.minutes,
-            self.seconds
-        ]
-
-        for widget in labels_to_add:
-            widget.setFont(QFont("Poppins", 10))
-            self.time_values_layout.addWidget(widget)
-            self.time_values_layout.addWidget(self.widgets_to_add[labels_to_add.index(widget)])
-
-        self.time_values_widget.setLayout(self.time_values_layout)
+        self.time_values_widget = QComboBox()
+        self.time_values_widget.setCurrentIndex(self.time_units.index(self.selected_time_unit))
+        for time_unit in self.time_units:
+            self.time_values_widget.addItem(time_unit)
+        self.time_values_widget.activated.connect(self.change_time_unit)
 
         self.time_values_label.setHidden(True)
         self.time_values_widget.setHidden(True)
 
         self.form_layout.addRow(self.time_values_label, self.time_values_widget)
+
+        self.time_value_input_label = QLabel("Value: ")
+        self.time_value_input_label.setFont(self.label_font)
+        self.time_value_input = QSpinBox()
+        self.time_value_input.setMinimumWidth(135)
+        self.time_value_input.setMaximum(MAXIMUM_TIME_INPUT)
+
+        self.time_value_input_label.setHidden(True)
+        self.time_value_input.setHidden(True)
+
+        self.form_layout.addRow(self.time_value_input_label, self.time_value_input)
 
         self.match_type_lbl = QLabel("Matching Target: ")
 
@@ -111,11 +96,14 @@ class TreeWidgetFilterAdvancedOptionsDialog(QtWidgets.QDialog):
         
         self.setLayout(self.window_layout)
 
-        self.resize(350, 200)
+        self.resize(350, 250)
         self.show()
 
     def change_match_type(self):
         self.selected_match_type = self.match_type_selector.currentText()
+
+    def change_time_unit(self):
+        self.selected_time_unit = self.time_values_widget.currentText()
 
     def close_win(self):
         self.destroy(True)
@@ -125,8 +113,9 @@ class TreeWidgetFilterAdvancedOptionsDialog(QtWidgets.QDialog):
             date = self.due_date_picker.date().toString("yyyy-MM-dd")
             self.fill_tree_function(mode=self.selected_filter, date=date)
         if self.selected_filter == "Time Till Overdue":
-            time_values = [widget.value() for widget in self.widgets_to_add]
-            self.fill_tree_function(mode=self.selected_filter, match_type=self.selected_match_type, time_values=time_values)
+            time_value = self.time_value_input.value()
+            self.fill_tree_function(mode=self.selected_filter, time_unit=self.selected_time_unit, time_value=time_value, match_type=self.selected_match_type)
+
 
     def renderConfigurations(self):
         """Show the rest of the options based on the selected filter."""
@@ -136,6 +125,8 @@ class TreeWidgetFilterAdvancedOptionsDialog(QtWidgets.QDialog):
             self.due_date_picker.setHidden(True)
             self.time_values_label.setHidden(True)
             self.time_values_widget.setHidden(True)
+            self.time_value_input_label.setHidden(True)
+            self.time_value_input.setHidden(True)
             self.match_type_lbl.setHidden(True)
             self.match_type_selector.setHidden(True)
         elif text == "Due Date":
@@ -144,6 +135,8 @@ class TreeWidgetFilterAdvancedOptionsDialog(QtWidgets.QDialog):
             self.due_date_picker.setHidden(False)
             self.time_values_label.setHidden(True)
             self.time_values_widget.setHidden(True)
+            self.time_value_input_label.setHidden(True)
+            self.time_value_input.setHidden(True)
             self.match_type_lbl.setHidden(True)
             self.match_type_selector.setHidden(True)
             self.selected_filter = text
@@ -153,6 +146,8 @@ class TreeWidgetFilterAdvancedOptionsDialog(QtWidgets.QDialog):
             self.time_values_widget.setHidden(False)
             self.due_date_label.setHidden(True) 
             self.due_date_picker.setHidden(True)
+            self.time_value_input_label.setHidden(False)
+            self.time_value_input.setHidden(False)
             self.match_type_lbl.setHidden(False)
             self.match_type_selector.setHidden(False)
             self.selected_filter = text

@@ -1,9 +1,9 @@
 2021-11-25 06:12:00 pm
 Go skateboarding
-Completed ✅
+Overdue ⌛
 2021-11-06 07:15:00 am
 Walk the Dog
-Completed ✅
+Overdue ⌛
 2021-11-08 09:00:00 am
 Go To Mall
 Overdue ⌛
@@ -18,7 +18,7 @@ do work
 Overdue ⌛
 2021-12-05 12:00:00 am
 Go fishing
-Completed ✅
+Incomplete ❌
 2021-12-31 12:00:00 am
 wassup
 Incomplete ❌
@@ -30,4 +30,7 @@ noneofyourbeezwax
 Incomplete ❌
 2021-12-03 08:06:00 pm
 the next day
+Overdue ⌛
+2022-12-22 12:00:00 am
+das
 Incomplete ❌
