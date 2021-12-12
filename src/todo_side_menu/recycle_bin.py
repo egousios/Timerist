@@ -169,7 +169,7 @@ class RecycleBin(QtWidgets.QWidget):
                 selection_amount = self.getSelectedTodosCount()
                 self.selected_count.setText(f"Selected: {selection_amount}")
                 delete_item_from_query(data, f"users/{self.email}/recycled.txt")
-        self.manager.Refresh(self.manager.tree_filter_mode)
+        self.manager.Refresh()
 
     def empty_bin(self):
         if self.manager.showConfirmationDialogBeforeEmptyBin == True:

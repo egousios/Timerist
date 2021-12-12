@@ -1,10 +1,10 @@
 {
-    "background-image": "C:/Users/sophe/Downloads/output-onlinepngtools (20).png",
+    "background-image": "C:/Users/sophe/Downloads/output-onlinepngtools (31).png",
     "config": {
-        "theme": "Thermal",
-        "cursor": "Linux",
-        "task_font_size": 13,
-        "selected_font": "Default",
+        "theme": "Forest",
+        "cursor": "Medium Windows",
+        "task_font_size": 14,
+        "selected_font": "Ubuntu",
         "should_play_timer_on_open": false,
         "show_confirmation_dialog_before_emptying_bin": false
     }

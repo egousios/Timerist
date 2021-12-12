@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QScrollArea
-from dialogs import TreeWidgetFilterAdvancedOptionsDialog
+from dialogs.AdvancedTodoSearchFilterDialog import AdvancedTodoSearchFilterDialog
 from imports import *
 from forms import *
 from todo_side_menu.Components.archived_todo import ArchivedTodo
@@ -9,6 +9,7 @@ from auth import Auth
 from todo_side_menu.archive_manager import ArchiveManager
 from todo_side_menu.recycle_bin import RecycleBin
 from custom_components.profile_pic_picker import ProfilePicPicker, BigProfilePicPicker
+from custom_components.search_bar import SearchBar
 from json_settings.user_settings import load_user_settings, save_user_settings
 import shutil
 from hash import hash_char_for_astrix
@@ -266,6 +267,9 @@ class Ui_Timerist(object):
         self.treeWidgetFilterLabel = QLabel("Filter: ")
         self.treeWidgetFilterLabel.setFont(self.label_font)
 
+        self.treeWidgetSearchBar = SearchBar(placeholder_text="Search For Tasks Here...")
+        self.treeWidgetSearchBar.returnPressed.connect(self.search_todo)
+
         self.treeWidgetFilter = QComboBox()
         self.treeWidgetFilter.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLength)
 
@@ -273,17 +277,18 @@ class Ui_Timerist(object):
         self.treeWidgetFilter.setCurrentIndex(TREE_WIDGET_FILTERS.index("All"))
         self.treeWidgetFilter.activated.connect(self.change_tree_filter_mode)
 
-        self.treeWidgetFilterAdvanced = QPushButton("Advanced...")
-        self.treeWidgetFilterAdvanced.setMaximumWidth(150)
-        self.treeWidgetFilterAdvanced.clicked.connect(self.tree_filter_advanced_dialog)
+        self.open_advanced_todo_search_btn = QPushButton("Advanced...")
+        self.open_advanced_todo_search_btn.setMaximumWidth(150)
+        self.open_advanced_todo_search_btn.clicked.connect(self.open_advanced_todo_search_dialog)
 
         self.treeWidgetFilterLayout = QHBoxLayout()
         self.treeWidgetFilterLayout.addWidget(self.treeWidgetFilter)
-        self.treeWidgetFilterLayout.addWidget(self.treeWidgetFilterAdvanced)
+        self.treeWidgetFilterLayout.addWidget(self.open_advanced_todo_search_btn)
 
         self.treeWidgetSection = QWidget()
         self.treeWidgetSectionLayout = QVBoxLayout()
         self.treeWidgetSectionLayout.addWidget(self.treeWidgetFilterLabel)
+        self.treeWidgetSectionLayout.addWidget(self.treeWidgetSearchBar)
         self.treeWidgetSectionLayout.addLayout(self.treeWidgetFilterLayout)
         self.treeWidgetSectionLayout.addWidget(self.treeWidget)
         self.treeWidgetSection.setLayout(self.treeWidgetSectionLayout)
@@ -367,7 +372,7 @@ class Ui_Timerist(object):
         self.settings.setToolTip("Settings")
         self.settings.setIconSize(self.tool_btn_size_2)
         self.settings.setGeometry(QtCore.QRect(150, 360, 110, 30))
-        self.settings.clicked.connect(self.show_settings_win)
+        self.settings.clicked.connect(self.open_settings_win)
 
         self.viewCopyright = QtWidgets.QToolButton(self.MainWidget)
         self.viewCopyright.setIcon(QtGui.QIcon("images/copyright.png"))
@@ -429,8 +434,17 @@ class Ui_Timerist(object):
 
     def Refresh(self):
         self.fillTreeWidget(self.tree_filter_mode)
-            
 
+    def search_todo(self):
+        text = self.treeWidgetSearchBar.text()
+        contents_from_query = return_contents_from_query(path=f"users/{self.email}/data.txt")
+        for todo in contents_from_query:
+            task = todo[1]
+            if task == text:
+                self.treeWidget.addTopLevelItem(QTreeWidgetItem(task))
+
+
+            
     def Clear(self):
         ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to recycle all of your todos ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
         if ask == QtWidgets.QMessageBox.Yes:
@@ -455,8 +469,9 @@ class Ui_Timerist(object):
                         self.RecycledTodos.main_layout.addWidget(todo_object)
 
 
-    def tree_filter_advanced_dialog(self):
-        dialog = TreeWidgetFilterAdvancedOptionsDialog(Timerist, fill_tree_function=self.fillTreeWidget)
+    def open_advanced_todo_search_dialog(self):
+        dialog = AdvancedTodoSearchFilterDialog(Timerist, fill_tree_function=self.fillTreeWidget)
+        dialog.show()
 
     def closeEvent(self, evt):
         background = load_user_settings(self.user_settings_path)["background-image"]
@@ -526,18 +541,20 @@ class Ui_Timerist(object):
                             hours_to_finish = minutes_to_finish / 60
 
                             # test case 1 - uncomment and comment before and after testing.
-                            n = contents_from_query.index(e)
-                            stringed_task_date = qdate_date.toString("yyyy-MM-dd hh:mm:ss a")
-                            stringed_current_date = curr_dt.toString("yyyy-MM-dd hh:mm:ss a")
-                            print(
-                                "time-unit",
-                                time_unit,
-                                "time_value",
-                                time_value,
-                                f"{n}. Task Date: {stringed_task_date}",
-                                f"Today's Date: {stringed_current_date}",
-                                f"Days to finish: {days_to_finish}"
-                            )
+                            # n = contents_from_query.index(e)
+                            # stringed_task_date = qdate_date.toString("yyyy-MM-dd hh:mm:ss a")
+                            # stringed_current_date = curr_dt.toString("yyyy-MM-dd hh:mm:ss a")
+                            # print(
+                            #     "time-unit",
+                            #     time_unit,
+                            #     "time_value",
+                            #     time_value,
+                            #     "match_type",
+                            #     match_type,
+                            #     f"{n}. Task Date: {stringed_task_date}",
+                            #     f"Today's Date: {stringed_current_date}",
+                            #     f"Days to finish: {days_to_finish}"
+                            # )
 
                             if time_unit == "Years":
                                 if match_type == "EXACTLY":
@@ -583,13 +600,14 @@ class Ui_Timerist(object):
 
                             if time_unit == "Days":
                                 if match_type == "LESS_THAN":
-                                    if time_value < days_to_finish:
+                                    if time_value > days_to_finish:
                                         Item = QTreeWidgetItem(e)
                                         self.treeWidget.addTopLevelItem(Item)
+                                        print(time_value, days_to_finish, time_value < days_to_finish)
 
                             if time_unit == "Days":
                                 if match_type == "GREATER_THAN":
-                                    if time_value > days_to_finish:
+                                    if time_value < days_to_finish:
                                         Item = QTreeWidgetItem(e)
                                         self.treeWidget.addTopLevelItem(Item)
 
@@ -657,7 +675,7 @@ class Ui_Timerist(object):
         self.pushButton.setToolTip("Add A Task")
         self.pushButton.clicked.connect(self.add_todo)
 
-    def show_settings_win(self):
+    def open_settings_win(self):
         self.settings_win.show()
 
 
