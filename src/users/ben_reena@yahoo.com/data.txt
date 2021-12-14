@@ -31,15 +31,3 @@ Overdue ⌛
 2021-12-31 12:00:00 am
 wassup
 Incomplete ❌
-2021-11-18 02:16:00 pm
-Do some hiking
-Overdue ⌛
-9000-12-30 02:00:00 am
-hello_world
-Incomplete ❌
-2021-12-12 11:33:00 pm
-hi
-Overdue ⌛
-2021-12-12 11:35:00 pm
-da
-Overdue ⌛
