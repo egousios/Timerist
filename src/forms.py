@@ -25,7 +25,6 @@ class AddTodoForm(QtWidgets.QMainWindow):
         self.dateLabel.setGeometry(QtCore.QRect(230, 20, 411, 51))
         self.datetime = QtWidgets.QCalendarWidget(self)
         self.datetime.setGeometry(QtCore.QRect(30, 90, 411, 170))
-        self.datetime.clicked.connect(self.dateTell)
         kl = get_current_time()
         yr = kl[0:4]
         mm = kl[5:7]
@@ -52,7 +51,6 @@ class AddTodoForm(QtWidgets.QMainWindow):
         self.lineEdit = QtWidgets.QLineEdit(self)
         self.lineEdit.setObjectName("line")
         self.lineEdit.setGeometry(QtCore.QRect(30, 420, 411, 31))
-        self.lineEdit.returnPressed.connect(self.taskUpdate)
         self.pushButton = QtWidgets.QPushButton(self)
         self.pushButton.setGeometry(QtCore.QRect(30, 480, 90, 30))
         self.pushButton.setText("Ok")
@@ -168,20 +166,6 @@ class EditTodoForm(QtWidgets.QMainWindow):
         
     def cancel(self):
         self.destroy()
-
-    def dateTell(self):
-        font = QtGui.QFont()
-        font.setPointSize(15)
-        time_label = self.datetime.selectedDate().toString("yyyy-MM-dd")
-        self.dateLabel.setFont(font)
-        self.dateLabel.setText(f"{time_label}")
-
-    def taskUpdate(self):
-        font = QtGui.QFont()
-        font.setPointSize(15)
-        task = self.lineEdit.text()
-        self.taskLabel.setFont(font)
-        self.taskLabel.setText(f"{task}")
 
     def edit(self):
         date = self.datetime.selectedDate().toString("yyyy-MM-dd")
