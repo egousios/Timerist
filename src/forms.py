@@ -1,5 +1,12 @@
 from imports import *
 
+# note the code for this form is deprecated, and should not be used again in the future due to the
+# following:
+# 1. No use of layouts & instead the use of random positions for widgets
+# 2. Unclean variable names
+# 3. Bad Frontend
+# 4. lack of form style because there is no QFormLayout
+
 class AddTodoForm(QtWidgets.QMainWindow):
     def __init__(self, Parent, title, widget, user):
         super().__init__(parent=Parent)
@@ -66,20 +73,6 @@ class AddTodoForm(QtWidgets.QMainWindow):
     def cancel(self):
         self.destroy()
 
-    def dateTell(self):
-        font = QtGui.QFont()
-        font.setPointSize(15)
-        time_label = self.datetime.selectedDate().toString("yyyy-MM-dd")
-        self.dateLabel.setFont(font)
-        self.dateLabel.setText(f"{time_label}")
-
-    def taskUpdate(self):
-        font = QtGui.QFont()
-        font.setPointSize(15)
-        task = self.lineEdit.text()
-        self.taskLabel.setFont(font)
-        self.taskLabel.setText(f"{task}")
-
     def add(self):
         date = self.datetime.selectedDate().toString("yyyy-MM-dd")
         time = self.timeEdit.time().toString("hh:mm:ss a")
@@ -128,7 +121,6 @@ class EditTodoForm(QtWidgets.QMainWindow):
         m = int(self.item_to_edit.text(0)[5:7])
         d = int(self.item_to_edit.text(0)[8:10])
         self.datetime.setSelectedDate(QDate(y, m, d))
-        self.datetime.clicked.connect(self.dateTell)
 
         self.timeToCompleteLbl = QtWidgets.QLabel(self.centralwidget)
         self.timeToCompleteLbl.setGeometry(QtCore.QRect(30, 270, 411, 51))
@@ -157,7 +149,6 @@ class EditTodoForm(QtWidgets.QMainWindow):
         self.lineEdit.setObjectName("line")
         self.lineEdit.setGeometry(QtCore.QRect(30, 420, 411, 31))
         self.lineEdit.setText(self.item_to_edit.text(1))
-        self.lineEdit.returnPressed.connect(self.taskUpdate)
         self.pushButton = QtWidgets.QPushButton(self)
         self.pushButton.setGeometry(QtCore.QRect(30, 480, 110, 30))
         self.pushButton.setText("Save Changes")

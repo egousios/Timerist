@@ -472,7 +472,7 @@ class Ui_Timerist(object):
 
 
     def open_advanced_todo_search_dialog(self):
-        dialog = AdvancedTodoSearchFilterDialog(Timerist, fill_tree_function=self.fillTreeWidget)
+        dialog = AdvancedTodoSearchFilterDialog(Timerist, fill_tree_function=self.fillTreeWidget, sort_tree_function=self.sortTreeWidget)
         dialog.show()
 
     def closeEvent(self, evt):
@@ -480,12 +480,13 @@ class Ui_Timerist(object):
         save_user_settings(self.user_settings_path, {"background-image":background, "config":self.config})
         Timerist.destroy(destroyWindow=True, destroySubWindows=True)
         
-    def fillTreeWidget(self, mode="All", date=None):
+    def fillTreeWidget(self, mode="All", date=None, date_range=None):
         """Loads the data into the tree widget with the default mode being all.
            When the mode is set to something else, it is filtering the data
            by the target."""
         self.treeWidget.clear()
         contents_from_query = return_contents_from_query(path=f"users/{self.email}/data.txt")
+        contents_from_query = sorted(contents_from_query)
         for e in contents_from_query:
             if mode == "All":
                 if start_timer(e[0]) == 'yes' and e[2] == "Incomplete ❌": # Checks for overdue todos.
@@ -521,8 +522,28 @@ class Ui_Timerist(object):
                         Item = QTreeWidgetItem(e)
                         self.treeWidget.addTopLevelItem(Item)
 
-                    
+            elif mode == "Due Date Range":
+                if date_range != None:
+                    Date = e[0]
+                    year = int(Date[0:4])
+                    month = int(Date[5:7])
+                    day = int(Date[8:10])
+                    if QDate(year, month, day).toString("yyyy-MM-dd") in get_date_range_list(*date_range):
+                        Item = QTreeWidgetItem(e)
+                        self.treeWidget.addTopLevelItem(Item)
 
+
+    def sortTreeWidget(self, sort_order):
+        """Sorts the Tree Widget Using the value passed to sort_order."""
+        self.treeWidget.clear()
+        contents_from_query = return_contents_from_query(path=f"users/{self.email}/data.txt")
+        if sort_order == "Ascending":
+            contents_from_query = sorted(contents_from_query)
+        elif sort_order == "Descending":
+            contents_from_query = sorted(contents_from_query, reverse=True)
+        for task in contents_from_query:
+            Item = QTreeWidgetItem(task)
+            self.treeWidget.addTopLevelItem(Item)
 
 
 
