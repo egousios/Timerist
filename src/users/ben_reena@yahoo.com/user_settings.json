@@ -2,9 +2,9 @@
     "background-image": "C:/Users/sophe/Downloads/output-onlinepngtools (29).png",
     "config": {
         "theme": "Thermal",
-        "cursor": "Mac 1",
+        "cursor": "Semi-Medium Windows",
         "task_font_size": 14,
-        "selected_font": "Default",
+        "selected_font": "Ubuntu",
         "should_play_timer_on_open": false,
         "show_confirmation_dialog_before_emptying_bin": false
     }

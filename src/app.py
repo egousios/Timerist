@@ -167,7 +167,7 @@ FONTS = [
 
 FONT_CHANGEABLE_WIDGETS = [
     "QPushButton",
-    "QLabel"
+    "QLabel",
 ]
 
 TREE_WIDGET_FILTERS = ["All", "Overdue ⌛", "Incomplete ❌", "Completed ✅"]
@@ -268,7 +268,7 @@ class Ui_Timerist(object):
         self.treeWidgetFilterLabel.setFont(self.label_font)
 
         self.treeWidgetSearchBar = SearchBar(placeholder_text="Search For Tasks Here...")
-        self.treeWidgetSearchBar.returnPressed.connect(self.search_todo)
+        self.treeWidgetSearchBar.textChanged.connect(self.search_todo)
 
         self.treeWidgetFilter = QComboBox()
         self.treeWidgetFilter.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLength)
@@ -436,15 +436,17 @@ class Ui_Timerist(object):
         self.fillTreeWidget(self.tree_filter_mode)
 
     def search_todo(self):
-        text = self.treeWidgetSearchBar.text()
-        contents_from_query = return_contents_from_query(path=f"users/{self.email}/data.txt")
-        for todo in contents_from_query:
-            task = todo[1]
-            if task == text:
-                self.treeWidget.addTopLevelItem(QTreeWidgetItem(task))
-
-
-            
+        # Get all root nodes
+        all_items = self.treeWidget.findItems("", Qt.MatchStartsWith, column=1)
+            # matching items
+        match_items = self.treeWidget.findItems(self.treeWidgetSearchBar.text(), Qt.MatchStartsWith, column=1)
+            # Hide all root nodes
+        for item in all_items:
+            item.setHidden(True)
+            # Display the root node that meets the conditions
+        for item in match_items:
+            item.setHidden(False)
+  
     def Clear(self):
         ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to recycle all of your todos ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
         if ask == QtWidgets.QMessageBox.Yes:
@@ -478,7 +480,7 @@ class Ui_Timerist(object):
         save_user_settings(self.user_settings_path, {"background-image":background, "config":self.config})
         Timerist.destroy(destroyWindow=True, destroySubWindows=True)
         
-    def fillTreeWidget(self, mode="All", date=None, time_unit=None, time_value=None, match_type=None):
+    def fillTreeWidget(self, mode="All", date=None):
         """Loads the data into the tree widget with the default mode being all.
            When the mode is set to something else, it is filtering the data
            by the target."""
@@ -519,151 +521,7 @@ class Ui_Timerist(object):
                         Item = QTreeWidgetItem(e)
                         self.treeWidget.addTopLevelItem(Item)
 
-            elif mode == "Time Till Overdue":
-                if time_unit != None:
-                    if time_value != None:
-                        if match_type != None:
-
-                            Date = e[0]
-                            year = int(Date[0:4])
-                            month = int(Date[5:7])
-                            day = int(Date[8:10])
-                            hour = int(Date[9:11])
-                            minute = int(Date[14:16])
-                            second = int(Date[17:19])
-                            qdate_date = QDateTime(QDate(year, month, day), QTime(hour, minute, second))
-                            curr_dt = QtCore.QDateTime.currentDateTime()
-                            days_to_finish = curr_dt.daysTo(qdate_date)
-                            years_to_finish = days_to_finish  / 365
-                            months_to_finish = days_to_finish / 30.417
-                            secs_to_finish = curr_dt.secsTo(qdate_date)
-                            minutes_to_finish = secs_to_finish / 60
-                            hours_to_finish = minutes_to_finish / 60
-
-                            # test case 1 - uncomment and comment before and after testing.
-                            # n = contents_from_query.index(e)
-                            # stringed_task_date = qdate_date.toString("yyyy-MM-dd hh:mm:ss a")
-                            # stringed_current_date = curr_dt.toString("yyyy-MM-dd hh:mm:ss a")
-                            # print(
-                            #     "time-unit",
-                            #     time_unit,
-                            #     "time_value",
-                            #     time_value,
-                            #     "match_type",
-                            #     match_type,
-                            #     f"{n}. Task Date: {stringed_task_date}",
-                            #     f"Today's Date: {stringed_current_date}",
-                            #     f"Days to finish: {days_to_finish}"
-                            # )
-
-                            if time_unit == "Years":
-                                if match_type == "EXACTLY":
-                                    if time_value == years_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Years":
-                                if match_type == "LESS_THAN":
-                                    if time_value < years_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Years":
-                                if match_type == "GREATER_THAN":
-                                    if time_value > years_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Months":
-                                if match_type == "EXACTLY":
-                                    if time_value == months_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Months":
-                                if match_type == "LESS_THAN":
-                                    if time_value < months_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Months":
-                                if match_type == "GREATER_THAN":
-                                    if time_value > months_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-                                        
-                            if time_unit == "Days":
-                                if match_type == "EXACTLY":
-                                    if time_value == days_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Days":
-                                if match_type == "LESS_THAN":
-                                    if time_value > days_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-                                        print(time_value, days_to_finish, time_value < days_to_finish)
-
-                            if time_unit == "Days":
-                                if match_type == "GREATER_THAN":
-                                    if time_value < days_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Hours":
-                                if match_type == "EXACTLY":
-                                    if time_value == hours_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Hours":
-                                if match_type == "LESS_THAN":
-                                    if time_value < hours_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Hours":
-                                if match_type == "GREATER_THAN":
-                                    if time_value > hours_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Minutes":
-                                if match_type == "EXACTLY":
-                                    if time_value == minutes_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Minutes":
-                                if match_type == "LESS_THAN":
-                                    if time_value < minutes_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Minutes":
-                                if match_type == "GREATER_THAN":
-                                    if time_value > minutes_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Seconds":
-                                if match_type == "EXACTLY":
-                                    if time_value == secs_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Seconds":
-                                if match_type == "LESS_THAN":
-                                    if time_value < secs_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
-
-                            if time_unit == "Seconds":
-                                if match_type == "GREATER_THAN":
-                                    if time_value > secs_to_finish:
-                                        Item = QTreeWidgetItem(e)
-                                        self.treeWidget.addTopLevelItem(Item)
+                    
 
 
 
