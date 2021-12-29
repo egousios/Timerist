@@ -14,7 +14,7 @@
 
 
 <h2 align="center">App Screenshot: Introducing Themes<h2>
-<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshot/timerist-preview.png"></p>
+<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/timerist-preview.png"></p>
 
 <hr>
 <h2 align="center">Future Open Source Development Sneak Peak: Theme Editor<h2>
