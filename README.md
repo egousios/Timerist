@@ -14,19 +14,19 @@
 
 
 <h2 align="center">App Screenshot: Introducing Themes<h2>
-<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/timerist-preview.png"></p>
+<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/timerist-preview.png" width=100 height=100></p>
 
 <hr>
 <h2 align="center">Future Open Source Development Sneak Peak: Theme Editor<h2>
 <hr>
 <h3 align="center">Themes can be acessed by anyone with the theme editor.</h3>
-<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-main-menu.png"></p>
+<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-main-menu.png" width=100 height=100></p>
 
 <h3 align="center">Anyone is welcome to contribute by creating a new theme.<h3>
-<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-new-theme.png"></p>
+<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-new-theme.png" width=100 height=100></p>
 
 <h3 align="center">Themes are anonymous, and do not require a publisher, we can edit & view each other's themes freely.<h3>
 <div style="text-align: center;">
-   <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-edit-theme.png">
-   <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-view-theme.png">
+   <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-edit-theme.png" width=100 height=100>
+   <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-view-theme.png" width=100 height=100>
 </div>
