@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/lukewarm.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "lukewarm",
+    "theme_lighter_color": "#1803ff",
+    "theme_darker_color": "#ff0004",
+    "theme_data_filepath": "stylesheets/theme_datas/lukewarm.json"
+}

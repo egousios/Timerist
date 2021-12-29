@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Aquatic.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Aquatic",
+    "theme_lighter_color": "#30e3ff",
+    "theme_darker_color": "#155fff",
+    "theme_data_filepath": "stylesheets/theme_datas/Aquatic.json"
+}

@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Blackstone.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Blackstone",
+    "theme_lighter_color": "#7d7d7d",
+    "theme_darker_color": "#000000",
+    "theme_data_filepath": "stylesheets/theme_datas/Blackstone.json"
+}

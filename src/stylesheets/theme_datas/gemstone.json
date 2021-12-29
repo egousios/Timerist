@@ -1,0 +1,9 @@
+{
+    "theme_type":"Color/Element Theme",
+    "theme_file_path":"stylesheets/gemstone.qss",
+    "theme_base_theme":"stylesheets/gemstone.qss",
+    "theme_name":"Gemstone",
+    "theme_lighter_color":"#c14bc9",
+    "theme_darker_color":"#883da6",
+    "theme_data_filepath":"stylesheets/theme_datas/gemstone.json"
+}

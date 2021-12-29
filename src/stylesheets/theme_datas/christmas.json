@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/christmas.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "christmas",
+    "theme_lighter_color": "#ff0004",
+    "theme_darker_color": "#07a72c",
+    "theme_data_filepath": "stylesheets/theme_datas/christmas.json"
+}
