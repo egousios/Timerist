@@ -12,3 +12,4 @@ from utils import *
 from windows import *
 import sys, os
 from qtwidgets import *
+from auth.platforms import get_route_to_data

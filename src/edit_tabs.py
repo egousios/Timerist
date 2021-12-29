@@ -48,9 +48,9 @@ class EditTodoTabs(QtWidgets.QWidget):
         self.labelTime2 = QtWidgets.QLabel()
         self.labelTime2.setFont(self.font2)
         if self.timeText == "Task Closed ✅":
-            self.labelTime2.setStyleSheet("color: rgb(120, 255, 0);")
+            self.labelTime2.setStyleSheet("color: #60945f;")
         elif self.timeText == "Time is Up!":
-            self.labelTime2.setStyleSheet("color: rgb(240, 35, 35);")
+            self.labelTime2.setStyleSheet("color: #fc5b5b;")
             self.labelTime3 = QtWidgets.QLabel()
             self.labelTime3.setFont(self.font)
             self.labelTime3.setText('Alarm: on')
@@ -59,7 +59,7 @@ class EditTodoTabs(QtWidgets.QWidget):
             self.checkBox1.setChecked(True)
             self.checkBox1.stateChanged.connect(self.AlarmNoise)
         else:
-            self.labelTime2.setStyleSheet("color: rgb(255, 42, 0);")
+            self.labelTime2.setStyleSheet("color: #fc5b5b;")
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.showTime)
         self.timer.start(1000)

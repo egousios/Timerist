@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtGui import QCursor, QFont, QPixmap, QTextCursor
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QLineEdit
 
 class SearchBar(QLineEdit):

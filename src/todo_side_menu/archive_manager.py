@@ -3,6 +3,7 @@ from PyQt5.QtCore import QParallelAnimationGroup, QSize, Qt
 from PyQt5.QtGui import QBrush, QFont, QIcon, QKeySequence, QPalette, QPixmap
 from PyQt5.QtWidgets import *
 from typing import List, Optional
+from auth.platforms import get_route_to_data
 from backend.query import Tree, delete_item_from_query, is_item, return_contents_from_query, is_item
 from todo_side_menu.Components.recycled_todo import RecycledTodo
 from .Components.archived_todo import ArchivedTodo
@@ -119,7 +120,7 @@ class ArchiveManager(QtWidgets.QWidget):
 
     def unarchive_todo(self):
         for todo in self.selectedTodos:
-            if is_item(todo.todo_data, f"users/{self.email}/data.txt"):
+            if is_item(todo.todo_data, get_route_to_data(self.email, "availible_tasks")):
                 QMessageBox.critical(self, "Error", "Couldn't Unarchive todo because todo is already unarchived.")
             else:
                 data = [todo.todo_data[0], todo.todo_data[1], todo.todo_data[2]]
@@ -128,7 +129,7 @@ class ArchiveManager(QtWidgets.QWidget):
                         "task":data[1],
                         "status":data[2],
                     })
-                branch.save(branch.branches, id="all", path=f"users/{self.email}/data.txt")
+                branch.save(branch.branches, id="all", path=get_route_to_data(self.email, "availible_tasks"))
                 items = []
                 for i in reversed(range(self.main_layout.count())): 
                     item = self.main_layout.itemAt(i)
@@ -142,12 +143,12 @@ class ArchiveManager(QtWidgets.QWidget):
                 self.todos.remove(todo)
                 selection_amount = self.getSelectedTodosCount()
                 self.selected_count.setText(f"Selected: {selection_amount}")
-                delete_item_from_query(data, f"users/{self.email}/archived.txt")
+                delete_item_from_query(data, get_route_to_data(self.email, "archived_tasks"))
         self.manager.Refresh()
 
     def recycle_todo(self):
         for todo in self.selectedTodos:
-            if is_item(todo.todo_data, f"users/{self.email}/recycled.txt"):
+            if is_item(todo.todo_data, get_route_to_data(self.email, "recycled_tasks")):
                 QMessageBox.critical(self, "Error", "Couldn't Recycle todo because todo is already recycled.")
             else:
                 data = [todo.todo_data[0], todo.todo_data[1], todo.todo_data[2]]
@@ -156,7 +157,7 @@ class ArchiveManager(QtWidgets.QWidget):
                         "task":data[1],
                         "status":data[2],
                     })
-                branch.save(branch.branches, id="all", path=f"users/{self.email}/recycled.txt")
+                branch.save(branch.branches, id="all", path=get_route_to_data(self.email, "recycled_tasks"))
                 items = []
                 for i in reversed(range(self.main_layout.count())): 
                     item = self.main_layout.itemAt(i)
@@ -170,7 +171,7 @@ class ArchiveManager(QtWidgets.QWidget):
                 self.todos.remove(todo)
                 selection_amount = self.getSelectedTodosCount()
                 self.selected_count.setText(f"Selected: {selection_amount}")
-                delete_item_from_query(data, f"users/{self.email}/archived.txt")
+                delete_item_from_query(data, get_route_to_data(self.email, "archived_tasks"))
                 todo_object = RecycledTodo(self.manager.RecycledTodos, data)
                 todo_object.setStyleSheet("QFrame {border-width: 2;border-radius: 4;border-style: solid;border-color: #0d0e0f;}")
                 self.manager.RecycledTodos.todos.append(todo_object)

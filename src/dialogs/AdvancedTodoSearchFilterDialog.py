@@ -4,6 +4,9 @@ from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtWidgets import QComboBox, QDateEdit, QDialog, QDialogButtonBox, QFormLayout, QGroupBox, QHBoxLayout, QLabel, QSpinBox, QVBoxLayout, QWidget
 from backend.time import get_date_range_list, Date
 
+# Constants
+SORT_SELECTOR_ICONS = ["default", "images/ascending.png", "images/descending.png"]
+SORT_SELECTOR_ICON_SIZE = (50, 50)
 
 class AdvancedTodoSearchFilterDialog(QtWidgets.QDialog):
     """A dialog window for searching through tasks with advanced filters."""
@@ -23,7 +26,9 @@ class AdvancedTodoSearchFilterDialog(QtWidgets.QDialog):
         self.button_box.rejected.connect(self.close_win)
 
         self.filters = ["None", "Due Date", "Due Date Range", "Sort By Upcoming"]
+        self.sorts = ["Normal", "Ascending", "Descending"]
         self.selected_filter = self.filters[0] # None
+        self.selected_sort = self.sorts[0] # Normal
 
         self.filter_by_lbl = QLabel("Filter By: ")
         self.filter_by_lbl.setFont(self.label_font)
@@ -74,11 +79,11 @@ class AdvancedTodoSearchFilterDialog(QtWidgets.QDialog):
         self.sort_by_upcoming_label.setFont(self.label_font)
 
         self.sort_by_upcoming = QComboBox()
-        self.sort_by_upcoming.addItems(["Ascending", "Descending"])
-        self.sort_by_upcoming.setItemIcon(0, QIcon("images/ascending.png"))
-        self.sort_by_upcoming.setItemIcon(1, QIcon("images/descending.png"))
-        self.sort_by_upcoming.setIconSize(QSize(50, 50))
-        self.selected_sort = None
+        for i, sort in enumerate(self.sorts):
+            self.sort_by_upcoming.addItem(sort)
+            if i != 0:
+                self.sort_by_upcoming.setItemIcon(i, QIcon(SORT_SELECTOR_ICONS[i]))
+        self.sort_by_upcoming.setIconSize(QSize(*SORT_SELECTOR_ICON_SIZE))
         self.sort_by_upcoming.activated.connect(self.change_selected_sort)
 
         self.sort_by_upcoming_label.setHidden(True)

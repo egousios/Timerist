@@ -1,11 +1,11 @@
 {
-    "background-image": "C:/Users/sophe/Downloads/output-onlinepngtools (31).png",
+    "background-image": "C:/Users/sophe/Downloads/Screen-Shot-2021-08-13-at-9.44.49-AM.png",
     "config": {
-        "theme": "Ubuntu",
+        "theme": "Thermal",
         "cursor": "Linux",
-        "task_font_size": 16,
-        "selected_font": "Default",
-        "should_play_timer_on_open": false,
-        "show_confirmation_dialog_before_emptying_bin": false
+        "task_font_size": 14,
+        "selected_font": "Segoe Print",
+        "should_play_timer_on_open": true,
+        "show_confirmation_dialog_before_emptying_bin": true
     }
 }

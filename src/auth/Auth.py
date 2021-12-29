@@ -1,9 +1,10 @@
+from PyQt5.QtGui import QFontDatabase
 from PyQt5.QtWidgets import QDialogButtonBox, QGroupBox
 import sys
 import os
 import subprocess
-sys.path.insert(0, "../")
 from app import *
+sys.path.insert(0, "../")
 from .platforms import executePlatformCompatibleAuthCMD
 import pyrebase
 
@@ -59,10 +60,10 @@ class LoginWindow(QtWidgets.QDialog):
         id3 = QFontDatabase.addApplicationFont("assets/Ubuntu-Medium.ttf")
         _fontstr3 = QFontDatabase.applicationFontFamilies(id3)[0]
         font3 = QFont(_fontstr3, 30)
+        
+        QFontDatabase.addApplicationFont("assets/RedHat.ttf")
 
-        id4 = QFontDatabase.addApplicationFont("assets/RedHat.ttf")
-        _fontstr4 = QFontDatabase.applicationFontFamilies(id4)[0]
-        font4 = QFont(_fontstr4, 30)
+        QFontDatabase.addApplicationFont("assets/OpenSans-SemiBold.ttf")
 
         # Validity
         self.invalid = QLabel("Invalid Username Or Password!")
@@ -182,11 +183,11 @@ class LoginWindow(QtWidgets.QDialog):
     def loginToApp(self):
         email = self.email_field.text()
         password = self.password_field.text()
+
         '''
         try:
             user = auth.sign_in_with_email_and_password(email,password)
             app.setFont(_font)
-            clipboard=app.clipboard()
             sound_file = 'assets/alarm.wav'
             sound = QtMultimedia.QSoundEffect()
             sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
@@ -202,11 +203,12 @@ class LoginWindow(QtWidgets.QDialog):
             self.invalid.setVisible(True)
             self.retry.setVisible(True)
         '''
-        # This is to check for errors in the code
 
-        user = auth.sign_in_with_email_and_password(email,password)
+        # Coding mode - comment and uncomment when coding, on production use the above.
+        TEST_EMAIL, TEST_PASSWRD = "ben_reena@yahoo.com", "ssanthanas"
+        # Test user
+        user = auth.sign_in_with_email_and_password(TEST_EMAIL,TEST_PASSWRD)
         app.setFont(_font)
-        clipboard=app.clipboard()
         sound_file = 'assets/alarm.wav'
         sound = QtMultimedia.QSoundEffect()
         sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
@@ -214,7 +216,8 @@ class LoginWindow(QtWidgets.QDialog):
         sound.setVolume(50)
         password_hash = auth.get_account_info(user['idToken'])['users'][0]['passwordHash']
         email_verified = auth.get_account_info(user['idToken'])['users'][0]['emailVerified']
-        ui.setupUi(Timerist, sound, email=email, password=password, cached_password=password_hash, uid=user['localId'], email_verified=email_verified, auth=auth, idToken=user['idToken'])
+        # Give in the test email and password instead of the form field values.
+        ui.setupUi(Timerist, sound, email=TEST_EMAIL, password=TEST_PASSWRD, cached_password=password_hash, uid=user['localId'], email_verified=email_verified, auth=auth, idToken=user['idToken'])
         Timerist.showMaximized()
         self.setParent(Timerist)
         self.destroy(True)
@@ -518,3 +521,5 @@ class RegisterWindow(QtWidgets.QDialog):
         login = LoginWindow()
         child.setParent(login)
         login.show()
+
+

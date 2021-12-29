@@ -13,6 +13,9 @@ from custom_components.search_bar import SearchBar
 from json_settings.user_settings import load_user_settings, save_user_settings
 import shutil
 from hash import hash_char_for_astrix
+from theme_editor import THEMES, THEME_FILES
+from utils import load_json_data_from_json_file
+from theme_editor import SAVED_THEME_DATAS_SOURCE
 
 def start_timer(end_date):
     current_date_time = QtCore.QDateTime.currentDateTime()
@@ -22,6 +25,12 @@ def start_timer(end_date):
     else:
         return f"{days_in_between(fmt, end_date)} time left."
 
+QMENU_STYLESHEET = """QMenu { 
+                           background-color: black; 
+                           color: white; 
+                           border: black solid 1px
+                           }"""
+
 
 class QTreeWidgetCustom(QtWidgets.QTreeWidget):
     def __init__(self, parent, email):
@@ -30,6 +39,7 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
 
     def contextMenuEvent(self, event):
         contextMenu = QMenu(self)
+        contextMenu.setStyleSheet(QMENU_STYLESHEET)
         archive = contextMenu.addAction("Archive")
         recycle = contextMenu.addAction("Recycle")
         edit = contextMenu.addAction("Edit")
@@ -41,12 +51,12 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
         elif action == edit:
             self.Edit()
 
-
+ 
     def Archive(self):
         for item in self.selectedItems():
             data = [item.text(0), item.text(1), item.text(2)]
 
-            if is_item(data, f"users/{self.email}/archived.txt"):
+            if is_item(data, get_route_to_data(self.email, "archived_tasks")):
                 QMessageBox.critical(Timerist, "Error", "Couldn't archive todo because todo is already archived.")
             else:
                 branch = Tree(branches={
@@ -54,9 +64,9 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
                         "task":data[1],
                         "status":data[2],
                     })
-                branch.save(branch.branches, id="all", path=f"users/{self.email}/archived.txt")
+                branch.save(branch.branches, id="all", path=get_route_to_data(self.email, "archived_tasks"))
                 self.takeTopLevelItem(self.indexOfTopLevelItem(item))
-                delete_item_from_query(data, path=f'users/{self.email}/data.txt')
+                delete_item_from_query(data, path=get_route_to_data(self.email, "availible_tasks"))
                 todo_object = ArchivedTodo(self.archiveWid, data)
                 todo_object.setStyleSheet("QFrame {border-width: 2;border-radius: 4;border-style: solid;border-color: #0d0e0f;}")
                 self.archiveWid.todos.append(todo_object)
@@ -66,7 +76,7 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
         for item in self.selectedItems():
             data = [item.text(0), item.text(1), item.text(2)]
 
-            if is_item(data, f"users/{self.email}/recycled.txt"):
+            if is_item(data, get_route_to_data(self.email, "recycled_tasks")):
                 QMessageBox.critical(Timerist, "Error", "Couldn't recycle todo because todo is already recycled.")
             else:
                 branch = Tree(branches={
@@ -74,9 +84,9 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
                         "task":data[1],
                         "status":data[2],
                     })
-                branch.save(branch.branches, id="all", path=f"users/{self.email}/recycled.txt")
+                branch.save(branch.branches, id="all", path=get_route_to_data(self.email, "recycled_tasks"))
                 self.takeTopLevelItem(self.indexOfTopLevelItem(item))
-                delete_item_from_query(data, path=f'users/{self.email}/data.txt')
+                delete_item_from_query(data, path=get_route_to_data(self.email, "availible_tasks"))
                 todo_object = RecycledTodo(self.recycleWid, data)
                 todo_object.setStyleSheet("QFrame {border-width: 2;border-radius: 4;border-style: solid;border-color: #0d0e0f;}")
                 self.recycleWid.todos.append(todo_object)
@@ -97,18 +107,7 @@ class QTreeWidgetCustom(QtWidgets.QTreeWidget):
 
 """Settings Constants"""
 
-THEMES = ["Default", "Ubuntu", "Aqua", "Thermal", "Forest", "Earth", "Gemstone", "Blackstone"]
-
-THEME_FILES = [
-    "stylesheets/default.qss",
-    "stylesheets/ubuntu.qss",
-    "stylesheets/aqua.qss",
-    "stylesheets/thermal.qss",
-    "stylesheets/forest.qss",
-    "stylesheets/earth.qss",
-    "stylesheets/gemstone.qss",
-    "stylesheets/blackstone.qss",
-]
+app = QtWidgets.QApplication(sys.argv)
 
 # Add this to the stylesheets to regulate system appearance.
 THEME_REGULATOR = """
@@ -117,14 +116,23 @@ QTreeWidget QHeaderView::section {
 }
 
 QMenu { 
-    background-color: black; 
+    background: transparent;
     color: white; 
-    border: black solid 1px
+    border: black solid 1px;
 }
 
 QLineEdit {
     font-size: 11.5px;
 }
+
+QMainWindow {
+    color: #fff;
+}
+
+QScrollArea {
+    background: transparent;
+}
+
 """
 
 CURSORS = [
@@ -158,16 +166,13 @@ CURSOR_FILES = [
 
 TASK_FONT_SIZE_RANGE = (6, 100)
 
-FONTS = [
-    "Default",
-    "Ubuntu",
-    "Segoe UI",
-    "Red Hat"
-]
+FONTS = [font for font in QFontDatabase().families()]
+FONTS[0] = "Default"
 
 FONT_CHANGEABLE_WIDGETS = [
     "QPushButton",
     "QLabel",
+    "QLineEdit"
 ]
 
 TREE_WIDGET_FILTERS = ["All", "Overdue ⌛", "Incomplete ❌", "Completed ✅"]
@@ -183,6 +188,7 @@ class Ui_Timerist(object):
         self.TodoLayout = QVBoxLayout()
 
         self.MainWidget = QtWidgets.QWidget()
+        self.MainWidget.setStyleSheet("background-color: #fff")
 
         self.opened = False
         self.tool_btn_size = QtCore.QSize(400, 400)
@@ -199,7 +205,7 @@ class Ui_Timerist(object):
         self.idToken = idToken
         self.shouldPlayTimerOnOpen = True
         self.showConfirmationDialogBeforeEmptyBin = True
-        self.user_settings_path = f"users/{self.email}/user_settings.json"
+        self.user_settings_path = get_route_to_data(self.email, "user_settings")
 
         self.default_config = {
             "theme":"Default",
@@ -243,8 +249,8 @@ class Ui_Timerist(object):
         self.label_font = QFont("Poppins", 15)
 
         ### Context Menu Tabs 
-        self.ArchivedTodos = ArchiveManager(Timerist, f"users/{self.email}/data.txt", return_contents_from_query(f"users/{self.email}/archived.txt"), email=self.email, maker=self, manager=self)
-        self.RecycledTodos = RecycleBin(Timerist, f"users/{self.email}/data.txt", return_contents_from_query(f"users/{self.email}/recycled.txt"), email=self.email, maker=self, manager=self, showConfirmationBeforeEmpty=self.showConfirmationDialogBeforeEmptyBin)
+        self.ArchivedTodos = ArchiveManager(Timerist, get_route_to_data(self.email, "availible_tasks"), return_contents_from_query(get_route_to_data(self.email, "archived_tasks")), email=self.email, maker=self, manager=self)
+        self.RecycledTodos = RecycleBin(Timerist, get_route_to_data(self.email, "availible_tasks"), return_contents_from_query(get_route_to_data(self.email, "recycled_tasks")), email=self.email, maker=self, manager=self, showConfirmationBeforeEmpty=self.showConfirmationDialogBeforeEmptyBin)
 
         self.tree_filter_mode = "All"
 
@@ -275,6 +281,10 @@ class Ui_Timerist(object):
 
         self.treeWidgetFilter.addItems(TREE_WIDGET_FILTERS)
         self.treeWidgetFilter.setCurrentIndex(TREE_WIDGET_FILTERS.index("All"))
+        self.treeWidgetFilter.setStyleSheet("""
+        QComboBox{ background-color: white; color: black; }
+
+        """)
         self.treeWidgetFilter.activated.connect(self.change_tree_filter_mode)
 
         self.open_advanced_todo_search_btn = QPushButton("Advanced...")
@@ -427,6 +437,8 @@ class Ui_Timerist(object):
     
     def Logout(self):
         background = load_user_settings(self.user_settings_path)["background-image"]
+        if hasattr(self, "settings_win"):
+            save_user_settings(self.user_settings_path, {"background-image":background, "config":self.config})
         save_user_settings(self.user_settings_path, {"background-image":background, "config":self.config})
         Timerist.destroy(destroyWindow=True, destroySubWindows=True)
         QApplication.instance().exit(0)
@@ -454,7 +466,7 @@ class Ui_Timerist(object):
                 item = self.treeWidget.topLevelItem(i)
                 if isinstance(item, QTreeWidgetItem):
                     data = [item.text(0), item.text(1), item.text(2)]
-                    if is_item(data, f"users/{self.email}/recycled.txt"):
+                    if is_item(data, get_route_to_data(self.email, "recycled_tasks")):
                         QMessageBox.critical(Timerist, "Error", "Couldn't recycle todo because todo is already recycled.")
                     else:
                         branch = Tree(branches={
@@ -462,9 +474,9 @@ class Ui_Timerist(object):
                                 "task":data[1],
                                 "status":data[2],
                             })
-                        branch.save(branch.branches, id="all", path=f"users/{self.email}/recycled.txt")
+                        branch.save(branch.branches, id="all", path=get_route_to_data(self.email, "recycled_tasks"))
                         self.treeWidget.takeTopLevelItem(i)
-                        delete_item_from_query(data, path=f'users/{self.email}/data.txt')
+                        delete_item_from_query(data, path=get_route_to_data(self.email, "availible_tasks"))
                         todo_object = RecycledTodo(self.RecycledTodos, data)
                         todo_object.setStyleSheet("QFrame {border-width: 2;border-radius: 4;border-style: solid;border-color: #0d0e0f;}")
                         self.RecycledTodos.todos.append(todo_object)
@@ -477,6 +489,8 @@ class Ui_Timerist(object):
 
     def closeEvent(self, evt):
         background = load_user_settings(self.user_settings_path)["background-image"]
+        if hasattr(self, "settings_win"):
+            save_user_settings(self.user_settings_path, {"background-image":background, "config":self.config})
         save_user_settings(self.user_settings_path, {"background-image":background, "config":self.config})
         Timerist.destroy(destroyWindow=True, destroySubWindows=True)
         
@@ -485,12 +499,12 @@ class Ui_Timerist(object):
            When the mode is set to something else, it is filtering the data
            by the target."""
         self.treeWidget.clear()
-        contents_from_query = return_contents_from_query(path=f"users/{self.email}/data.txt")
+        contents_from_query = return_contents_from_query(path=get_route_to_data(self.email, "availible_tasks"))
         contents_from_query = sorted(contents_from_query)
         for e in contents_from_query:
             if mode == "All":
                 if start_timer(e[0]) == 'yes' and e[2] == "Incomplete ❌": # Checks for overdue todos.
-                    edit_item(e, e[0], e[1], 'Overdue ⌛', f"users/{self.email}/data.txt")
+                    edit_item(e, e[0], e[1], 'Overdue ⌛', get_route_to_data(self.email, "availible_tasks"))
                     Item = QTreeWidgetItem(e)
                     self.treeWidget.addTopLevelItem(Item)
                 else:
@@ -536,11 +550,13 @@ class Ui_Timerist(object):
     def sortTreeWidget(self, sort_order):
         """Sorts the Tree Widget Using the value passed to sort_order."""
         self.treeWidget.clear()
-        contents_from_query = return_contents_from_query(path=f"users/{self.email}/data.txt")
+        contents_from_query = return_contents_from_query(path=get_route_to_data(self.email, "availible_tasks"))
         if sort_order == "Ascending":
             contents_from_query = sorted(contents_from_query)
         elif sort_order == "Descending":
             contents_from_query = sorted(contents_from_query, reverse=True)
+        elif sort_order == "None":
+            contents_from_query = return_contents_from_query(path=get_route_to_data(self.email, "availible_tasks"))
         for task in contents_from_query:
             Item = QTreeWidgetItem(task)
             self.treeWidget.addTopLevelItem(Item)
@@ -560,24 +576,26 @@ class Ui_Timerist(object):
 
     def settingsWindow(self, show=True):
         self.settings_win = QtWidgets.QDialog(Timerist)
-        self.settings_win.resize(QSize(550, 400))
+        self.settings_win.resize(QSize(400, 350))
         self.settings_win.setWindowTitle("Settings")
         self.settings_win.setWindowIcon(QIcon("images/settings.png"))
         self.settings_win_tabs = CustomTabWidget()
         self.settings_win_account_tab = QWidget()
         self.settings_win_todolist_tab = QWidget()
         self.settings_win_appearance_tab = QWidget()
+        self.settings_win_advanced_tab = QWidget()
 
         self.settings_win_tabs.addTab(self.settings_win_account_tab, "Account")
         self.settings_win_tabs.addTab(self.settings_win_todolist_tab, "To-Do-List")
         self.settings_win_tabs.addTab(self.settings_win_appearance_tab, "Appearance")
+        self.settings_win_tabs.addTab(self.settings_win_advanced_tab, "Advanced")
         layout = QVBoxLayout()
         layout.addWidget(self.settings_win_tabs)
-        ui_font = QFont("Poppins", 20)
-        ui_font_smaller = QFont("Poppins", 14)
+        ui_font = QFont("Poppins", 16)
+        ui_font_smaller = QFont("Poppins", 13)
         small_font = QFont("Poppins", 11.5)
-        value_font = QFont("Segoe UI", 20)
-        btn_font = QFont("Poppins", 13)
+        value_font = QFont("Segoe UI", 16)
+        btn_font = QFont("Poppins", 12)
 
         self.account_field_layout = QFormLayout()
         self.account_field_layout.setLabelAlignment(Qt.AlignLeft)
@@ -683,6 +701,7 @@ class Ui_Timerist(object):
 
         self.should_play_timer_on_open_label = QLabel("Ring Alarm When Task Is Overdue: ")
         self.should_play_timer_on_open_label.setFont(ui_font_smaller)
+
         self.should_play_timer_on_open = AnimatedToggle()
         self.should_play_timer_on_open.setChecked(self.shouldPlayTimerOnOpen)
         self.should_play_timer_on_open.setMaximumSize(90, 40)
@@ -710,7 +729,10 @@ class Ui_Timerist(object):
         self.interface_theme_selector.setMaximumSize(QSize(120, 150))
         self.interface_theme_selector.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
         self.interface_theme_selector.addItems(THEMES)
-        self.interface_theme_selector.setCurrentIndex(THEMES.index(self.selected_theme))
+        try:
+            self.interface_theme_selector.setCurrentIndex(THEMES.index(self.selected_theme))
+        except:
+            self.interface_theme_selector.setCurrentIndex(THEMES.index("Default"))
         self.interface_theme_selector.activated.connect(self.change_theme)
 
         self.cursors = QLabel("Cursor: ")
@@ -756,11 +778,49 @@ class Ui_Timerist(object):
 
         self.settings_win_appearance_tab.setLayout(self.settings_win_appearance_layout)
 
+        self.settings_win_advanced_layout = QFormLayout()
+
+        self.reset_settings_lbl = QLabel("Reset To Default: ")
+        self.reset_settings_lbl.setFont(self.label_font)
+
+        self.reset_settings_btn = QPushButton("Reset")
+        self.reset_settings_btn.setMaximumSize(120, 50)
+        self.reset_settings_btn.setFont(btn_font)
+        self.reset_settings_btn.clicked.connect(self.reset_settings)
+
+        self.settings_win_advanced_layout.addRow(self.reset_settings_lbl, self.reset_settings_btn)
+
+        self.settings_win_advanced_tab.setLayout(self.settings_win_advanced_layout)
+
+
         self.settings_win.setLayout(layout)
 
         if show == True:
             self.settings_win.show()
 
+    def reset_settings(self):
+        """Reset Configurations, Leave Profile Picture."""
+        # Reset values
+        self.selected_theme = self.default_config["theme"]
+        self.selected_cursor = self.default_config["cursor"]
+        self.selected_task_font_size = self.default_config["task_font_size"]
+        self.selected_font = self.default_config["selected_font"]
+        self.shouldPlayTimerOnOpen = self.default_config["should_play_timer_on_open"]
+        self.showConfirmationDialogBeforeEmptyBin = self.default_config["show_confirmation_dialog_before_emptying_bin"]
+        # Setting Values
+        self.interface_theme_selector.setCurrentIndex(THEMES.index(self.selected_theme))
+        self.cursor_selector.setCurrentIndex(CURSORS.index(self.selected_cursor))
+        self.task_font_size_selector.setValue(self.selected_task_font_size)
+        self.app_font_selector.setCurrentIndex(FONTS.index(self.selected_font))
+        self.should_play_timer_on_open.setChecked(self.shouldPlayTimerOnOpen)
+        self.show_confirmation_dlg_before_empty_bin.setChecked(self.showConfirmationDialogBeforeEmptyBin)
+        # Updating Settings
+        self.change_theme()
+        self.change_cursor()
+        self.change_task_font_size()
+        self.change_app_font()
+        self.toggle_timer_on_open(self.shouldPlayTimerOnOpen)
+        self.show_confirmation_before_empty_bin(self.showConfirmationDialogBeforeEmptyBin)
 
     def change_tree_filter_mode(self):
         name = self.treeWidgetFilter.currentText()
@@ -786,9 +846,8 @@ class Ui_Timerist(object):
         self.treeWidget.setFont(font)
         self.selected_task_font_size = task_font_size
         self.config["task_font_size"] = self.selected_task_font_size
+
         
-
-
     def change_theme(self):
         name = self.interface_theme_selector.currentText()
         theme = load_from_stylesheet(THEME_FILES[THEMES.index(name)]) + THEME_REGULATOR
@@ -861,15 +920,15 @@ class Ui_Timerist(object):
             if item_text_prev[2] == "Incomplete ❌":
                 item.setText(2, "Completed ✅")
                 item_text_new = [item.text(0), item.text(1), item.text(2)]
-                change_item_from_query(item_text_prev, item_text_new, f'users/{self.email}/data.txt')
+                change_item_from_query(item_text_prev, item_text_new, get_route_to_data(self.email, "availible_tasks"))
             elif item_text_prev[2] == "Overdue ⌛":
                 item.setText(2, "Completed ✅")
                 item_text_new = [item.text(0), item.text(1), item.text(2)]
-                change_item_from_query(item_text_prev, item_text_new, f'users/{self.email}/data.txt')
+                change_item_from_query(item_text_prev, item_text_new, get_route_to_data(self.email, "availible_tasks"))
             elif item_text_prev[2] == "Completed ✅":
                 item.setText(2, "Incomplete ❌")
                 item_text_new = [item.text(0), item.text(1), item.text(2)]
-                change_item_from_query(item_text_prev, item_text_new, f'users/{self.email}/data.txt')
+                change_item_from_query(item_text_prev, item_text_new, get_route_to_data(self.email, "availible_tasks"))
 
 
     def view_todo(self):
@@ -921,7 +980,7 @@ class Ui_Timerist(object):
         CopyrightWin.setCentralWidget(widget)
         CopyrightWin.show()
 
-app = QtWidgets.QApplication(sys.argv)
+
 app.setStyle('Fusion')
 app.setStyleSheet(load_from_stylesheet(THEME_FILES[0])) # default
 pallete = app.palette()
