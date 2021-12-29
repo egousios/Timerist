@@ -25,7 +25,6 @@
 <p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-new-theme.png"></p>
 
 <h3 align="center">Themes are anonymous, and do not require a publisher, we can edit & view each other's themes freely.<h3>
-<div style="text-align: center;">
-   <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-edit-theme.png">
-   <img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-view-theme.png">
-</div>
+
+<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-edit-theme.png"></p>
+<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-view-theme.png"></p>
