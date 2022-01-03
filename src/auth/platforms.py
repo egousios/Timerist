@@ -9,7 +9,6 @@ PLATFORMS = {
 
 user_datas = {
     "files":['data.txt', 'archived.txt', 'recycled.txt', 'user_settings.json'],
-    "folders":['documents']
 }
 
 def get_route_to_data(email, data_to_get_route_from):
@@ -17,7 +16,8 @@ def get_route_to_data(email, data_to_get_route_from):
         "availible_tasks":f"users/{email}/data.txt",
         "recycled_tasks":f"users/{email}/recycled.txt",
         "archived_tasks":f"users/{email}/archived.txt",
-        "user_settings":f"users/{email}/user_settings.json"
+        "user_settings":f"users/{email}/user_settings.json",
+        "user_email":f"users/{email}"
     }
 
     if data_to_get_route_from not in DATA_ROUTES:
@@ -32,6 +32,7 @@ def get_route_to_data(email, data_to_get_route_from):
 # get_route_to_data(self.email, "recycled_tasks")
 # get_route_to_data(self.email, "archived_tasks")
 # get_route_to_data(self.email, "user_settings")
+# get_route_to_data(self.email, "user_email")
 
 def WindowsUserDataInitialize(email):
     data, archived, recycled = user_datas["files"][0], user_datas["files"][1], user_datas["files"][2]

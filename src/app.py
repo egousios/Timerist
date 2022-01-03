@@ -172,7 +172,15 @@ FONTS[0] = "Default"
 FONT_CHANGEABLE_WIDGETS = [
     "QPushButton",
     "QLabel",
-    "QLineEdit"
+    "QLineEdit",
+    "QMessageBox",
+    "QSpinBox",
+    "QCalendarWidget",
+    "QDialog",
+    "QFrame",
+    "QToolTip",
+    "QTabWidget",
+    "QMenu"
 ]
 
 TREE_WIDGET_FILTERS = ["All", "Overdue ⌛", "Incomplete ❌", "Completed ✅"]
@@ -188,7 +196,6 @@ class Ui_Timerist(object):
         self.TodoLayout = QVBoxLayout()
 
         self.MainWidget = QtWidgets.QWidget()
-        self.MainWidget.setStyleSheet("background-color: #fff")
 
         self.opened = False
         self.tool_btn_size = QtCore.QSize(400, 400)
@@ -370,6 +377,16 @@ class Ui_Timerist(object):
 
         self.settingsWindow(show=False)
         self.change_theme()
+        try:
+            theme_type = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["theme_type"]
+        except:
+            theme_type = "Default"
+
+        if theme_type == "Color/Element Theme" or self.selected_theme == "Default":
+            self.MainWidget.setStyleSheet("background-color: #fff")
+        else:
+            theme_color = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["push_button_background_color"]
+            self.MainWidget.setStyleSheet(f"background-color: {theme_color}")
         self.change_cursor()
         self.change_task_font_size()
         self.change_app_font()
@@ -460,7 +477,7 @@ class Ui_Timerist(object):
             item.setHidden(False)
   
     def Clear(self):
-        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to recycle all of your todos ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Do you want to recycle all of your todos ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
         if ask == QtWidgets.QMessageBox.Yes:
             for i in range(self.treeWidget.topLevelItemCount()):
                 item = self.treeWidget.topLevelItem(i)
@@ -800,27 +817,39 @@ class Ui_Timerist(object):
 
     def reset_settings(self):
         """Reset Configurations, Leave Profile Picture."""
-        # Reset values
-        self.selected_theme = self.default_config["theme"]
-        self.selected_cursor = self.default_config["cursor"]
-        self.selected_task_font_size = self.default_config["task_font_size"]
-        self.selected_font = self.default_config["selected_font"]
-        self.shouldPlayTimerOnOpen = self.default_config["should_play_timer_on_open"]
-        self.showConfirmationDialogBeforeEmptyBin = self.default_config["show_confirmation_dialog_before_emptying_bin"]
-        # Setting Values
-        self.interface_theme_selector.setCurrentIndex(THEMES.index(self.selected_theme))
-        self.cursor_selector.setCurrentIndex(CURSORS.index(self.selected_cursor))
-        self.task_font_size_selector.setValue(self.selected_task_font_size)
-        self.app_font_selector.setCurrentIndex(FONTS.index(self.selected_font))
-        self.should_play_timer_on_open.setChecked(self.shouldPlayTimerOnOpen)
-        self.show_confirmation_dlg_before_empty_bin.setChecked(self.showConfirmationDialogBeforeEmptyBin)
-        # Updating Settings
-        self.change_theme()
-        self.change_cursor()
-        self.change_task_font_size()
-        self.change_app_font()
-        self.toggle_timer_on_open(self.shouldPlayTimerOnOpen)
-        self.show_confirmation_before_empty_bin(self.showConfirmationDialogBeforeEmptyBin)
+        ask = QMessageBox.warning(Timerist, "Are you sure ?", "Do you really want to reset your settings to default ?", QMessageBox.Yes | QMessageBox.No)
+        if ask == QMessageBox.Yes:
+            # Reset values
+            self.selected_theme = self.default_config["theme"]
+            self.selected_cursor = self.default_config["cursor"]
+            self.selected_task_font_size = self.default_config["task_font_size"]
+            self.selected_font = self.default_config["selected_font"]
+            self.shouldPlayTimerOnOpen = self.default_config["should_play_timer_on_open"]
+            self.showConfirmationDialogBeforeEmptyBin = self.default_config["show_confirmation_dialog_before_emptying_bin"]
+            # Setting Values
+            self.interface_theme_selector.setCurrentIndex(THEMES.index(self.selected_theme))
+            self.cursor_selector.setCurrentIndex(CURSORS.index(self.selected_cursor))
+            self.task_font_size_selector.setValue(self.selected_task_font_size)
+            self.app_font_selector.setCurrentIndex(FONTS.index(self.selected_font))
+            self.should_play_timer_on_open.setChecked(self.shouldPlayTimerOnOpen)
+            self.show_confirmation_dlg_before_empty_bin.setChecked(self.showConfirmationDialogBeforeEmptyBin)
+            # Updating Settings
+            self.change_theme()
+            try:
+                theme_type = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["theme_type"]
+            except:
+                theme_type = "Default"
+
+            if theme_type == "Color/Element Theme" or self.selected_theme == "Default":
+                self.MainWidget.setStyleSheet("background-color: #fff")
+            else:
+                theme_color = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["push_button_background_color"]
+                self.MainWidget.setStyleSheet(f"background-color: {theme_color}")
+            self.change_cursor()
+            self.change_task_font_size()
+            self.change_app_font()
+            self.toggle_timer_on_open(self.shouldPlayTimerOnOpen)
+            self.show_confirmation_before_empty_bin(self.showConfirmationDialogBeforeEmptyBin)
 
     def change_tree_filter_mode(self):
         name = self.treeWidgetFilter.currentText()
@@ -854,6 +883,17 @@ class Ui_Timerist(object):
         app.setStyleSheet(theme)
         self.selected_theme = name
         self.config["theme"] = self.selected_theme
+        try:
+            theme_type = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["theme_type"]
+        except:
+            theme_type = "Default"
+
+        if theme_type == "Color/Element Theme" or self.selected_theme == "Default":
+            self.MainWidget.setStyleSheet("background-color: #fff")
+        else:
+            theme_color = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["push_button_background_color"]
+            self.MainWidget.setStyleSheet(f"background-color: {theme_color}")
+            
 
 
     def change_cursor(self):
@@ -868,11 +908,11 @@ class Ui_Timerist(object):
         self.config["cursor"] = self.selected_cursor
 
     def deleteAccount(self):
-        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Are you sure that you want to delete your account ?, This cannot be undone.", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        ask = QtWidgets.QMessageBox.question(Timerist, "Are you sure ?", "Do you want to delete your account forever ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
         if ask == QtWidgets.QMessageBox.Yes:
             self.auth.delete_user_account(self.idToken)
             QMessageBox.information(Timerist, "Success!", "Your account has sucessfully been deleted.")
-            shutil.rmtree(f"users/{self.email}")
+            shutil.rmtree(get_route_to_data(self.email, "user_email"))
         
 
     

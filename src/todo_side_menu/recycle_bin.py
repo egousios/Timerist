@@ -174,7 +174,7 @@ class RecycleBin(QtWidgets.QWidget):
 
     def empty_bin(self):
         if self.manager.showConfirmationDialogBeforeEmptyBin == True:
-            ask = QtWidgets.QMessageBox.question(self, "Are you sure ?", "Are you sure that you want to permenantly delete all of your todos ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+            ask = QtWidgets.QMessageBox.question(self, "Are you sure ?", "Do you want to permenantly delete all of your todos ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
             if ask == QtWidgets.QMessageBox.Yes:
                 for todo in self.todos:
                     data = [todo.todo_data[0], todo.todo_data[1], todo.todo_data[2]]

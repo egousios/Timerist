@@ -12,19 +12,5 @@
    <img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
 </p>
 
-<h2 align="center">App Screenshot: Introducing Themes<h2>
-<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/timerist-preview.png"></p>
-
-
-<h2 align="center">Future Open Source Development Sneak Peak: Theme Editor<h2>
-<hr>
-<h3 align="center">Themes can be acessed by anyone with the theme editor.</h3>
-<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-main-menu.png"></p>
-
-<h3 align="center">Anyone is welcome to contribute by creating a new theme.<h3>
-<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-new-theme.png"></p>
-
-<h3 align="center">Themes are anonymous, and do not require a publisher, we can edit & view each other's themes freely.<h3>
-
-<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-edit-theme.png"></p>
-<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/screenshots/theme-editor-sneak-peak-view-theme.png"></p>
+<h2 align="center">App Screenshot: Sample Theme (Aquatic)<h2>
+<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/screenshots/timerist-preview.png"></p>
