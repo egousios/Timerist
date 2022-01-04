@@ -295,7 +295,7 @@ class Ui_Timerist(object):
         self.treeWidgetFilter.activated.connect(self.change_tree_filter_mode)
 
         self.open_advanced_todo_search_btn = QPushButton("Advanced...")
-        self.open_advanced_todo_search_btn.setMaximumWidth(150)
+        self.open_advanced_todo_search_btn.setMaximumWidth(180)
         self.open_advanced_todo_search_btn.clicked.connect(self.open_advanced_todo_search_dialog)
 
         self.treeWidgetFilterLayout = QHBoxLayout()
@@ -377,16 +377,6 @@ class Ui_Timerist(object):
 
         self.settingsWindow(show=False)
         self.change_theme()
-        try:
-            theme_type = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["theme_type"]
-        except:
-            theme_type = "Default"
-
-        if theme_type == "Color/Element Theme" or self.selected_theme == "Default":
-            self.MainWidget.setStyleSheet("background-color: #fff")
-        else:
-            theme_color = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["push_button_background_color"]
-            self.MainWidget.setStyleSheet(f"background-color: {theme_color}")
         self.change_cursor()
         self.change_task_font_size()
         self.change_app_font()
@@ -439,6 +429,7 @@ class Ui_Timerist(object):
         self.TodoLayout.setStretch(1, 1)
         # Newest Layout for MainWidget
         self.MainWidget.setLayout(self.TodoLayout)
+        self.MainWidget.setStyleSheet("background-color: #fff")
         self.scrollWidget = QtWidgets.QScrollArea()
         self.scrollWidget.setWidget(self.MainWidget)
         self.scrollWidget.setWidgetResizable(True)
@@ -801,7 +792,7 @@ class Ui_Timerist(object):
         self.reset_settings_lbl.setFont(self.label_font)
 
         self.reset_settings_btn = QPushButton("Reset")
-        self.reset_settings_btn.setMaximumSize(120, 50)
+        self.reset_settings_btn.setMaximumSize(120, 60)
         self.reset_settings_btn.setFont(btn_font)
         self.reset_settings_btn.clicked.connect(self.reset_settings)
 
@@ -835,16 +826,6 @@ class Ui_Timerist(object):
             self.show_confirmation_dlg_before_empty_bin.setChecked(self.showConfirmationDialogBeforeEmptyBin)
             # Updating Settings
             self.change_theme()
-            try:
-                theme_type = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["theme_type"]
-            except:
-                theme_type = "Default"
-
-            if theme_type == "Color/Element Theme" or self.selected_theme == "Default":
-                self.MainWidget.setStyleSheet("background-color: #fff")
-            else:
-                theme_color = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["push_button_background_color"]
-                self.MainWidget.setStyleSheet(f"background-color: {theme_color}")
             self.change_cursor()
             self.change_task_font_size()
             self.change_app_font()
@@ -883,16 +864,6 @@ class Ui_Timerist(object):
         app.setStyleSheet(theme)
         self.selected_theme = name
         self.config["theme"] = self.selected_theme
-        try:
-            theme_type = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["theme_type"]
-        except:
-            theme_type = "Default"
-
-        if theme_type == "Color/Element Theme" or self.selected_theme == "Default":
-            self.MainWidget.setStyleSheet("background-color: #fff")
-        else:
-            theme_color = load_json_data_from_json_file(f"stylesheets/theme_datas/{self.selected_theme}.json")["push_button_background_color"]
-            self.MainWidget.setStyleSheet(f"background-color: {theme_color}")
             
 
 
