@@ -12,5 +12,5 @@
    <img alt="Framework" src="https://img.shields.io/badge/framework-PyQt5-blue.svg">
 </p>
 
-<h2 align="center">Leaked Screenshot of an earth element theme: (Aquatic)<h2>
+<h2 align="center">Leaked Theme Screenshot: (Aquatic)<h2>
 <p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/screenshots/timerist-preview.png"></p>
