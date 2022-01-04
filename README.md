@@ -2,7 +2,7 @@
    <a href="https://github.com/TheEliteCoder1/Timerist/blob/main/src/timer_icon.png"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/src/timer_icon.png"></a>
 </p>
 <p align="center">
-   <em>A functional & easy-to-use to-do-list app with precise deadlines and time tracking. This project is made with love using Python & PyQt.</em>
+   <em>A functional, aesthetic, customizable & easy-to-use to-do-list app with a countdown timer for each task that goes down to the millisecond. This project is made with dedication & love using Python & PyQt.</em>
 </p>
 <br>
 <p align="center">
