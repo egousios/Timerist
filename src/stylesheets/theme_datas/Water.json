@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Water.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Water",
+    "theme_lighter_color": "#d0fdff",
+    "theme_darker_color": "#0fcbff",
+    "theme_data_filepath": "stylesheets/theme_datas/Water.json"
+}

@@ -48,7 +48,7 @@ class ColorValueShower(QWidget):
     def change_color(self):
         dlg = QColorDialog()
         color = dlg.getColor()
-        if color.isValid():
+        if color.lighter(90).isValid():
             self.current_value = color.name()
             self.current_value_lbl.setText(self.current_value)
             self.preview_color.setStyleSheet(f"background-color: {self.current_value};")

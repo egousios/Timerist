@@ -1,11 +1,12 @@
 import sys, os
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtGui import QColor, QFont, QFontDatabase, QIcon
-from PyQt5.QtWidgets import QComboBox, QDialog, QFormLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidget, QMainWindow, QMessageBox, QPushButton, QScrollArea, QScrollBar, QSizePolicy, QSpacerItem, QSpinBox, QToolButton, QVBoxLayout, QWidget
-from PyQt5.QtCore import QPoint, QRect, QSize, Qt
+from PyQt5.QtGui import QColor, QFont, QFontDatabase, QIcon, QKeySequence
+from PyQt5.QtWidgets import QAction, QApplication, QComboBox, QDialog, QFormLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidget, QMainWindow, QMenuBar, QMessageBox, QPushButton, QScrollArea, QScrollBar, QSizePolicy, QSpacerItem, QSpinBox, QToolBar, QToolButton, QVBoxLayout, QWidget
+from PyQt5.QtCore import QEvent, QPoint, QRect, QSize, Qt
 from custom_components.color_value_shower import ColorValueShower
 from custom_components.single_line_text_input import SingleLineTextInput
 from custom_components.search_bar import SearchBar
+from utils import load_from_stylesheet
 from utils import write_and_save_json_data, load_json_data_from_json_file
 
 # get the paths to the themes.
@@ -15,7 +16,7 @@ def get_theme_paths(themes_directory):
 # Program Constants
 WINDOW_TITLE = "Theme Editor"
 WINDOW_ICON = "images/color_wheel.png"
-WINDOW_SIZE = (980, 600)
+WINDOW_SIZE = (980, 650)
 WINDOW_STYLESHEET = """
 QMessageBox {
     background-color: #fff;
@@ -31,6 +32,8 @@ QToolButton {
     border: 2px solid #233cad;
     border-radius: 5px;
     font-family: OpenSans-SemiBold;
+    padding-top: 2px;
+    padding-left: 2px;
 }
 
 QToolButton:hover {
@@ -91,74 +94,12 @@ QGroupBox {
     font-size: 25px; 
     font-family: OpenSans-SemiBold;
 }
-"""
-SCROLLBAR_STYLESHEET = """
-QScrollBar:horizontal
-{
-    height: 15px;
-    margin: 3px 15px 3px 15px;
-    border: 1px transparent #2A2929;
-    border-radius: 4px;
-    background-color: white;
-}
 
-QScrollBar::handle:horizontal
-{
-    background-color: black; 
-    min-width: 5px;
-    border-radius: 4px;
-}
-
-QScrollBar:vertical
-{
-    background-color: white;
-    width: 15px;
-    margin: 15px 3px 15px 3px;
-    border: 1px transparent #2A2929;
-    border-radius: 4px;
-}
-
-QScrollBar::handle:vertical
-{
-    background-color: black;
-    min-height: 5px;
-    border-radius: 4px;
-}
-
-QScrollBar::right-arrow:horizontal, QScrollBar::left-arrow:horizontal
-{
-    border: none;
-    background: none;
-    color: none;
-}
-
-QScrollBar::add-line:horizontal {
-    border: none;
-    background: none;
-}
-
-QScrollBar::sub-line:horizontal {
-    border: none;
-    background: none;
-}
-
-QScrollBar::right-arrow:vertical, QScrollBar::left-arrow:vertical
-{
-    border: none;
-    background: none;
-    color: none;
-}
-
-QScrollBar::add-line:vertical {
-    border: none;
-    background: none;
-}
-
-QScrollBar::sub-line:vertical {
-    border: none;
-    background: none;
+QToolBar {
+    margin-top: 0px;
 }
 """
+
 TEXT_INPUT_FONT = ("OpenSans-SemiBold", 12)
 BUTTON_FONT = ("OpenSans-SemiBold", 14)
 THEME_FILES = get_theme_paths("stylesheets")
@@ -171,35 +112,11 @@ for theme in THEME_FILES:
     THEMES.append(theme) # We get our name from this character-removal formula
 
 SAVED_THEME_DATAS_SOURCE = "stylesheets/theme_datas"
-MAX_BORDER_WIDTH_PX, MAX_BORDER_RADIUS_PX = 14, 14
-MAX_PADDING = 5
-MIN_PADDING = 1
-BORDER_STYLES = [
-    "dashed",
-    "dot-dash",
-    "dot-dot-dash",
-    "dotted",
-    "double",
-    "groved",
-    "inset",
-    "outset",
-    "ridge",
-    "solid",
-    "none"
-]
-TEXT_DECORATIONS = [
-    "none",
-    "underline",
-    "overline",
-    "line-through"
-]
+THEME_COUNT = len(THEMES)
+TOOL_BTN_SIZE = QSize(40, 40)
 
 """APP variable. Don't Touch."""
 app = QtWidgets.QApplication(sys.argv)
-
-MAX_FONT_SIZE = 23
-FONT_FAMILIES = [font for font in QFontDatabase().families()]
-FONT_SIZES = [str(x)+"px" for x in range(MAX_FONT_SIZE) if x >= 15]
 
 class SaveColorThemeData:
     """
@@ -264,6 +181,7 @@ class ThemeEditor(QMainWindow):
         self.resize(*WINDOW_SIZE)
         self.label_font = QFont("OpenSans-SemiBold", 13)
         self.tool_btn_size = QSize(60, 60)
+        self.tool_button_font = QFont("OpenSans-SemiBold", 15)
         self.btn_font = QFont(*BUTTON_FONT)
         self.editor = QWidget()
         self.Menu = QWidget()
@@ -274,6 +192,7 @@ class ThemeEditor(QMainWindow):
         self.selected_darker_color = QColor(0, 0, 0).name()
         self.makeMenu()
         self.makeUI()
+        self.makeGuide()
         self.open_menu()
 
     def makeUI(self):
@@ -320,14 +239,17 @@ class ThemeEditor(QMainWindow):
         self.submit_theme_btn = QPushButton("Submit")
         self.submit_theme_btn.setFont(self.btn_font)
         self.submit_theme_btn.clicked.connect(self.submit_theme)
+        self.submit_theme_btn.setShortcut(QKeySequence("Ctrl+S"))
 
         self.publish_theme_btn = QPushButton("Publish")
         self.publish_theme_btn.setFont(self.btn_font)
         self.publish_theme_btn.clicked.connect(self.publish_theme)
+        self.publish_theme_btn.setShortcut(QKeySequence("Ctrl+P"))
 
         self.menu_btn = QPushButton("Menu")
         self.menu_btn.setFont(self.btn_font)
         self.menu_btn.clicked.connect(self.open_menu)
+        self.menu_btn.setShortcut(QKeySequence("Ctrl+M"))
 
         self.form_buttons_layout.addWidget(self.submit_theme_btn)
         self.form_buttons_layout.addWidget(self.publish_theme_btn)
@@ -338,11 +260,21 @@ class ThemeEditor(QMainWindow):
         self.window_layout.addLayout(self.form_buttons_layout)
         self.setFont(QFont("OpenSans-SemiBold", 14))
 
+    def makeGuide(self):
+        self.guide_window = QDialog(self)
+        self.guide_window.setWindowTitle("Guide")
+        self.guide_window.setWindowIcon(QIcon("images/guide.png"))
+        self.guide_window.resize(QSize(500, 500))
+
+    def showGuide(self):
+        self.guide_window.show()
+
     def publish_theme(self): 
         if self.selected_theme_type == "Color/Element Theme":
             if self.theme_file_name != None:
-                if len(self.theme_file_name) > 1 and len(self.theme_file_name) < 15:
+                if len(self.theme_file_name) > 1 and len(self.theme_file_name) < 18:
                     if not self.theme_file_name.lower() in [theme.lower() for theme in THEMES]:
+                        self.theme_file_name = self.theme_file_name.replace(" ", "")
                         theme_path = f"stylesheets/{self.theme_file_name}.qss"
                         theme=open(theme_path, "a").close()
                         with open(theme_path, "w") as file:
@@ -360,7 +292,7 @@ class ThemeEditor(QMainWindow):
                     else:
                         QMessageBox.warning(self, "Name Taken", f"Your theme name was already taken.")
                 else:
-                    QMessageBox.warning(self, "Too Short/Long", f"Your theme name must be at least one character, and less than 15 characters long.")
+                    QMessageBox.warning(self, "Too Short/Long", f"Your theme name must be at least one character, and less than 18 characters long.")
             else:
                 QMessageBox.critical(self, "Publishing Error", f"You must submit your theme first before publishing it.")
 
@@ -368,11 +300,12 @@ class ThemeEditor(QMainWindow):
     def makeMenu(self):
         self.menu_layout = QVBoxLayout()
 
-        menu_title = QLabel("Published Themes:")
+        self.menu_title_text = f"Published Themes: ({THEME_COUNT})"
+        self.menu_title = QLabel(self.menu_title_text)
 
         self.themes_searchbar = SearchBar()
         self.themes_searchbar.setFont(QFont("OpenSans-SemiBold", 14))
-        self.themes_searchbar.setFixedWidth(int(menu_title.width()/2))
+        self.themes_searchbar.setFixedWidth(int(self.menu_title.width()/2))
         self.themes_searchbar.setStyleSheet(SearchBar().styleSheet()+"""
         border: 2px solid #233cad;
         border-radius: 5px;
@@ -389,23 +322,52 @@ class ThemeEditor(QMainWindow):
         self.view_action = QPushButton("View")
         self.view_action.setFont(self.btn_font)
         self.view_action.clicked.connect(self.view_theme)
+        self.view_action.setShortcut(QKeySequence("Ctrl+V"))
 
         self.new_action = QPushButton("New +")
         self.new_action.setFont(self.btn_font)
         self.new_action.clicked.connect(self.new_theme)
+        self.new_action.setShortcut(QKeySequence("Ctrl+N"))
 
         self.delete_action = QPushButton("Delete")
         self.delete_action.setFont(self.btn_font)
         self.delete_action.clicked.connect(self.delete_theme)
+        self.delete_action.setShortcut(QKeySequence("Ctrl+D"))
+
+        self.preview_action = QPushButton("Preview")
+        self.preview_action.setFont(self.btn_font)
+        self.preview_action.clicked.connect(self.preview_theme)
+        self.preview_action.setShortcut(QKeySequence("Ctrl+P"))
 
         self.actions_widget = QWidget()
         self.actions_widget_layout = QHBoxLayout()
         self.actions_widget_layout.addWidget(self.delete_action)
+        self.actions_widget_layout.addWidget(self.preview_action)
         self.actions_widget_layout.addWidget(self.view_action)
         self.actions_widget_layout.addWidget(self.new_action)
         self.actions_widget.setLayout(self.actions_widget_layout)
+
+        self.guide = QToolButton()
+        self.guide.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.guide.setShortcut(QKeySequence("Ctrl+H"))
+        self.guide.setText("Guide")
+        self.guide.setFont(self.tool_button_font)
+        self.guide.setIcon(QIcon("images/guide.png"))
+        self.guide.setStyleSheet(self.guide.styleSheet()+"""
+        QToolButton {
+            border-color: #e53935;
+            background: rgba(229, 57, 53, 0.25);
+            color: #000;
+        }
+        """)
+        self.guide.clicked.connect(self.showGuide)
+
+        self.tool_bar = QToolBar()
+        self.tool_bar.setIconSize(TOOL_BTN_SIZE)
+        self.tool_bar.addWidget(self.guide)
     
-        self.menu_layout.addWidget(menu_title, alignment=Qt.AlignTop | Qt.AlignCenter)
+        self.menu_layout.addWidget(self.tool_bar)
+        self.menu_layout.addWidget(self.menu_title, alignment=Qt.AlignTop | Qt.AlignCenter)
         self.menu_layout.addWidget(self.themes_searchbar, alignment=Qt.AlignCenter)
         self.menu_layout.addWidget(self.themes_list, alignment=Qt.AlignCenter)
         self.menu_layout.addWidget(self.actions_widget)
@@ -416,16 +378,22 @@ class ThemeEditor(QMainWindow):
         lst = get_updated_themes_list()
         lst.remove("Default")
         self.themes_list.addItems(lst)
+        THEME_COUNT = len(lst)
+        self.menu_title.setText(self.menu_title_text)
+
 
     def delete_theme(self):
         if self.selected_theme_from_menu != None:
-            ask = QMessageBox.warning(self, "Are you sure ?", "Do you want to delete this theme permanently ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+            ask = QMessageBox.warning(self, "Are you sure ?", f"Do you want to delete theme '{self.selected_theme_from_menu}' permanently ?", QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
             if ask == QtWidgets.QMessageBox.Yes:
                 name = self.selected_theme_from_menu.replace(self.selected_theme_from_menu[0], self.selected_theme_from_menu[0].upper())
                 stylesheet, json_data_file = f"stylesheets/{name}.qss", f"{SAVED_THEME_DATAS_SOURCE}/{name}.json"
                 removal_datas = [stylesheet, json_data_file]
                 for removal_data in removal_datas:
-                    os.remove(removal_data)
+                    try:
+                        os.remove(removal_data)
+                    except:
+                        pass
                 self.refresh_themes_list()
 
     def new_theme(self):
@@ -441,6 +409,15 @@ class ThemeEditor(QMainWindow):
         self.submit_theme_btn.setDisabled(False)
         self.publish_theme_btn.setDisabled(False)
         self.go_back()
+
+    def preview_theme(self):
+        if self.selected_theme_from_menu != None:
+            try:
+                filename = self.selected_theme_from_menu.replace(self.selected_theme_from_menu[0], self.selected_theme_from_menu[0].lower(), 1)
+            except:
+                filename = self.selected_theme_from_menu
+            stylesheet = f"stylesheets/{filename}.qss"
+            app.setStyleSheet(load_from_stylesheet(stylesheet))
 
     def view_theme(self):
         if self.selected_theme_from_menu != None:

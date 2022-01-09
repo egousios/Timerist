@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Midnight.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Midnight",
+    "theme_lighter_color": "#af4eff",
+    "theme_darker_color": "#5e0eff",
+    "theme_data_filepath": "stylesheets/theme_datas/Midnight.json"
+}

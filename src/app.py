@@ -180,7 +180,9 @@ FONT_CHANGEABLE_WIDGETS = [
     "QFrame",
     "QToolTip",
     "QTabWidget",
-    "QMenu"
+    "QMenu",
+    "QPlainTextEdit",
+    "QTextEdit"
 ]
 
 TREE_WIDGET_FILTERS = ["All", "Overdue ⌛", "Incomplete ❌", "Completed ✅"]
@@ -972,24 +974,24 @@ class Ui_Timerist(object):
                     edit_todo_win.show()
 
     def CopyrightShow(self):
-        CopyrightWin = QtWidgets.QMainWindow(Timerist)
-        CopyrightWin.resize(500, 350)
-        CopyrightWin.setWindowTitle("Copyright")
-        CopyrightWin.setWindowIcon(QIcon("images/copyright.png"))
+        self.CopyrightWin = QtWidgets.QMainWindow(Timerist)
+        self.CopyrightWin.resize(500, 350)
+        self.CopyrightWin.setWindowTitle("Copyright")
+        self.CopyrightWin.setWindowIcon(QIcon("images/copyright.png"))
         layout = QVBoxLayout()
         widget = QtWidgets.QWidget()
-        copyright_text = QTextEdit(widget)
-        copyright_text.setReadOnly(True)
-        copyright_text.setCursor(Qt.PointingHandCursor)
-        copyright_text.setText(open("assets/LICENSE", "r").read())
+        self.copyright_text = QTextEdit(widget)
+        self.copyright_text.setReadOnly(True)
+        self.copyright_text.setCursor(Qt.PointingHandCursor)
+        self.copyright_text.setText(open("assets/LICENSE", "r").read())
         copyright_font_id = QFontDatabase.addApplicationFont("assets/Segoe UI.ttf")
-        copyright_text_font_family = QFontDatabase.applicationFontFamilies(copyright_font_id)[0]
-        copyright_text_font = QFont(copyright_text_font_family, 13)
-        copyright_text.setFont(copyright_text_font)
-        layout.addWidget(copyright_text)
+        self.copyright_text_font_family = QFontDatabase.applicationFontFamilies(copyright_font_id)[0]
+        self.copyright_text_font = QFont(self.copyright_text_font_family, 13)
+        self.copyright_text.setFont(self.copyright_text_font)
+        layout.addWidget(self.copyright_text)
         widget.setLayout(layout)
-        CopyrightWin.setCentralWidget(widget)
-        CopyrightWin.show()
+        self.CopyrightWin.setCentralWidget(widget)
+        self.CopyrightWin.show()
 
 
 app.setStyle('Fusion')

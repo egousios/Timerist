@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Magenta.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Magenta",
+    "theme_lighter_color": "#ff00ae",
+    "theme_darker_color": "#ba0b7d",
+    "theme_data_filepath": "stylesheets/theme_datas/Magenta.json"
+}
