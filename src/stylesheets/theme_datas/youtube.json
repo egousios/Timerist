@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/youtube.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "youtube",
+    "theme_lighter_color": "#e52d27",
+    "theme_darker_color": "#b31217",
+    "theme_data_filepath": "stylesheets/theme_datas/youtube.json"
+}

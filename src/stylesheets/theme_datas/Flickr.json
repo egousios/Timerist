@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Flickr.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Flickr",
+    "theme_lighter_color": "#ff0084",
+    "theme_darker_color": "#33001b",
+    "theme_data_filepath": "stylesheets/theme_datas/Flickr.json"
+}

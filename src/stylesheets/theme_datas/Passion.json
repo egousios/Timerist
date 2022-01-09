@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Passion.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Passion",
+    "theme_lighter_color": "#e53935",
+    "theme_darker_color": "#e35d5b",
+    "theme_data_filepath": "stylesheets/theme_datas/Passion.json"
+}

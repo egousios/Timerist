@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Frosty.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Frosty",
+    "theme_lighter_color": "#000428",
+    "theme_darker_color": "#004e92",
+    "theme_data_filepath": "stylesheets/theme_datas/Frosty.json"
+}

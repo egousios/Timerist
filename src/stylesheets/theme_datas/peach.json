@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/peach.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "peach",
+    "theme_lighter_color": "#ed4264",
+    "theme_darker_color": "#ffedbc",
+    "theme_data_filepath": "stylesheets/theme_datas/peach.json"
+}

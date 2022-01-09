@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/CuriosityBlue.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "CuriosityBlue",
+    "theme_lighter_color": "#525252",
+    "theme_darker_color": "#3d72b4",
+    "theme_data_filepath": "stylesheets/theme_datas/CuriosityBlue.json"
+}

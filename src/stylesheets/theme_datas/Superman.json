@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Superman.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Superman",
+    "theme_lighter_color": "#0099f7",
+    "theme_darker_color": "#f11712",
+    "theme_data_filepath": "stylesheets/theme_datas/Superman.json"
+}

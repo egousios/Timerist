@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/BackToEarth.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "BackToEarth",
+    "theme_lighter_color": "#00c9ff",
+    "theme_darker_color": "#92fe9d",
+    "theme_data_filepath": "stylesheets/theme_datas/BackToEarth.json"
+}

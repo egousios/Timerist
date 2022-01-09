@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Mirage.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Mirage",
+    "theme_lighter_color": "#16222a",
+    "theme_darker_color": "#3a6073",
+    "theme_data_filepath": "stylesheets/theme_datas/Mirage.json"
+}

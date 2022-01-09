@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/vine.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "vine",
+    "theme_lighter_color": "#00bf8f",
+    "theme_darker_color": "#001510",
+    "theme_data_filepath": "stylesheets/theme_datas/vine.json"
+}

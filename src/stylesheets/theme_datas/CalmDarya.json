@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/CalmDarya.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "CalmDarya",
+    "theme_lighter_color": "#dae2f8",
+    "theme_darker_color": "#d6a4a4",
+    "theme_data_filepath": "stylesheets/theme_datas/CalmDarya.json"
+}

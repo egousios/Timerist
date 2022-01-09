@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/caramel.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "caramel",
+    "theme_lighter_color": "#d1913c",
+    "theme_darker_color": "#ffd194",
+    "theme_data_filepath": "stylesheets/theme_datas/caramel.json"
+}

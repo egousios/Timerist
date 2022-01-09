@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/TikTok.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "TikTok",
+    "theme_lighter_color": "#ee1d52",
+    "theme_darker_color": "#68c9d0",
+    "theme_data_filepath": "stylesheets/theme_datas/TikTok.json"
+}

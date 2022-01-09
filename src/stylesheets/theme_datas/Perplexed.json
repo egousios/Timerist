@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Perplexed.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Perplexed",
+    "theme_lighter_color": "#7b4397",
+    "theme_darker_color": "#dc2430",
+    "theme_data_filepath": "stylesheets/theme_datas/Perplexed.json"
+}

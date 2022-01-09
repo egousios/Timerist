@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Jonquil.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Jonquil",
+    "theme_lighter_color": "#ffeeee",
+    "theme_darker_color": "#ddefbb",
+    "theme_data_filepath": "stylesheets/theme_datas/Jonquil.json"
+}

@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/MiddleOfDay.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "MiddleOfDay",
+    "theme_lighter_color": "#2c3e50",
+    "theme_darker_color": "#3498db",
+    "theme_data_filepath": "stylesheets/theme_datas/MiddleOfDay.json"
+}

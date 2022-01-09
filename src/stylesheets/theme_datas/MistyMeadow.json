@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/MistyMeadow.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "MistyMeadow",
+    "theme_lighter_color": "#215f00",
+    "theme_darker_color": "#e4e4d9",
+    "theme_data_filepath": "stylesheets/theme_datas/MistyMeadow.json"
+}

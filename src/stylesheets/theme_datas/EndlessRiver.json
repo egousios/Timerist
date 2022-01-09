@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/EndlessRiver.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "EndlessRiver",
+    "theme_lighter_color": "#43cea2",
+    "theme_darker_color": "#185a9d",
+    "theme_data_filepath": "stylesheets/theme_datas/EndlessRiver.json"
+}

@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Orange.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Orange",
+    "theme_lighter_color": "#f46b45",
+    "theme_darker_color": "#eea849",
+    "theme_data_filepath": "stylesheets/theme_datas/Orange.json"
+}

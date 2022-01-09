@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/LemonTwist.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "LemonTwist",
+    "theme_lighter_color": "#3ca55c",
+    "theme_darker_color": "#b5ac49",
+    "theme_data_filepath": "stylesheets/theme_datas/LemonTwist.json"
+}

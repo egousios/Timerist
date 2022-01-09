@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/cherryBlossoms.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "cherryBlossoms",
+    "theme_lighter_color": "#fbd3e9",
+    "theme_darker_color": "#bb377d",
+    "theme_data_filepath": "stylesheets/theme_datas/cherryBlossoms.json"
+}

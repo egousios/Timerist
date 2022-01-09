@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/piglet.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "piglet",
+    "theme_lighter_color": "#ee9ca7",
+    "theme_darker_color": "#ffdde1",
+    "theme_data_filepath": "stylesheets/theme_datas/piglet.json"
+}

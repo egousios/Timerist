@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/freshturboscent.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "freshturboscent",
+    "theme_lighter_color": "#f1f2b5",
+    "theme_darker_color": "#135058",
+    "theme_data_filepath": "stylesheets/theme_datas/freshturboscent.json"
+}

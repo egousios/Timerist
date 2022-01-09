@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/SunnyDay.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "SunnyDay",
+    "theme_lighter_color": "#ede574",
+    "theme_darker_color": "#e1f5c4",
+    "theme_data_filepath": "stylesheets/theme_datas/SunnyDay.json"
+}

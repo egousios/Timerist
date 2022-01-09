@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Snapchat.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Snapchat",
+    "theme_lighter_color": "#ffff00",
+    "theme_darker_color": "#000000",
+    "theme_data_filepath": "stylesheets/theme_datas/Snapchat.json"
+}

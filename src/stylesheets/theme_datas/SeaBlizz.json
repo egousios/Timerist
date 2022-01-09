@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/SeaBlizz.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "SeaBlizz",
+    "theme_lighter_color": "#1cd8d2",
+    "theme_darker_color": "#93edc7",
+    "theme_data_filepath": "stylesheets/theme_datas/SeaBlizz.json"
+}

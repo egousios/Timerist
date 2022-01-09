@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Timber.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Timber",
+    "theme_lighter_color": "#fc00ff",
+    "theme_darker_color": "#00dbde",
+    "theme_data_filepath": "stylesheets/theme_datas/Timber.json"
+}

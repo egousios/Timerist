@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/mauve.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "mauve",
+    "theme_lighter_color": "#44275a",
+    "theme_darker_color": "#734b6d",
+    "theme_data_filepath": "stylesheets/theme_datas/mauve.json"
+}

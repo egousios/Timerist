@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Kashmir.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Kashmir",
+    "theme_lighter_color": "#614385",
+    "theme_darker_color": "#516395",
+    "theme_data_filepath": "stylesheets/theme_datas/Kashmir.json"
+}

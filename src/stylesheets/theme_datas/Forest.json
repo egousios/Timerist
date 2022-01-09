@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Forest.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Forest",
+    "theme_lighter_color": "#5a3f37",
+    "theme_darker_color": "#2c7744",
+    "theme_data_filepath": "stylesheets/theme_datas/Forest.json"
+}

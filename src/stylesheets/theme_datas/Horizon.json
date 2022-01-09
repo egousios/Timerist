@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Horizon.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Horizon",
+    "theme_lighter_color": "#003973",
+    "theme_darker_color": "#e5e5be",
+    "theme_data_filepath": "stylesheets/theme_datas/Horizon.json"
+}
