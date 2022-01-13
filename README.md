@@ -13,4 +13,4 @@
 </p>
 
 <h2 align="center">Leaked Theme Screenshot: (Aquatic)<h2>
-<p align="center"><img src="https://github.com/TheEliteCoder1/Timerist/blob/main/screenshots/timerist-preview.png"></p>
+<img src="https://raw.githubusercontent.com/TheEliteCoder1/Timerist/main/screenshots/timerist-preview.png">
