@@ -184,7 +184,7 @@ class LoginWindow(QtWidgets.QDialog):
         email = self.email_field.text()
         password = self.password_field.text()
 
-        '''
+
         try:
             user = auth.sign_in_with_email_and_password(email,password)
             app.setFont(_font)
@@ -202,25 +202,6 @@ class LoginWindow(QtWidgets.QDialog):
         except:
             self.invalid.setVisible(True)
             self.retry.setVisible(True)
-        '''
-
-        # Coding mode - comment and uncomment when coding, on production use the above.
-        TEST_EMAIL, TEST_PASSWRD = "ben_reena@yahoo.com", "ssanthanas"
-        # Test user
-        user = auth.sign_in_with_email_and_password(TEST_EMAIL,TEST_PASSWRD)
-        app.setFont(_font)
-        sound_file = 'assets/alarm.wav'
-        sound = QtMultimedia.QSoundEffect()
-        sound.setSource(QtCore.QUrl.fromLocalFile(sound_file))
-        sound.setLoopCount(QtMultimedia.QSoundEffect.Infinite)
-        sound.setVolume(50)
-        password_hash = auth.get_account_info(user['idToken'])['users'][0]['passwordHash']
-        email_verified = auth.get_account_info(user['idToken'])['users'][0]['emailVerified']
-        # Give in the test email and password instead of the form field values.
-        ui.setupUi(Timerist, sound, email=TEST_EMAIL, password=TEST_PASSWRD, cached_password=password_hash, uid=user['localId'], email_verified=email_verified, auth=auth, idToken=user['idToken'])
-        Timerist.showMaximized()
-        self.setParent(Timerist)
-        self.destroy(True)
 
 
 
