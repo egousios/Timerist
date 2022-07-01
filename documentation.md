@@ -11,7 +11,6 @@ Table of Contents
     * [Archiving Tasks](#Archiving-Tasks)
 * [Help](#Help)
     * [Settings](#Settings)
-    * [User Account](#Authentication)
 <!--te-->
 
 Installation
