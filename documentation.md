@@ -95,12 +95,24 @@ below the Todo-list Options area:
 Only tasks that match the search requirement will show.
 
 2. The Filter By Status Tool will Only display tasks that match
-the requested Status.
+the requested Status. There are 4 diffrent options - All, Incomplete, Overdue, Completed.
 
-There are 4 diffrent options - All, Incomplete, Overdue, Completed:
+3. The Advacned Filter Option will prompt you with the following Dialogue:
 
-All: 
-<img src="screenshots/all.png">
+<img src="screenshots/advanced-filter.png">
 
+There are four options to filter tasks with the Advanced Filter Tool:
 
+<img src="screenshots/four-advanced-options.png">
 
+1. The Filter by Due Date Option only displays tasks that match the specified due date:
+
+<img src="screenshots/duedatefilter.png">
+
+2. The Filter by Due Date Range Option only displays tasks that have a due date that falls between the specified range of dates including the Start Date and End Date:
+
+<img src="screenshots/duedaterange.png">
+
+3. The Sort By Upcoming Option sorts the tasks with the following requirements:
+
+<img src="screenshots/sortbyupcoming.png">
