@@ -116,3 +116,59 @@ There are four options to filter tasks with the Advanced Filter Tool:
 3. The Sort By Upcoming Option sorts the tasks with the following requirements:
 
 <img src="screenshots/sortbyupcoming.png">
+
+Recycling Tasks
+------------------------------------------------
+
+#### In The App's Interface, you should see the following below the top-right section:
+
+<img src="screenshots/tabarea.png">
+
+Whenever you recycle a task from the Todo-list, they go to the Recycled Tab.
+
+<img src="screenshots/recycled-tab.png">
+
+1. The Restore Option will bring the task back to the Todo-list.
+
+2. The Delete Option will permanently delete the task forever.
+
+3. The Clear Option will permanently delete all tasks in the Recycled Tab forever.
+
+Archiving Tasks
+------------------------------------------------
+
+Whenever you archive a task from the Todo-list, they go to the Archived Tab.
+
+<img src="screenshots/archived.png">
+
+1. The Unarchive Option will bring the task back to the Todo-list.
+
+2. The Recycle Option will send the task to the Recycled Tab.
+
+Help
+====
+
+Settings
+-------------------------------------
+
+When you click the settings button found in the top-right corner 
+of the Interface, the following Dialogue should show:
+
+<img src="screenshots/settings.png">
+
+There are 4 Tabs with Diffrent Options:
+1. Account - Contains settings to do with your Account.
+- The verify email button sends an verification email to your account's email.
+- The reset password button sends an email to reset your Account's password.
+- The Unique Id copy button copies your Account's Unique Id to the clipboard.
+- The delete account button deletes your account permanently if you press 'yes' on the confirmation dialogue.
+2. To-Do-List - Contains settings pertaining to the Todo-list
+- The 'Ring Alarm When Task Is Overdue' option will ring an alarm immediatley when you view a task that is overdue.
+- The 'Show Confirmation Dialog Before Emptying Bin' option will show a confirmation dialog before permenantly deleting all tasks from the recycled tab.
+3. Appearance - Contains settings to customize the apperance of the app.
+- The theme option allows you to customize the appearance of the Interface with a variety of diffrent themes. (The theme that was used for this demonstration was Aquatic.)
+- The cursor option allows you to change the mouse cursor apperance in the app with cursors from Windows, Mac & Linux regardless of which operating system you're on.
+- The task font size option allows you to change the font size of the tasks displayed on the todo-list.
+- The app font option allows you to change the font used in the App's interface. (The app font that was used for this demonstration was Segoe Print)
+4. Advanced - Contains Advanced Settings
+- The 'Reset To Default' option resets all of your settings to the default configuration.

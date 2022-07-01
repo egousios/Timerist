@@ -2,11 +2,8 @@
 Do the laundry
 Overdue ⌛
 2022-06-30 12:00:00 am
-Feed Goldfish
+Do the dishes
 Overdue ⌛
 2022-07-20 12:00:00 am
 Go for a hike in the Alps
 Incomplete ❌
-2022-06-30 12:00:00 am
-Do the dishes
-Overdue ⌛
