@@ -2,3 +2,4 @@ I have decided to deploy my app by creating an installer and placing it on diffr
 store fronts of desktop platforms.
 https://www.pythonguis.com/tutorials/packaging-pyqt5-pyside2-applications-windows-pyinstaller/
 https://partner.microsoft.com/en-us/dashboard/registration
+https://developer.microsoft.com/en-us/microsoft-store/register/

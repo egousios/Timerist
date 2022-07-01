@@ -1,0 +1,9 @@
+{
+    "theme_type": "Color/Element Theme",
+    "theme_file_path": "stylesheets/Skyhigh.qss",
+    "theme_base_theme": "stylesheets/gemstone.qss",
+    "theme_name": "Skyhigh",
+    "theme_lighter_color": "#05f3ff",
+    "theme_darker_color": "#33ffff",
+    "theme_data_filepath": "stylesheets/theme_datas/Skyhigh.json"
+}
